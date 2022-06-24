@@ -4,10 +4,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "ngrok": "ngrok authtoken 2AzomlxwiuTJlBW2gw74XhVUlXt_4Zm5S4owAPU3iEyGVwBCz && ngrok http 3000"
   },
   "dependencies": {
     "next": "12.1.4",
+    "ngrok": "^4.3.1",
     "react": "18.0.0",
     "react-dom": "18.0.0"
   },
