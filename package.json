@@ -8,6 +8,7 @@
     "ngrok": "ngrok authtoken 2AzomlxwiuTJlBW2gw74XhVUlXt_4Zm5S4owAPU3iEyGVwBCz && ngrok http 3000"
   },
   "dependencies": {
+    "apexcharts": "^3.35.3",
     "next": "12.1.4",
     "next-auth": "^4.6.1",
     "next-session": "^4.0.4",
