@@ -1,9 +1,15 @@
 :root{
   --color-darkness-background: white; 
   --color-main: #4361ee;
+  --color-error: red;
+  --color-warning: gold;
+  --color-advice: lightblue;
   --default-border-radius: 3px;
 }
-
+/* OVERRIDE */
+.rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active{
+  color:var(--color-main)!important;
+}
 html,
 body {
   padding: 0;

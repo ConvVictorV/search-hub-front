@@ -8,7 +8,7 @@
     "ngrok": "ngrok authtoken 2AzomlxwiuTJlBW2gw74XhVUlXt_4Zm5S4owAPU3iEyGVwBCz && ngrok http 3000"
   },
   "dependencies": {
-    "apexcharts": "^3.35.3",
+    "chart.js": "^3.8.0",
     "next": "12.1.4",
     "next-auth": "^4.6.1",
     "next-session": "^4.0.4",
@@ -16,7 +16,9 @@
     "passport": "^0.6.0",
     "passport-google-oidc": "^0.1.0",
     "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "react-chartjs-2": "^4.2.0",
+    "react-dom": "18.0.0",
+    "rsuite": "^5.15.1"
   },
   "devDependencies": {
     "eslint": "8.12.0",
