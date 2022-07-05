@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 
 const Select = (props) => {
-    if (props.fetch == undefined) return <></>
     const { SelectPicker, Loader } = require('rsuite');
     const [items, setItems] = useState([]);
     const [customers, setCustomers] = useState([])
     useEffect(() => {
+        if (props.fetch == undefined) return <></>
         fetch(props.fetch)
             .then((res) => res.json())
             .then((data) => {
                 setCustomers(data)
             })
     }, [])
+    
+
+   
 
     const updateData = () => {
         if (items.length === 0) {

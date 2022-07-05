@@ -5,8 +5,7 @@ import { signIn, useSession } from "next-auth/react"
 import Home from './index'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-
-
+import Link from 'next/link'
 
 export default function Login() {
   const { status } = useSession()
@@ -23,9 +22,9 @@ export default function Login() {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>
-          SearchHUB <a href="http://conversion.com.br/">| Conversion</a>
+          SearchHUB <Link href={"http://conversion.com.br/"}>| Conversion</Link>
         </h1>
-        <h2 className={styles.subtitle}>Faça <a href="#" onClick={(e) => {e.preventDefault();signIn("google",{redirect:"http://localhost:3000/"})}}>login</a> para continuar, ou se preferir, <a href="/">volte ao inicio</a></h2>
+        <h2 className={styles.subtitle}>Faça <Link href={"#"} onClick={(e) => {e.preventDefault();signIn("google")}}>login</Link> para continuar, ou se preferir, <Link href={"/"}>volte ao inicio</Link></h2>
       </main>
     </div>
   )
