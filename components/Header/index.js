@@ -82,7 +82,7 @@ export default function Header(args) {
 
             <Breadcrumb>
               {
-                breadc.map(item => <Breadcrumb.Item href={item.path}>{item.name}</Breadcrumb.Item>)
+                breadc.map((item,index) => <Breadcrumb.Item key={index} href={item.path}>{item.name}</Breadcrumb.Item>)
               }
             </Breadcrumb>
             {<h1>{args.pageName}</h1>}
