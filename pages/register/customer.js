@@ -13,12 +13,12 @@ const createCustomerSchema = Schema.Model({
 
 function Customer(args) {
   return (
-    <DefaultLayout toggleTheme={args.toggleTheme} title="Registrar novo cliente | SearchHub" description="SearchHub Conversion" background={5} pageName="Registrar novo Cliente" >
+    <DefaultLayout toggleTheme={args.toggleTheme} title="Registrar novo cliente | SearchHub" description="SearchHub Conversion" background={3} pageName="Registrar novo Cliente" >
       <Container style={{ height: '80vh' }}>
         <FlexboxGrid justify="center" align="middle" style={{ height: '100%' }}>
           <FlexboxGrid.Item colspan={12}>
-          <Panel style={{width:'fit-content',backgroundColor:"var(--rs-body)"  }} shaded bordered>
-            <Form model={createCustomerSchema}>
+          <Panel header={"Informações do cliente"} style={{width:'500px',backgroundColor:"var(--rs-body)"  }} shaded bordered>
+            <Form model={createCustomerSchema} fluid>
               <TextField name="customer-name" label="Nome do cliente" required />
               <TextField name="customer-email" type="email" label="Email do Squad/Analista" required />
               <TextField name="customer-id-squad" type="number" label="Id do Squad" required />

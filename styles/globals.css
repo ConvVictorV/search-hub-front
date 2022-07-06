@@ -78,3 +78,7 @@ color: white;
 .rs-sidenav-collapse-out hr,.rs-sidenav-collapse-in hr{
   margin: 0px;
 }
+
+.rs-form-control.rs-form-control-wrapper {
+  max-width: 94%!important;
+}

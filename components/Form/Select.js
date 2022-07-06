@@ -42,7 +42,7 @@ const Select = (props) => {
             renderMenu={renderMenu}
             size={props.size || ''}
             style={{
-                width: "300px",
+                width: "94%",
                 verticalAlign: "top"
             }}
         />

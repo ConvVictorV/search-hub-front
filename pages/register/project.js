@@ -13,12 +13,12 @@ const createCustomerSchema = Schema.Model({
 
 function Project(args) {
   return (
-    <DefaultLayout toggleTheme={args.toggleTheme} title="Registrar novo projeto | SearchHub" description="SearchHub Conversion" background={1} pageName="Registrar novo Projeto">
+    <DefaultLayout toggleTheme={args.toggleTheme} title="Registrar novo projeto | SearchHub" description="SearchHub Conversion" background={3} pageName="Registrar novo Projeto">
       <Container style={{ height: '80vh' }}>
         <FlexboxGrid justify="center" align="middle" style={{ height: '100%' }}>
           <FlexboxGrid.Item colspan={12}>
-            <Panel bordered style={{ width: 'fit-content',backgroundColor:"var(--rs-body)"  }} shaded >
-              <Form model={createCustomerSchema}>
+            <Panel header={"Informações do projeto"} bordered style={{ width: '500px',backgroundColor:"var(--rs-body)"  }} shaded >
+              <Form model={createCustomerSchema} fluid>
                 <Form.Group controlId="project-customer" required style={{
                   marginBottom: "0px"
                 }}>

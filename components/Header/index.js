@@ -54,11 +54,12 @@ export default function Header(args) {
   const renderIconButton = (props, ref) => {
     return (
       <Whisper
+      
         trigger="hover"
         placement={'left'}
         controlId={`control-id-left`}
         speaker={
-          <Tooltip>{session && session.user && session.user.name || ''}</Tooltip>
+          <Tooltip visible>{session && session.user && session.user.name || ''}</Tooltip>
         }
       >
         <AvatarGroup>
@@ -85,7 +86,9 @@ export default function Header(args) {
                 breadc.map((item,index) => <Breadcrumb.Item key={index} href={item.path}>{item.name}</Breadcrumb.Item>)
               }
             </Breadcrumb>
-            {<h1>{args.pageName}</h1>}
+            {<h3 style={{
+              paddingBottom:"50px"
+            }}>{args.pageName}</h3>}
           </div>
           <div>
             <Dropdown placement="bottomEnd" renderToggle={renderIconButton}>
