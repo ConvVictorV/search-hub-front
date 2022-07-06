@@ -22,7 +22,7 @@ function Project(args) {
                 <Form.Group controlId="project-customer" required style={{
                   marginBottom: "0px"
                 }}>
-                  <Select size="lg" fetch="http://localhost:3000/api/get/customers" placeholder="Selecione o cliente" />
+                  <Select size="lg" fetch={`${process.env.NEXTAUTH_URL}api/get/customers`} placeholder="Selecione o cliente" />
                   {/* <span className="rs-form-error-message rs-form-error-message-show"><span className="rs-form-error-message-arrow"></span><span className="rs-form-error-message-inner">Digite a url do cliente.</span></span> */}
                 </Form.Group>
                 <TextField size="lg" name="project-url" type="text" label="Url do projeto" style={{
