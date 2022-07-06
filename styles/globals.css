@@ -1,14 +1,25 @@
 :root{
   --color-darkness-background: white; 
-  --color-main: #4361ee;
-  --color-error: red;
-  --color-warning: gold;
-  --color-advice: lightblue;
+  --color-error: #FE3939;;
+  --color-warning: #EEBE43;
+  --color-advice: #43BBEE;
   --default-border-radius: 3px;
+  --color-conversion-1: #4361EE;
+  --color-conversion-2:#8738D7;
+  --color-conversion-3:#EE43AA;
+  --color-conversion-4:#FE3939;
+  --color-conversion-5:#EE7643;
+  --color-conversion-6:#EEBE43;
+  --color-conversion-7:#00BFA5;
+  --color-conversion-8:#43BBEE;
+  --color-conversion-9:#43BBEE;
+  --color-conversion-10:#8C9CBA;
+  --color-conversion-11:#4E5E81;
+  --color-conversion-12:#2B3A56;
 }
 /* OVERRIDE */
 .rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active{
-  color:var(--color-main)!important;
+  color:var(--color-conversion-1)!important;
 }
 html,
 body {
@@ -25,4 +36,45 @@ a {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+.rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active::after {
+  content: "";
+  width: 2px;
+  height: 100%;
+  background: var(--color-conversion-1);
+  display: block;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+.rs-sidenav-toggle .rs-sidenav-toggle-button{
+  border-radius: 50px;
+  background: var(--color-conversion-1);
+  width: 32px;
+  height: 31px;
+  padding: 6px;
+}
+
+.rs-sidenav-toggle .rs-sidenav-toggle-button svg {
+color: white;
+}
+
+.rs-sidenav-collapse-out .logo-name {
+  display: none;
+}
+.rs-theme-light .logo-name{
+  color:var(--color-conversion-12);
+}
+.logo-name{
+  padding-left:10px;
+}
+
+.rs-sidenav-collapse-out .rs-sidenav-toggle.rs-sidenav-toggle-collapsed {
+  right: -32px!important;
+  top: 16px!important;
+}
+
+.rs-sidenav-collapse-out hr,.rs-sidenav-collapse-in hr{
+  margin: 0px;
 }

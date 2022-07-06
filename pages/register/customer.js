@@ -11,13 +11,13 @@ const createCustomerSchema = Schema.Model({
   "customer-active": Schema.Types.BooleanType()
 });
 
-function Customer() {
+function Customer(args) {
   return (
-    <DefaultLayout title="Registrar novo cliente | SearchHub" description="SearchHub Conversion" >
+    <DefaultLayout toggleTheme={args.toggleTheme} title="Registrar novo cliente | SearchHub" description="SearchHub Conversion" background={5} pageName="Registrar novo Cliente" >
       <Container style={{ height: '80vh' }}>
         <FlexboxGrid justify="center" align="middle" style={{ height: '100%' }}>
           <FlexboxGrid.Item colspan={12}>
-          <Panel header="Criar novo cliente" bordered style={{width:'fit-content'}}>
+          <Panel style={{width:'fit-content',backgroundColor:"var(--rs-body)"  }} shaded bordered>
             <Form model={createCustomerSchema}>
               <TextField name="customer-name" label="Nome do cliente" required />
               <TextField name="customer-email" type="email" label="Email do Squad/Analista" required />
@@ -28,7 +28,7 @@ function Customer() {
               <Form.Group>
                 <ButtonToolbar>
                   <Button style={{
-                    backgroundColor: 'var(--color-main)',
+                    backgroundColor: 'var(--color-conversion-1)',
                     color: 'var(--color-darkness-background)'
                   }} type="submit">Enviar</Button>
                 </ButtonToolbar>

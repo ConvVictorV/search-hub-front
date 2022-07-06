@@ -40,6 +40,7 @@ const Select = (props) => {
             onOpen={updateData}
             onSearch={updateData}
             renderMenu={renderMenu}
+            size={props.size || ''}
             style={{
                 width: "300px",
                 verticalAlign: "top"

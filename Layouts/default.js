@@ -5,7 +5,7 @@ import Grid from 'rsuite/Grid';
 import Row from 'rsuite/Row';
 import Col from 'rsuite/Col';
 import Header from '../components/Header';
-
+import getBackground from '../components/Backgrounds'
 
 function DefaultLayout(args) {
     return (
@@ -17,14 +17,15 @@ function DefaultLayout(args) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Container>
+            <Container style={{
+                background:`no-repeat center/cover url('${ args.background ? getBackground(args.background) : false}')`,
+            }}>
                 <Sidenav />
                 <Container>
-                <Header />
-                    <Grid >
+                    <Header toggleTheme={args.toggleTheme} pageName={args.pageName}  />
+                    <Grid>
                         <Row>
-                            <Col style={{width:'100%',minHeight:"100vh"}}>
-                                
+                            <Col style={{ width: '100%', minHeight: "100vh" }}>
                                 {args.children}
                             </Col>
                         </Row>

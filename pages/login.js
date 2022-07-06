@@ -1,31 +1,38 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Login.module.css'
 import { signIn, useSession } from "next-auth/react"
 import Home from './index'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import Link from 'next/link'
-
-export default function Login() {
+import { Form, ButtonToolbar, Button, FlexboxGrid, Container, Checkbox, Schema, Panel, IconButton } from 'rsuite'
+import EmailFillIcon from '@rsuite/icons/EmailFill';
+export default function Login(props) {
   const { status } = useSession()
   const router = useRouter()
-  useEffect(()=>{
+  useEffect(() => {
     if (status === "authenticated") router.push('/')
   })
   return (
-    <div className={styles.container}>
+    <div className={styles.backgroundAnimated}>
       <Head>
         <title>Search Hub | Conversion</title>
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          SearchHUB <Link href={"http://conversion.com.br/"}>| Conversion</Link>
-        </h1>
-        <h2 className={styles.subtitle}>Faça <Link href={"#"} onClick={(e) => {e.preventDefault();signIn("google")}}>login</Link> para continuar, ou se preferir, <Link href={"/"}>volte ao inicio</Link></h2>
-      </main>
+      <Container style={{ height: '100vh' }} backgroundColor={"var(--rs-body)"}>
+        <FlexboxGrid justify="center" align="middle" style={{ height: '100%' }}>
+          <FlexboxGrid.Item colspan={12} justify="center" align="middle">
+            <Image src={'/searchhub-white.png'} width={389} height={78} />
+            <div style={{marginTop:'50px'}}>
+              <IconButton icon={<EmailFillIcon  />} onClick={() => { signIn("google") }}  appearance="default">
+                Entrar com Google
+              </IconButton>
+            </div>
+          </FlexboxGrid.Item>
+        </FlexboxGrid>
+      </Container>
     </div>
   )
 }

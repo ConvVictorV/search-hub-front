@@ -3,14 +3,27 @@ import '../styles/globals.css';
 import { SessionProvider, useSession } from "next-auth/react"
 import Login from './login'
 import { CustomProvider } from 'rsuite';
-import { createContext,useState } from 'react';
+import { createContext,useEffect,useState } from 'react';
 
 export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }) {
+
   const [theme, setTheme] = useState('light');
-  let toggleTheme = () => theme === 'light' ? setTheme('dark') : setTheme('light')
+  useEffect(()=>{
+    typeof window !== 'undefined' ? setTheme(localStorage.getItem('theme') || "light") : false
+  },[])
+  let toggleTheme = () => {
+    if(theme === 'light'){
+      setTheme('dark')
+      localStorage.setItem('theme','dark')
+    }else{
+      setTheme('light');
+      localStorage.setItem('theme','light')
+    }
+  }
+
   return (
     <SessionProvider
       session={session}

@@ -1,7 +1,7 @@
 
 
 .title a,.subtitle a {
-  color: var(--color-main);
+  color: var(--color-conversion-1);
   text-decoration: none;
 }
 
@@ -17,7 +17,7 @@
 }
 
 button.btn_logout{
-  background-color: var(--color-main);
+  background-color: var(--color-conversion-1);
   color: var(--color-darkness-background);
   border:none;
   border-radius: var(--default-border-radius);

@@ -25,17 +25,13 @@ const options = {
             //CONTROLLER CONST
             const isAllowedToSignIn = true
             
+            //VERIFY CONVERSION EMAIL
+            if(email.indexOf('@conversion.com.br') == -1) isAllowedToSignIn = false
+            
             //SEARCH NOT ALLOWED EMAILS
-            if(notAllowedEmails.indexOf(email) > -1) return false
-
-            if (isAllowedToSignIn) {
-                return true
-            } else {
-                // Return false to display a default error message
-                return false
-                // Or you can return a URL to redirect to:
-                // return '/unauthorized'
-            }
+            if(notAllowedEmails.indexOf(email) > -1) isAllowedToSignIn = false
+            
+            return isAllowedToSignIn === true ? true : false
         }
     }
 }

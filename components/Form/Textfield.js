@@ -1,9 +1,9 @@
 import { Form } from 'rsuite'
 
-const TextField = ({ name, label, accepter, required, ...rest }) => (
-    <Form.Group controlId={name}>
+const TextField = ({ name, label, accepter, required, style, size, ...rest }) => (
+    <Form.Group controlId={name} style={style}>
         <Form.ControlLabel>{label} </Form.ControlLabel>
-        <Form.Control name={name} accepter={accepter} {...rest} />
+        <Form.Control size={size} name={name} accepter={accepter} {...rest} />
         {required ? <Form.HelpText tooltip>{label} é obrigatório</Form.HelpText> : <></>}
     </Form.Group>
 );
