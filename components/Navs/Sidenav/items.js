@@ -17,6 +17,12 @@ module.exports.sidenavItems = [
         name: "Registrar Projeto",
         icon: Dashboard,
         active: true
+    },
+    {
+        url: "/register/demo",
+        name: "Table Example",
+        icon: Dashboard,
+        active: true
     }
 ]
 

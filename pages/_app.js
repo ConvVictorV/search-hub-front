@@ -4,6 +4,8 @@ import { SessionProvider, useSession } from "next-auth/react"
 import Login from './login'
 import { CustomProvider } from 'rsuite';
 import { createContext,useEffect,useState } from 'react';
+import ptbr from 'rsuite/locales/pt_BR';
+
 
 export default function MyApp({
   Component,
@@ -33,7 +35,7 @@ export default function MyApp({
       refetchOnWindowFocus={true}>
       {Component.auth ? (
         <Auth>
-          <CustomProvider theme={theme}>
+          <CustomProvider theme={theme} locale={ptbr}>
             <Component toggleTheme={toggleTheme} {...pageProps} session={session} />
           </CustomProvider>
         </Auth>

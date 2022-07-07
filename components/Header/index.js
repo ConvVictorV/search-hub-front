@@ -42,7 +42,6 @@ export default function Header(args) {
       for(let i = 1;i <= index; i++){
         path= path + "/" + hlinks[i]
       }
-      console.log(path)
       return {
         name: toTitleCase(link),
         path: path || '/'
@@ -95,10 +94,6 @@ export default function Header(args) {
               <Dropdown.Item onSelect={args.toggleTheme}>Mudar tema</Dropdown.Item>
               <Dropdown.Item onSelect={handleSignout} icon={<ExitIcon />}>Sair</Dropdown.Item>
             </Dropdown>
-            <ArrowDownIcon style={{
-              marginTop: '13px',
-              'width': '30px'
-            }} />
           </div>
         </FlexboxGrid>
       </Navbar>

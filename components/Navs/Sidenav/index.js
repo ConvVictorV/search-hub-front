@@ -10,7 +10,6 @@ function Sidenav() {
     const [activeKey, setActiveKey] = useState(1);
     const { sidenavItems } = require('./items')
     const route = useRouter()
-    console.log(route)
     return (
         <div>
             <Sidebar
@@ -42,8 +41,8 @@ function Sidenav() {
                     <Sidenav.Body>
                         <Nav activeKey={activeKey} onSelect={setActiveKey} onSelectCapture={setActiveKey}>
                             {sidenavItems.map((item, key) =>
-                                item.active ? <Link href={item.url || "/"} passHref >
-                                    <Nav.Item active={item.url === route.pathname} key={key} eventKey={key} icon={<item.icon /> || false}>
+                                item.active ? <Link href={item.url || "/"} passHref key={key}>
+                                    <Nav.Item active={item.url === route.pathname} eventKey={key} icon={<item.icon /> || false}>
                                         {item.name || ''}
                                     </Nav.Item>
                                 </Link> : ""

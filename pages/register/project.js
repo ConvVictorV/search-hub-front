@@ -1,53 +1,71 @@
-import { Form, ButtonToolbar, Button, FlexboxGrid, Container, Checkbox, Schema, Panel } from 'rsuite'
+import { ButtonToolbar, Button, FlexboxGrid, Container, Checkbox, Schema, Panel } from 'rsuite'
 import DefaultLayout from '../../Layouts/default'
-import TextField from '../../components/Form/Textfield'
-import Select from '../../components/Form/Select'
-
-const createCustomerSchema = Schema.Model({
-  "project-customer":Schema.Types.StringType().isRequired('Selecione o cliente.'),
-  "project-url":Schema.Types.StringType().isRequired('Digite a url do cliente.'),
-  "project-account":Schema.Types.StringType().isRequired('Digite a conta do cliente.'),
-  "project-sitename":Schema.Types.StringType().isRequired('Digite o sitename do cliente.'),
-  "project-id-squad":Schema.Types.StringType().isRequired('Digite o id de squad do cliente.'),
-});
+import Form from '../../components/Form'
+import { useRouter } from 'next/router'
+import { useState,useEffect } from 'react'
 
 function Project(args) {
+  const [host,setHost] = useState("")
+  const route = useRouter()
+  useEffect(()=>{
+    setHost(route.pathname)
+  },[])
   return (
-    <DefaultLayout toggleTheme={args.toggleTheme} title="Registrar novo projeto | SearchHub" description="SearchHub Conversion" background={3} pageName="Registrar novo Projeto">
+    <DefaultLayout toggleTheme={args.toggleTheme} title="Registrar novo projeto | SearchHub" description="SearchHub Conversion" background={2} pageName="Registrar novo Projeto">
       <Container style={{ height: '80vh' }}>
         <FlexboxGrid justify="center" align="middle" style={{ height: '100%' }}>
           <FlexboxGrid.Item colspan={12}>
             <Panel header={"Informações do projeto"} bordered style={{ width: '500px',backgroundColor:"var(--rs-body)"  }} shaded >
-              <Form model={createCustomerSchema} fluid>
-                <Form.Group controlId="project-customer" required style={{
-                  marginBottom: "0px"
-                }}>
-                  <Select size="lg" fetch={`${process.env.NEXTAUTH_URL}api/get/customers`} placeholder="Selecione o cliente" />
-                  {/* <span className="rs-form-error-message rs-form-error-message-show"><span className="rs-form-error-message-arrow"></span><span className="rs-form-error-message-inner">Digite a url do cliente.</span></span> */}
-                </Form.Group>
-                <TextField size="lg" name="project-url" type="text" label="Url do projeto" style={{
-                  marginTop: "25px"
-                }} required />
-                <TextField size="lg" name="project-account" type="text" label="Conta Google Search Console" required />
-                <TextField size="lg" name="project-sitename" type="text" label="Sitename Google Search Console" required />
-                <TextField size="lg" name="project-id-squad" type="number" label="Id do Squad" required />
-                <Form.Group controlId="project-blog" style={{
-                  marginBottom: "0px"
-                }}>
-                  <Checkbox>Blog</Checkbox>
-                </Form.Group>
-                <Form.Group controlId="project-institucional">
-                  <Checkbox>Institucional</Checkbox>
-                </Form.Group>
-                <Form.Group>
-                  <ButtonToolbar>
-                    <Button style={{
-                      backgroundColor: 'var(--color-conversion-1)',
-                      color: 'var(--color-darkness-background)'
-                    }} type="submit">Enviar</Button>
-                  </ButtonToolbar>
-                </Form.Group>
-              </Form>
+            <Form
+                fluid
+                model={Schema.Model({
+                  "project-customer":Schema.Types.StringType().isRequired('Selecione o projeto.'),
+                  "project-url":Schema.Types.StringType().isRequired('Digite a url do projeto.'),
+                  "project-account":Schema.Types.StringType().isRequired('Digite a conta do projeto.'),
+                  "project-sitename":Schema.Types.StringType().isRequired('Digite o sitename do projeto.'),
+                  "project-id-squad":Schema.Types.StringType().isRequired('Digite o id de squad do projeto.'),
+                })}
+                inputs={[
+                  {
+                      type: "select",
+                      name: "project-customer",
+                      placeholder: "Selecione o cliente",
+                      fetch: host+"/api/get/customers"
+                  },
+                  {
+                      type: "text",
+                      name: "project-url",
+                      label: "Nome do cliente",
+                      required: true,
+                      style: {
+                        marginTop: "24px"
+                      }
+                  },
+                  {
+                      type: "email",
+                      name: "project-account",
+                      label: "Conta Google Search Console",
+                      required: true
+                  }, 
+                  {
+                    type: "email",
+                    name: "project-sitename",
+                    label: "Sitename Google Search Console",
+                    required: true
+                  },
+                  {
+                    type: "number",
+                    name: "project-id-squad",
+                    label: "Id do Squad",
+                    required: true
+                },
+                  {
+                      type: "checkbox",
+                      name: "project-active",
+                      options: ['Blog','Institucional']
+                  }
+              ]}
+              ></Form>
             </Panel>
           </FlexboxGrid.Item>
         </FlexboxGrid>
