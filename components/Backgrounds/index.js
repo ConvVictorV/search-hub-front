@@ -5,7 +5,9 @@ const getBackground = (background) => {
         'layered-waves-haikei.svg',
         'stacked-peaks-haikei.svg',
         'stacked-steps-haikei.svg',
-        'wave (2).svg'
+        'wave (2).svg',
+        'blob-scene-haikei.svg',
+        'blob-scene-haikei (1).svg'
     ]
     return '/backgrounds/' + (backgrounds[background || getRandomInt(0, backgrounds.length - 1)] || backgrounds[0])
 }

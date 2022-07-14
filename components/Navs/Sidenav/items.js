@@ -23,6 +23,12 @@ module.exports.sidenavItems = [
         name: "Table Example",
         icon: Dashboard,
         active: true
+    },
+    {
+        url: "/customers",
+        name: "Clientes",
+        icon: Dashboard,
+        active: true
     }
 ]
 

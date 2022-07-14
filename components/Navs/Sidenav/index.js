@@ -16,8 +16,9 @@ function Sidenav() {
                 style={{ display: 'flex', flexDirection: 'column' }}
                 width={expanded == true || expanded == 'true' ? 260 : 56}
                 collapsible
+                
             >
-                <Sidenav expanded={expanded == true || expanded == 'true' ? true : false} style={{ height: "100vh", position: 'fixed', maxWidth: '260px' }}>
+                <Sidenav expanded={expanded == true || expanded == 'true' ? true : false} style={{ height: "100vh", position: 'fixed', maxWidth: '260px',boxShadow:"1px 0px 10px 0px #0000003b" }}>
                     <Sidenav.Header>
                         <div style={{
                             fontSize: expanded == true || expanded == 'true' ? 16 : 0,
