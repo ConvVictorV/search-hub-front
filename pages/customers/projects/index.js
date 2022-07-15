@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Container, ButtonToolbar, IconButton, Schema, Panel, Stack } from 'rsuite'
-import FullWidthLayout from '../../Layouts/fullwidth'
+import FullWidthLayout from '../../../Layouts/fullwidth'
 import React from 'react';
 import { useRouter } from 'next/router';
-import TableCustomers from '../../components/Tables/customers';
-import DrawerComponent from '../../components/Drawer';
+import DrawerComponent from '../../../components/Drawer';
 import PlusIcon from '@rsuite/icons/Plus'
-import Form from '../../components/Form'
+import Form from '../../../components/Form'
+import TableProjects from '../../../components/Tables/projects';
 
 const createNewCustomerForm = () => {
     return (
@@ -15,35 +15,45 @@ const createNewCustomerForm = () => {
             margin: "auto"
         }}>
             <Form
+                fluid
                 model={Schema.Model({
-                    "customer-name": Schema.Types.StringType().isRequired('Digite o nome do cliente.'),
-                    "customer-email": Schema.Types.StringType().isRequired('Digite um email.').isEmail('Digite um email válido.'),
-                    "customer-id-squad": Schema.Types.NumberType().isRequired('Digite um id.'),
-                    "customer-active": Schema.Types.BooleanType()
+                    "project-url": Schema.Types.StringType().isRequired('Digite a url do projeto.'),
+                    "project-account": Schema.Types.StringType().isRequired('Digite a conta do projeto.'),
+                    "project-sitename": Schema.Types.StringType().isRequired('Digite o sitename do projeto.'),
+                    "project-id-ga": Schema.Types.StringType().isRequired('Digite o id do GA.'),
                 })}
                 inputs={[
                     {
                         type: "text",
-                        name: "customer-name",
-                        label: "Nome do cliente",
+                        name: "project-url",
+                        label: "Url do site",
+                        required: true,
+                        style: {
+                            marginTop: "24px"
+                        }
+                    },
+                    {
+                        type: "email",
+                        name: "project-account",
+                        label: "Conta Google Search Console",
                         required: true
                     },
                     {
                         type: "email",
-                        name: "customer-email",
-                        label: "Email do Squad/Analista",
+                        name: "project-sitename",
+                        label: "Sitename Google Search Console",
                         required: true
                     },
                     {
                         type: "number",
-                        name: "customer-id-squad",
-                        label: "Id do Squad",
+                        name: "project-id-ga",
+                        label: "Id do GA",
                         required: true
                     },
                     {
                         type: "checkbox",
-                        name: "customer-active",
-                        options: ['O cliente está ativo?']
+                        name: "project-type",
+                        options: [{ "label": "Blog", checked: true }, { "label": "Insitucional", checked: true }]
                     }
                 ]}
             ></Form>
@@ -58,33 +68,49 @@ const createEditCustomerForm = (data) => {
         }}>
             <Form
                 sendText="Salvar"
+                fluid
                 inputs={[
                     {
                         type: "text",
-                        name: "customer-name",
-                        label: "Nome do cliente",
-                        defaultValue:  data.nmcustomer,
+                        name: "project-url",
+                        label: "Url do site",
+                        defaultValue:  data.dsurlsite,
+                        required: true,
+                        disabled:true,
+                        style: {
+                            marginTop: "24px"
+                        }
+                    },
+                    {
+                        type: "text",
+                        name: "project-account",
+                        label: "Conta Google Search Console",
+                        defaultValue:  data.dsaccountgsc,
+                        required: true,
+                        disabled:true
+                        
+                    },
+                    {
+                        type: "text",
+                        name: "project-sitename",
+                        label: "Sitename Google Search Console",
+                        defaultValue:  data.dssitenamegsc,
                         required: true,
                         disabled:true
                     },
                     {
-                        type: "email",
-                        name: "customer-email",
-                        label: "Email do Squad/Analista",
-                        defaultValue:  data.dsclientemail,
-                        required: true
-                    },
-                    {
                         type: "number",
-                        name: "customer-id-squad",
-                        label: "Id do Squad",
-                        defaultValue:  data.idsquad,
-                        required: true
+                        name: "project-id-ga",
+                        label: "Id do GA",
+                        defaultValue:  data.nrviewIdga,
+                        required: true,
+                        disabled:true
+                        
                     },
                     {
                         type: "checkbox",
-                        name: "customer-active",
-                        options: [{label:'O cliente está ativo?',checked:true}]
+                        name: "project-type",
+                        options: [{ "label": "Blog", checked: true }, { "label": "Insitucional", checked: true }]
                     }
                 ]}
             ></Form>
@@ -100,21 +126,21 @@ function Demo(args) {
     const [drawerOpenEdit, setDrawerOpenEdit] = useState(false);
     const [editRowData, setRowData] = useState(false);
     const filteredCustomers = searchCustomer(search, tableData);
-    
+
 
     const getHeaderTable = () => {
         return (
-            <ButtonToolbar style={{ paddingBottom: "18px",display: "flex",justifyContent: "end" }}>
+            <ButtonToolbar style={{ paddingBottom: "18px", display: "flex", justifyContent: "end" }}>
                 <IconButton icon={
                     <PlusIcon style={{
                         backgroundColor: 'transparent',
                         color: 'var(--color-conversion-1)'
                     }} />
                 } onClick={() => setDrawerOpenCreate(true)} appearance={"ghost"} style={{
-                    color:"var(--color-conversion-1)",
-                    borderColor:"var(--color-conversion-1)",
+                    color: "var(--color-conversion-1)",
+                    borderColor: "var(--color-conversion-1)",
                 }}>
-                    Adicionar cliente
+                    Adicionar projeto
                 </IconButton>
             </ButtonToolbar>
         )
@@ -133,31 +159,31 @@ function Demo(args) {
     const route = useRouter()
     useEffect(() => {
         setHost(route.pathname)
-        fetch(host + '/api/get/fakeCustomers').then(r => r.json()).then(data => setTableData(data))
+        fetch(host + '/api/get/fakeProjects').then(r => r.json()).then(data => setTableData(data))
     }, [])
 
     return (
-        <FullWidthLayout toggleTheme={args.toggleTheme} title="Clientes | SearchHub" description="SearchHub Conversion" background={2} pageName="Clientes">
+        <FullWidthLayout toggleTheme={args.toggleTheme} title="Projetos | SearchHub" description="SearchHub Conversion" background={2} pageName="Projetos">
             <Container style={{
                 padding: "0px 50px",
             }}>
                 <DrawerComponent
-                    size={"lg"}
-                    title="Adicionar cliente"
+                    size={"full"}
+                    title="Adicionar projeto"
                     placement={"bottom"}
                     open={drawerOpenCreate}
                     setOpen={setDrawerOpenCreate}
                     body={createNewCustomerForm()}
                 />
                 <DrawerComponent
-                    size={"lg"}
-                    title="Editar cliente"
+                    size={"full"}
+                    title="Editar projeto"
                     placement={"bottom"}
                     open={drawerOpenEdit}
                     setOpen={setDrawerOpenEdit}
                     body={createEditCustomerForm(editRowData)}
                 />
-                <TableCustomers
+                <TableProjects
                     tableData={filteredCustomers}
                     setSearch={setSearch}
                     headerMenu={getHeaderTable()}

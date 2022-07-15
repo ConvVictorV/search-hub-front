@@ -10,23 +10,29 @@ module.exports.sidenavItems = [
         url: "/register/customer",
         name: "Registrar Cliente",
         icon: Dashboard,
-        active: true
+        active: false
     },
     {
         url: "/register/project",
         name: "Registrar Projeto",
         icon: Dashboard,
-        active: true
+        active: false
     },
     {
         url: "/register/demo",
         name: "Table Example",
         icon: Dashboard,
-        active: true
+        active: false
     },
     {
         url: "/customers",
         name: "Clientes",
+        icon: Dashboard,
+        active: true
+    },
+    {
+        url: "/customers/projects",
+        name: "Projetos",
         icon: Dashboard,
         active: true
     }

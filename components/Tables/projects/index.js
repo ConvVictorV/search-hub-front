@@ -56,7 +56,7 @@ function capitalizeFirstLetter(string) {
 }
 
 
-const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, setRowData }) => {
+const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, setRowData }) => {
     const [loading, setLoading] = React.useState(true);
     const [limit, setLimit] = React.useState(12);
     const [page, setPage] = React.useState(1);
@@ -124,7 +124,7 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                         className="rs-input"
                         type="text"
                         onChange={(event) => setSearch(event.target.value)}
-                        placeholder={`Buscar (${tableData.length + ' Clientes'})`}
+                        placeholder={`Buscar (${tableData.length + ' Projetos'})`}
                         style={{
                             width:"500px"
                         }}
@@ -142,30 +142,36 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                 sortType={sortType}
                 onSortColumn={handleSortColumn}
             >
-                <Column sortable resizable width={50} align="center" fixed>
-                    <HeaderCell>Id</HeaderCell>
+                <Column sortable resizable width={100} align="center" fixed>
+                    <HeaderCell>Id Cliente</HeaderCell>
                     <Cell dataKey="idcustomer" />
                 </Column>
-
+                <Column sortable resizable width={100} align="center" fixed>
+                    <HeaderCell>Id Projeto</HeaderCell>
+                    <Cell dataKey="idproject" />
+                </Column>
                 <Column sortable resizable width={200} fixed>
-                    <HeaderCell>Nome</HeaderCell>
-                    <NmCustomer dataKey="nmcustomer" />
+                    <HeaderCell>Url do Site</HeaderCell>
+                    <Cell dataKey="dsurlsite" />
                 </Column>
 
-                <Column sortable resizable width={100} >
-                    <HeaderCell>Status</HeaderCell>
-                    <StatusCell dataKey="blstatus" />
+                <Column sortable resizable width={150}>
+                    <HeaderCell>Tipo do Site</HeaderCell>
+                    <Cell dataKey="dstype" />
                 </Column>
-
-                <Column sortable resizable width={100}>
-                    <HeaderCell>ID Squad</HeaderCell>
-                    <Cell dataKey="idsquad" />
+                <Column sortable width={100}>
+                    <HeaderCell>Conta GSC</HeaderCell>
+                    <Cell dataKey="dsaccountgsc" />
                 </Column>
                 <Column sortable width={200} flexGrow={1}>
-                    <HeaderCell>Email</HeaderCell>
-                    <Cell dataKey="dsclientemail" />
+                    <HeaderCell>Sitename GSC</HeaderCell>
+                    <Cell dataKey="dssitenamegsc" />
                 </Column>
-                <Column width={50} verticalAlign={"top"} align="center"  >
+                <Column sortable width={100}>
+                    <HeaderCell>Id GA</HeaderCell>
+                    <Cell dataKey="nrviewIdga" />
+                </Column>
+                <Column width={50} verticalAlign={"top"} align="center">
                     <HeaderCell>Editar</HeaderCell>
                     <ActionCell setDrawerOpenEdit={setDrawerOpenEdit} setRowData={setRowData} dataKey="idcustomer" />
                 </Column>
@@ -192,4 +198,4 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
         </Panel>)
 }
 
-export default TableCustomers
+export default TableProjects

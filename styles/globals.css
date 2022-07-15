@@ -37,6 +37,9 @@ a {
 
 
 /* OVERRIDE */
+.rs-sidenav-header:hover {
+  cursor:pointer
+}
 button.rs-pagination-btn.rs-pagination-btn-active {
   color: var(--color-conversion-1);
   border-color: var(--color-conversion-1);
