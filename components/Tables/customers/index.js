@@ -1,4 +1,4 @@
-import { Panel, InputGroup, Input, Pagination, Table, IconButton, Divider, Whisper, Popover, Dropdown, Badge } from 'rsuite'
+import { Panel, InputGroup, Input, Pagination, Table, IconButton, Divider, Whisper, Popover, Dropdown, Badge, Button } from 'rsuite'
 import React, { useEffect } from 'react';
 
 import SearchIcon from '@rsuite/icons/Search'
@@ -9,38 +9,18 @@ import EditIcon from '@rsuite/icons/Edit';
 import MoreIcon from '@rsuite/icons/More';
 
 
-
-
-const renderMenu = ({ onClose, left, top, className }, ref) => {
-    const handleSelect = eventKey => {
-        onClose();
-    };
-    return (
-        <Popover ref={ref} className={className} style={{ left, top }} full>
-            <Dropdown.Menu onSelect={handleSelect}>
-                <Dropdown.Item eventKey={3}>Download As...</Dropdown.Item>
-                <Dropdown.Item eventKey={4}>Export PDF</Dropdown.Item>
-                <Dropdown.Item eventKey={5}>Export HTML</Dropdown.Item>
-                <Dropdown.Item eventKey={6}>Settings</Dropdown.Item>
-                <Dropdown.Item eventKey={7}>About</Dropdown.Item>
-            </Dropdown.Menu>
-        </Popover>
-    );
-};
-
 // custom cells
-const ActionCell = ({ rowData, dataKey, ...props }) => {
+const ActionCell = ({ setDrawerOpenEdit, rowData, dataKey, setRowData, ...props }) => {
     function handleAction() {
-        console.log(rowData);
+        setRowData(rowData);
+        setDrawerOpenEdit(true);
     }
     return (
         <Cell {...props} className="link-group">
             <div style={{ marginTop: "-8px" }}>
-                <IconButton appearance="subtle" onClick={handleAction} icon={<EditIcon />} />
-                <Divider vertical />
-                <Whisper placement="autoVerticalStart" trigger="click" speaker={renderMenu}>
-                    <IconButton appearance="subtle" icon={<MoreIcon />} />
-                </Whisper>
+                <IconButton appearance="primary" style={{
+                    background: "var(--color-conversion-1)"
+                }} onClick={handleAction} icon={<EditIcon />} />
             </div>
         </Cell>
     );
@@ -49,7 +29,15 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
     const { blstatus } = rowData
     return (
         <Cell {...props} className="link-group">
-            {blstatus && <><Badge style={{ background: 'var(--color-conversion-7)' }} /> {blstatus.toString()}</> || <><Badge style={{ background: 'var(--color-conversion-4)' }} /> {"false"}</>}
+            <div style={{ marginTop: "-8px" }}>
+                {blstatus && <Button appearance='ghost' style={{
+                    color: 'var(--color-conversion-7)',
+                    borderColor: 'var(--color-conversion-7)'
+                }}><Badge style={{ background: 'var(--color-conversion-7)' }} /> {"ativo"}</Button> || <Button appearance='ghost' style={{
+                    color: 'var(--color-conversion-4)',
+                    borderColor: 'var(--color-conversion-4)'
+                }}><Badge style={{ background: 'var(--color-conversion-4)' }} /> {"inativo"}</Button>}
+            </div>
         </Cell>
     );
 };
@@ -68,9 +56,9 @@ function capitalizeFirstLetter(string) {
 }
 
 
-const TableCustomers = ({ tableData, setSearch, headerMenu }) => {
+const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, setRowData }) => {
     const [loading, setLoading] = React.useState(true);
-    const [limit, setLimit] = React.useState(8);
+    const [limit, setLimit] = React.useState(12);
     const [page, setPage] = React.useState(1);
     const [sortColumn, setSortColumn] = React.useState();
     const [sortType, setSortType] = React.useState();
@@ -122,9 +110,11 @@ const TableCustomers = ({ tableData, setSearch, headerMenu }) => {
     return (
         <Panel bordered style={{ backgroundColor: "var(--rs-bg-card)", padding: "0px" }} shaded>
             {headerMenu}
-            <span><h3 style={{ paddingBottom: "10px",display:"inline-block",paddingRight:"10px"}}>Busca</h3>
-            <p style={{display:"contents",color: "darkgray"}}>{tableData.length+' Clientes'}</p></span>
-            <InputGroup inside>
+            <span><h3 style={{ paddingBottom: "10px", display: "inline-block", paddingRight: "10px" }}>Busca</h3>
+                <p style={{ display: "contents", color: "darkgray" }}>{tableData.length + ' Clientes'}</p></span>
+            <InputGroup inside style={{
+                marginBottom: "20px"
+            }}>
                 <InputGroup.Addon>
                     <SearchIcon />
                 </InputGroup.Addon>
@@ -136,7 +126,7 @@ const TableCustomers = ({ tableData, setSearch, headerMenu }) => {
                 />
 
             </InputGroup>
-            <hr />
+            {/* <hr /> */}
             <Table
                 virtualized
                 autoHeight
@@ -156,7 +146,7 @@ const TableCustomers = ({ tableData, setSearch, headerMenu }) => {
                     <NmCustomer dataKey="nmcustomer" />
                 </Column>
 
-                <Column sortable resizable width={100}>
+                <Column sortable resizable width={100} >
                     <HeaderCell>Status</HeaderCell>
                     <StatusCell dataKey="blstatus" />
                 </Column>
@@ -169,9 +159,9 @@ const TableCustomers = ({ tableData, setSearch, headerMenu }) => {
                     <HeaderCell>Email</HeaderCell>
                     <Cell dataKey="dsclientemail" />
                 </Column>
-                <Column width={200} verticalAlign={"top"} >
+                <Column width={200} verticalAlign={"top"} align="center"  >
                     <HeaderCell>Action</HeaderCell>
-                    <ActionCell dataKey="idcustomer" />
+                    <ActionCell setDrawerOpenEdit={setDrawerOpenEdit} setRowData={setRowData} dataKey="idcustomer" />
                 </Column>
             </Table>
             <div style={{ padding: 20 }}>
@@ -184,6 +174,7 @@ const TableCustomers = ({ tableData, setSearch, headerMenu }) => {
                     boundaryLinks
                     maxButtons={5}
                     size="xs"
+                    total={tableData.length}
                     layout={['-', 'limit', '|', 'pager', 'skip']}
                     limitOptions={[10, 20]}
                     limit={limit}

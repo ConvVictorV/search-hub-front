@@ -41,6 +41,7 @@ const Select = (props) => {
             onSearch={updateData}
             renderMenu={renderMenu}
             size={props.size || ''}
+            disabled={props.disabled || false}
             style={{
                 width: "94%",
                 verticalAlign: "top"

@@ -6,9 +6,10 @@ import { useRouter } from 'next/router';
 import TableCustomers from '../../components/Tables/customers';
 import DrawerComponent from '../../components/Drawer';
 import PlusIcon from '@rsuite/icons/Plus'
+import EditIcon from '@rsuite/icons/Edit';
 import Form from '../../components/Form'
 
-const createCustomForm = () => {
+const createNewCustomerForm = () => {
     return (
         <Panel style={{
             width: "500px",
@@ -50,13 +51,56 @@ const createCustomForm = () => {
         </Panel>
     )
 }
+const createEditCustomerForm = (data) => {
+    return (
+        <Panel style={{
+            width: "500px",
+            margin: "auto"
+        }}>
+            <Form
+                inputs={[
+                    {
+                        type: "text",
+                        name: "customer-name",
+                        label: "Nome do cliente",
+                        defaultValue:  data.nmcustomer,
+                        required: true,
+                        disabled:true
+                    },
+                    {
+                        type: "email",
+                        name: "customer-email",
+                        label: "Email do Squad/Analista",
+                        defaultValue:  data.dsclientemail,
+                        required: true
+                    },
+                    {
+                        type: "number",
+                        name: "customer-id-squad",
+                        label: "Id do Squad",
+                        defaultValue:  data.idsquad,
+                        required: true
+                    },
+                    {
+                        type: "checkbox",
+                        name: "customer-active",
+                        options: [{label:'O cliente está ativo?',checked:true}]
+                    }
+                ]}
+            ></Form>
+        </Panel>
+    )
+}
 
 function Demo(args) {
     const [tableData, setTableData] = React.useState([])
     const [search, setSearch] = useState("");
     const [host, setHost] = useState("")
-    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [drawerOpenCreate, setDrawerOpenCreate] = useState(false);
+    const [drawerOpenEdit, setDrawerOpenEdit] = useState(false);
+    const [editRowData, setRowData] = useState(false);
     const filteredCustomers = searchCustomer(search, tableData);
+    
 
     const getHeaderTable = () => {
         return (
@@ -66,7 +110,7 @@ function Demo(args) {
                         backgroundColor: 'transparent',
                         color: 'var(--color-conversion-1)'
                     }} />
-                } onClick={() => setDrawerOpen(true)} appearance={"ghost"} style={{
+                } onClick={() => setDrawerOpenCreate(true)} appearance={"ghost"} style={{
                     color:"var(--color-conversion-1)",
                     borderColor:"var(--color-conversion-1)",
                 }}>
@@ -101,14 +145,24 @@ function Demo(args) {
                     size={"lg"}
                     title="Adicionar cliente"
                     placement={"bottom"}
-                    open={drawerOpen}
-                    setOpen={setDrawerOpen}
-                    body={createCustomForm()}
+                    open={drawerOpenCreate}
+                    setOpen={setDrawerOpenCreate}
+                    body={createNewCustomerForm()}
+                />
+                <DrawerComponent
+                    size={"lg"}
+                    title="Editar cliente"
+                    placement={"bottom"}
+                    open={drawerOpenEdit}
+                    setOpen={setDrawerOpenEdit}
+                    body={createEditCustomerForm(editRowData)}
                 />
                 <TableCustomers
                     tableData={filteredCustomers}
                     setSearch={setSearch}
                     headerMenu={getHeaderTable()}
+                    setRowData={setRowData}
+                    setDrawerOpenEdit={setDrawerOpenEdit}
                 />
             </Container>
 

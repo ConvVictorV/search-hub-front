@@ -17,10 +17,7 @@
   --color-conversion-11:#4E5E81;
   --color-conversion-12:#2B3A56;
 }
-/* OVERRIDE */
-.rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active{
-  color:var(--color-conversion-1)!important;
-}
+
 html,
 body {
   padding: 0;
@@ -36,6 +33,19 @@ a {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+
+/* OVERRIDE */
+button.rs-pagination-btn.rs-pagination-btn-active {
+  color: var(--color-conversion-1);
+  border-color: var(--color-conversion-1);
+}
+.rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active{
+  color:var(--color-conversion-1)!important;
+}
+.rs-table-cell-header-icon-sort{
+  color: var(--color-conversion-1);
 }
 .rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active::after {
   content: "";
