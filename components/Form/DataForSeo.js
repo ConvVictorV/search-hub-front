@@ -87,10 +87,22 @@ function FormComponent({ footer, sendText, ...rest }) {
             <Form.Group>
                 <ButtonToolbar>
                     <Button onClick={sendData} style={{
-                            backgroundColor: 'var(--color-conversion-1)',
-                            color: 'var(--color-darkness-background)',
-                            marginTop: "20px"
-                        }} type="submit">{'Enviar'}</Button>
+                        backgroundColor: 'var(--color-conversion-1)',
+                        color: 'var(--color-darkness-background)',
+                        marginTop: "20px"
+                    }} type="submit">{'Inserir Palavras'}</Button>
+
+<Button onClick={sendData} style={{
+                        backgroundColor: 'var(--color-conversion-1)',
+                        color: 'var(--color-darkness-background)',
+                        marginTop: "20px"
+                    }} type="submit">{'Excluir Palavras'}</Button>
+
+<Button onClick={sendData} style={{
+                        backgroundColor: 'var(--color-conversion-1)',
+                        color: 'var(--color-darkness-background)',
+                        marginTop: "20px"
+                    }} type="submit">{'Extrair Arquivo'}</Button>
                 </ButtonToolbar>
             </Form.Group>
 
