@@ -50,7 +50,7 @@ module.exports.sidenavItems = [
     },
     {
         url: "/applications/data-for-seo",
-        name: "Gerenciador do Data for SEO",
+        name: "Gerenciador Data for SEO",
         icon: Dashboard,
         active: true
     }
