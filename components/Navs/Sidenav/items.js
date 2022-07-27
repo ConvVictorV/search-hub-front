@@ -35,6 +35,24 @@ module.exports.sidenavItems = [
         name: "Projetos",
         icon: Dashboard,
         active: true
+    },
+    {
+        url: "/applications/content-gap",
+        name: "Content Gap",
+        icon: Dashboard,
+        active: true
+    },
+    {
+        url: "/register/worked-pages",
+        name: "Páginas Trabalhadas",
+        icon: Dashboard,
+        active: true
+    },
+    {
+        url: "/applications/data-for-seo",
+        name: "Gerenciador do Data for SEO",
+        icon: Dashboard,
+        active: true
     }
 ]
 

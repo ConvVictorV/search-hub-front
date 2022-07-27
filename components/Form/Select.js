@@ -4,6 +4,7 @@ const Select = (props) => {
     const { SelectPicker, Loader } = require('rsuite');
     const [items, setItems] = useState([]);
     const [customers, setCustomers] = useState([])
+
     useEffect(() => {
         if (props.fetch == undefined) return <></>
         fetch(props.fetch)
@@ -13,8 +14,9 @@ const Select = (props) => {
             })
     }, [])
     
+    const onSelectItem = () =>{
 
-   
+    }
 
     const updateData = () => {
         if (items.length === 0) {
@@ -46,6 +48,7 @@ const Select = (props) => {
                 width: "94%",
                 verticalAlign: "top"
             }}
+            onSelect={props.onSelect || onSelectItem}
         />
     );
 };

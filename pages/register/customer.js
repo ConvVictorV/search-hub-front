@@ -29,29 +29,32 @@ function Customer(args) {
                 })}
                 inputs={[
                   {
-                      type: "text",
-                      name: "customer-name",
-                      label: "Nome do cliente",
-                      required: true
+                    type: "text",
+                    name: "customer-name",
+                    label: "Nome do cliente",
+                    required: true
                   },
                   {
-                      type: "email",
-                      name: "customer-email",
-                      label: "Email do Squad/Analista",
-                      required: true
+                    type: "email",
+                    name: "customer-email",
+                    label: "Email do Squad/Analista",
+                    required: true
                   },
                   {
                     type: "number",
                     name: "customer-id-squad",
                     label: "Id do Squad",
                     required: true
-                },
+                  },
                   {
-                      type: "checkbox",
-                      name: "customer-active",
-                      options: ['O cliente está ativo?']
+                    type: "checkbox",
+                    name: "customer-active",
+                    options: [{
+                      label: "O cliente está ativo?",
+                      checked: true
+                    }]
                   }
-              ]}
+                ]}
               ></Form>
             </Panel>
           </FlexboxGrid.Item>
