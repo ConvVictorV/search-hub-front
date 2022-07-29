@@ -74,7 +74,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
     return (
         <Form fluid>
             <Select
-                fetch={"/api/get/select/customersId"}
+                fetch={localStorage.getItem("host")+"/api/get/select/customersId"}
                 placeholder={"Selecione o cliente"}
                 onSelect={setProjectCustomer}
             />
@@ -94,7 +94,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
                 <Form.Control name="project-nr-ga" onChange={setProjectNrGa} />
             </Form.Group>
             <Select
-                fetch={"/api/get/select/projectsAccounts"}
+                fetch={localStorage.getItem("host")+"/api/get/select/projectsAccounts"}
                 placeholder={"Selecione a conta do GSC"}
                 onSelect={setProjectAccount}
             />
