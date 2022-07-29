@@ -15,7 +15,6 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
     const [customerActive, setCustomerActive] = useState(blstatus || false)
 
 
-    console.log(session)
     const messageLoading = (
         <Message showIcon type={"info"} duration={0}>
             Processando dados!

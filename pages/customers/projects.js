@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import { Container, ButtonToolbar, IconButton, Panel, Modal, Button, Message, useToaster } from 'rsuite'
 import FullWidthLayout from '../../Layouts/fullwidth'
 import React from 'react';
-import TableCustomers from '../../components/Tables/customers';
+import TableProjects from '../../components/Tables/customers/projects';
 import PlusIcon from '@rsuite/icons/Plus'
-import EditForm from '../../components/Form/Pages/Customers/updateCustomer'
-import CreateForm from '../../components/Form/Pages/Customers/createCustomer'
+import EditForm from '../../components/Form/Pages/Customers/Projects/updateProject'
+import CreateForm from '../../components/Form/Pages/Customers/Projects/createProject'
 import ReloadIcon from '@rsuite/icons/Reload';
-
-
 
 function Demo(args) {
     const [tableData, setTableData] = useState([])
@@ -17,16 +15,16 @@ function Demo(args) {
     const [openEditForm, setOpenEditForm] = useState(false);
     const [openCreateForm, setOpenCreateForm] = useState(false);
     const [rowData, setRowData] = useState();
-    const toast = useToaster();
-
+    const toast = useToaster()
     const handleClose = () => {
         setOpenEditForm(false);
         setOpenCreateForm(false);
         updateData()
     };
+
     const getData = () =>{
         const axios = require('axios')
-        axios.get('/api/get/customers').then(({ data }) => setTableData(data))
+        axios.get('/api/get/projects').then(({ data }) => setTableData(data))
     }
     const updateData = () =>{
         toast.push(<Message showIcon type={"success"} duration={2000}>
@@ -50,7 +48,7 @@ function Demo(args) {
                     color: "var(--color-conversion-1)",
                     borderColor: "var(--color-conversion-1)",
                 }}>
-                    Adicionar cliente
+                    Adicionar projeto
                 </IconButton>
 
                 <IconButton icon={
@@ -79,28 +77,28 @@ function Demo(args) {
     }
 
     return (
-        <FullWidthLayout toggleTheme={args.toggleTheme} title="Clientes | SearchHub" description="SearchHub Conversion" background={2} pageName="Clientes">
+        <FullWidthLayout toggleTheme={args.toggleTheme} title="Projetos | SearchHub" description="SearchHub Conversion" background={2} pageName="Projetos">
             <Container style={{
                 padding: "0px 50px",
             }}>
                 <Modal open={openEditForm} onClose={handleClose} size="xs" keyboard={false} backdrop={'static'}>
                     <Modal.Header>
-                        <Modal.Title>Atualizar cliente</Modal.Title>
+                        <Modal.Title>Atualizar projeto</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <EditForm closeModal={handleClose} data={rowData} />
+                        <EditForm closeModal={handleClose} rowData={rowData} />
                     </Modal.Body>
                 </Modal>
 
                 <Modal open={openCreateForm} onClose={handleClose} size="xs" keyboard={false} backdrop={'static'}>
                     <Modal.Header>
-                        <Modal.Title>Criar cliente</Modal.Title>
+                        <Modal.Title>Criar projeto</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <CreateForm closeModal={handleClose} />
                     </Modal.Body>
                 </Modal>
-                <TableCustomers
+                <TableProjects
                     tableData={filteredCustomers}
                     setSearch={setSearch}
                     headerMenu={getHeaderTable()}

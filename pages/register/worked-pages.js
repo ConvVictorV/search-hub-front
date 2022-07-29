@@ -5,7 +5,6 @@ import { useState } from 'react'
 
 
 function WorkedPages(args) {
-  const [active, setActive] = useState('portal');
   return (
     <DefaultLayout toggleTheme={args.toggleTheme} title="Páginas trabalhadas | SearchHub" description="SearchHub Conversion" background={2} pageName="[BETA] Páginas Trabalhadas" >
       <Container style={{ height: '80vh' }}>

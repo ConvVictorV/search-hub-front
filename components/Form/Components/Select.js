@@ -9,8 +9,7 @@ const Select = (props) => {
     useEffect(() => {
         if (props.fetch == undefined) return <></>
         axios.get(props.fetch)
-            .then((res) => res.json())
-            .then((data) => {
+            .then(({data}) => {
                 setCustomers(data)
             })
     }, [])
