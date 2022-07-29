@@ -24,7 +24,7 @@ function Demo(args) {
 
     const getData = () =>{
         const axios = require('axios')
-        axios.get(localStorage.getItem("host")+'/api/get/projects').then(({ data }) => setTableData(data))
+        axios.get('/api/get/projects').then(({ data }) => setTableData(data))
     }
     const updateData = () =>{
         toast.push(<Message showIcon type={"success"} duration={2000}>

@@ -3,29 +3,26 @@ import '../styles/globals.css';
 import { SessionProvider, useSession } from "next-auth/react"
 import Login from './login'
 import { CustomProvider } from 'rsuite';
-import { createContext, useEffect, useState } from 'react';
+import { createContext,useEffect,useState } from 'react';
 import ptbr from 'rsuite/locales/pt_BR';
-import { useRouter } from 'next/router';
 
 
 export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }) {
+
   const [theme, setTheme] = useState('light');
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setTheme(localStorage.getItem('theme') || "light") 
-      localStorage.setItem("host",window.location.origin)
-    }
-  }, [])
+  useEffect(()=>{
+    typeof window !== 'undefined' ? setTheme(localStorage.getItem('theme') || "light") : false
+  },[])
   let toggleTheme = () => {
-    if (theme === 'light') {
+    if(theme === 'light'){
       setTheme('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
+      localStorage.setItem('theme','dark')
+    }else{
       setTheme('light');
-      localStorage.setItem('theme', 'light')
+      localStorage.setItem('theme','light')
     }
   }
 

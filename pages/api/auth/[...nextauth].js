@@ -48,9 +48,6 @@ const options = {
             session.id_token = token.id_token
             return session
         }
-    },
-    session: {
-        maxAge: 2 * 60 * 60,
     }
 }
 
