@@ -8,6 +8,7 @@
     "ngrok": "ngrok authtoken 2AzomlxwiuTJlBW2gw74XhVUlXt_4Zm5S4owAPU3iEyGVwBCz && ngrok http 3000"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "chart.js": "^3.8.0",
     "next": "12.1.4",
     "next-auth": "^4.6.1",

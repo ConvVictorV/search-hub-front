@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Form, ButtonToolbar, Button, Checkbox, Uploader, TagInput, RadioGroup, Radio, useToaster, Message } from 'rsuite'
-import Select from './Select'
-import TextField from './Textfield'
-
+import { useState } from 'react'
+import { Form, ButtonToolbar, Button, Uploader, useToaster, Message } from 'rsuite'
+import Select from '../../../Components/Select'
 
 function FormComponent({ footer, sendText, ...rest }) {
     const [files, setFiles] = useState([])
@@ -30,20 +28,6 @@ function FormComponent({ footer, sendText, ...rest }) {
         formData.append("csv", files[0] && files[0].blobFile || null)
         formData.append("idcustomer", customer)
         toast.push(messageLoading, { placement: "topCenter" })
-        // fetch("", {
-        //     "headers": {
-        //         "cache-control": "no-cache",
-        //         "pragma": "no-cache",
-        //     },
-        //     "body": formData,
-        //     "method": "POST",
-        //     "mode": "cors",
-        //     "credentials": "omit"
-        // })
-        //     .then(result => {console.log(result);})
-        //     .then(sucessHandle)
-        //     .catch(errorHandle)
-
     }
 
     const clearToast = async () => new Promise((res, rej) => {
@@ -81,16 +65,28 @@ function FormComponent({ footer, sendText, ...rest }) {
                 }}>Clique ou arraste os arquivos para fazer upload</div>
             </Uploader>
 
-            <Select placeholder="Conta Search Console" fetch="http://localhost:3000/api/get/fakeCustomersSelectId" onSelect={setCustomer} />
+            <Select placeholder="Conta Search Console" fetch="/api/get/fakeCustomersSelectId" onSelect={setCustomer} />
 
 
             <Form.Group>
                 <ButtonToolbar>
                     <Button onClick={sendData} style={{
-                            backgroundColor: 'var(--color-conversion-1)',
-                            color: 'var(--color-darkness-background)',
-                            marginTop: "20px"
-                        }} type="submit">{'Enviar'}</Button>
+                        backgroundColor: 'var(--color-conversion-1)',
+                        color: 'var(--color-darkness-background)',
+                        marginTop: "20px"
+                    }} type="submit">{'Inserir Palavras'}</Button>
+
+                    <Button onClick={sendData} style={{
+                        backgroundColor: 'var(--color-conversion-1)',
+                        color: 'var(--color-darkness-background)',
+                        marginTop: "20px"
+                    }} type="submit">{'Excluir Palavras'}</Button>
+
+                    <Button onClick={sendData} style={{
+                        backgroundColor: 'var(--color-conversion-1)',
+                        color: 'var(--color-darkness-background)',
+                        marginTop: "20px"
+                    }} type="submit">{'Extrair Arquivo'}</Button>
                 </ButtonToolbar>
             </Form.Group>
 

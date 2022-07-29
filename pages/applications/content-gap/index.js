@@ -1,9 +1,6 @@
-import { ButtonToolbar, Button, FlexboxGrid, Container, Checkbox, PanelGroup, Panel, Placeholder, Row, Nav } from 'rsuite'
+import {  FlexboxGrid, Container, PanelGroup, Panel, Placeholder, Row } from 'rsuite'
 import DefaultLayout from '../../../Layouts/default'
-import styles from '../../../styles/register/Customer.module.css'
-import Select from '../../../components/Form/Select'
-import TextField from '../../../components/Form/Textfield'
-import Form from '../../../components/Form/ContentGap'
+import Form from '../../../components/Form/Pages/Applications/ContentGap'
 import { useState } from 'react'
 
 

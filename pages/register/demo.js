@@ -59,7 +59,7 @@ function Demo(args) {
     useEffect(() => {
         setLoading(true)
         setHost(route.pathname)
-        fetch(host + '/api/get/fakeData').then(r => r.json()).then(data => setFakeData(data)).then(() => setLoading(false))
+        fetch(host + '/api/get/fakeData').then(({data}) => setFakeData(data)).then(() => setLoading(false))
     }, [])
 
     const handleChangeLimit = dataKey => {

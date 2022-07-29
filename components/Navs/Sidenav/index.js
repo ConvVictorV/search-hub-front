@@ -19,8 +19,8 @@ function Sidenav() {
 
             >
                 <Sidenav expanded={expanded == true || expanded == 'true' ? true : false} style={{ height: "100vh", position: 'fixed', maxWidth: '260px', boxShadow: "1px 0px 10px 0px #0000003b" }}>
-                    <Link href={"/"} passHref>
-                        <Sidenav.Header>
+                    <Sidenav.Header>
+                        <Link href={"/"} passHref>
                             <div style={{
                                 fontSize: expanded == true || expanded == 'true' ? 16 : 0,
                                 minHeight: '62.84px',
@@ -32,15 +32,16 @@ function Sidenav() {
                                 <Image src="/logo-colored.svg" width={30} height={30} alt="Logo Conversion Colorida" />
                                 <h4 className="logo-name">SearchHub</h4>
                             </div>
-                            <hr />
-                            <Sidenav.Toggle style={{
-                                position: 'absolute',
-                                right: '-17px',
-                                top: '16px',
-                                border: "none"
-                            }} expanded={expanded == true || expanded == 'true' ? true : false} onToggle={expanded => { setExpanded(expanded); localStorage.setItem('menuState', expanded) }} />
-                        </Sidenav.Header>
-                    </Link>
+                        </Link>
+                        <hr />
+                        <Sidenav.Toggle style={{
+                            position: 'absolute',
+                            right: '-17px',
+                            top: '16px',
+                            border: "none"
+                        }} expanded={expanded == true || expanded == 'true' ? true : false} onToggle={expanded => { setExpanded(expanded); localStorage.setItem('menuState', expanded) }} />
+                    </Sidenav.Header>
+
                     <Sidenav.Body>
                         <Nav activeKey={activeKey} onSelect={setActiveKey} onSelectCapture={setActiveKey}>
                             {sidenavItems.map((item, key) =>

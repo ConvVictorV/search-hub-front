@@ -41,6 +41,18 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
         </Cell>
     );
 };
+const EmailCell = ({ rowData, dataKey, ...props }) => {
+    const { dsclientemail } = rowData
+    return (
+        <Cell {...props} className="link-group">
+            <div style={{ marginTop: "-8px" }}>
+                { dsclientemail ? dsclientemail.split(',').map((email,key)=>(<Button key={key} appearance='subtle' style={{
+
+                }}>{email}</Button>)) : ""}
+            </div>
+        </Cell>
+    );
+};
 const NmCustomer = ({ rowData, dataKey, ...props }) => {
     const { nmcustomer } = rowData
     return (
@@ -81,6 +93,13 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
         }, 500);
     };
 
+    const setPageData = (arrayData) => {
+        return typeof tableData == "object" ? arrayData.filter((v, i) => {
+            const start = limit * (page - 1);
+            const end = start + limit;
+            return i >= start && i < end;
+        }) : [];
+    }
     const data = typeof tableData == "object" ? tableData.filter((v, i) => {
         const start = limit * (page - 1);
         const end = start + limit;
@@ -89,7 +108,7 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
 
     const getData = () => {
         if (sortColumn && sortType) {
-            return data.sort((a, b) => {
+            return setPageData(tableData.sort((a, b) => {
                 let x = a[sortColumn];
                 let y = b[sortColumn];
                 if (typeof x === 'string') {
@@ -103,7 +122,7 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                 } else {
                     return y - x;
                 }
-            });
+            }));
         }
         return data;
     };
@@ -163,7 +182,7 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                 </Column>
                 <Column sortable width={200} flexGrow={1}>
                     <HeaderCell>Email</HeaderCell>
-                    <Cell dataKey="dsclientemail" />
+                    <EmailCell dataKey="dsclientemail" />
                 </Column>
                 <Column width={50} verticalAlign={"top"} align="center"  >
                     <HeaderCell>Editar</HeaderCell>

@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import { Form, ButtonToolbar, Button, Checkbox, Uploader, TagInput, RadioGroup, Radio, useToaster, Message } from 'rsuite'
-import Select from '../../components/Form/Select'
-import TextField from '../../components/Form/Textfield'
+import axios from 'axios'
+import { useState } from 'react'
+import { Form, ButtonToolbar, Button, TagInput, RadioGroup, Radio, useToaster, Message, Uploader } from 'rsuite'
+import Select from '../../../Components/Select'
 
 
 function FormComponent({ footer, sendText, ...rest }) {
@@ -37,23 +37,23 @@ function FormComponent({ footer, sendText, ...rest }) {
         formData.append("dsaccountgsc", "ga")
         formData.append("save", false)
         toast.push(messageLoading, { placement: "topCenter" })
-        fetch("https://southamerica-east1-iconic-rampart-279113.cloudfunctions.net/post_content_gap", {
-            "headers": {
+        axios.get("https://southamerica-east1-iconic-rampart-279113.cloudfunctions.net/post_content_gap", {
+            headers: {
                 "cache-control": "no-cache",
                 "pragma": "no-cache",
             },
-            "body": formData,
-            "method": "POST",
-            "mode": "cors",
-            "credentials": "omit"
+            body: formData,
+            method: "POST",
+            mode: "cors",
+            credentials: "omit"
         })
-            .then(result => {console.log(result);})
+            .then(result => { console.log(result); })
             .then(sucessHandle)
             .catch(errorHandle)
 
     }
 
-    const clearToast = async () => new Promise((res,rej)=>{
+    const clearToast = async () => new Promise((res, rej) => {
         toast.clear()
         setTimeout(() => {
             res()
@@ -61,17 +61,17 @@ function FormComponent({ footer, sendText, ...rest }) {
     })
 
     const sucessHandle = async () => {
-        await clearToast().then(()=>{
+        await clearToast().then(() => {
             toast.push(messageSucess, { placement: "topCenter" })
         })
-        
+
     }
 
     const errorHandle = async () => {
-        await clearToast().finally(()=>{
+        await clearToast().finally(() => {
             toast.push(messageError, { placement: "topCenter" })
         })
-        
+
     }
 
     return (
@@ -88,7 +88,7 @@ function FormComponent({ footer, sendText, ...rest }) {
                 }}>Clique ou arraste os arquivos para fazer upload</div>
             </Uploader>
 
-            <Select placeholder="Conta Search Console" fetch="http://localhost:3000/api/get/fakeCustomersSelectName" onSelect={setAccount} />
+            <Select placeholder="Conta Search Console" fetch="/api/get/fakeCustomersSelectName" onSelect={setAccount} />
             <TagInput
                 trigger={['Enter']}
                 placeholder="Palavras para remover"
@@ -105,16 +105,15 @@ function FormComponent({ footer, sendText, ...rest }) {
                 <Radio value="institucional">Institucional</Radio>
             </RadioGroup>
 
-            {footer ||
-                <Form.Group>
-                    <ButtonToolbar>
-                        <Button onClick={sendData} style={{
-                            backgroundColor: 'var(--color-conversion-1)',
-                            color: 'var(--color-darkness-background)'
-                        }} type="submit">{sendText || 'Enviar'}</Button>
-                    </ButtonToolbar>
-                </Form.Group>
-            }
+            <Form.Group>
+                <ButtonToolbar>
+                    <Button onClick={sendData} style={{
+                        backgroundColor: 'var(--color-conversion-1)',
+                        color: 'var(--color-darkness-background)'
+                    }} type="submit">{sendText || 'Enviar'}</Button>
+                </ButtonToolbar>
+            </Form.Group>
+
         </Form>)
 }
 

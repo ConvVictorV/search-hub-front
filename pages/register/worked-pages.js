@@ -1,6 +1,6 @@
 import { FlexboxGrid, Container,  PanelGroup, Panel, Placeholder, Row, } from 'rsuite'
 import DefaultLayout from '../../Layouts/default'
-import Form from '../../components/Form/WorkedPages'
+import Form from '../../components/Form/Register/WorkedPages'
 import { useState } from 'react'
 
 
