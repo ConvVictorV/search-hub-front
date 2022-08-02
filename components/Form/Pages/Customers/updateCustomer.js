@@ -2,12 +2,13 @@ import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { Form, useToaster, Message, Toggle, Button, ButtonToolbar } from 'rsuite'
+import Select from '../../Components/Select'
 
 function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
     const session = useSession();
     const idToken = session.data.id_token
     const toast = useToaster();
-    const { blstatus, dsclientemail, idcustomer, idsquad, nmcustomer } = data
+    const { blstatus, dsclientemail, idcustomer, idsquad, nmcustomer, dsname } = data
     const [customerId, setCustomerId] = useState(idcustomer || '')
     const [customerName, setCustomerName] = useState(nmcustomer || '')
     const [customerEmail, setCustomerEmail] = useState(dsclientemail || '')
@@ -76,21 +77,22 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
     return (
         <Form fluid>
             <Form.Group controlId="name-9">
-                <Form.ControlLabel>ID</Form.ControlLabel>
-                <Form.Control name="customer-name" onChange={setCustomerId} defaultValue={idcustomer} readOnly={true} />
-            </Form.Group>
-            <Form.Group controlId="name-9">
                 <Form.ControlLabel>Nome</Form.ControlLabel>
                 <Form.Control name="customer-name" onChange={setCustomerName} defaultValue={nmcustomer} />
             </Form.Group>
-            <Form.Group controlId="email-9">
+            <Select
+                fetch={"/api/get/select/squadsId"}
+                placeholder={dsname}
+                onSelect={setCustomerIdSquad}
+                defaultValue={idsquad}
+            />
+            <Form.Group controlId="email-9" style={{
+                marginTop:"20px"
+            }}>
                 <Form.ControlLabel>Email</Form.ControlLabel>
                 <Form.Control name="customer-email" type="email" onChange={setCustomerEmail} defaultValue={dsclientemail} />
             </Form.Group>
-            <Form.Group controlId="password-9">
-                <Form.ControlLabel>Id do Squad</Form.ControlLabel>
-                <Form.Control name="customer-id-squad" type="number" autoComplete="off" onChange={setCustomerIdSquad} defaultValue={idsquad} />
-            </Form.Group>
+            
             <Toggle size="lg" checkedChildren="Ativo" unCheckedChildren="Inativo" onChange={setCustomerActive} defaultChecked={blstatus} />
             <hr />
             <Form.Group>

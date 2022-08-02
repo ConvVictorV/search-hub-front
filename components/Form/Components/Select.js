@@ -49,6 +49,7 @@ const Select = (props) => {
                 verticalAlign: "top"
             }}
             onSelect={props.onSelect || onSelectItem}
+            {...props}
         />
     );
 };

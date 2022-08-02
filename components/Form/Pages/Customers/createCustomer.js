@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { Form, useToaster, Message, Toggle, Button, ButtonToolbar } from 'rsuite'
+import Select from '../../Components/Select'
 
 function FormComponent({ closeModal, footer, sendText, ...rest }) {
     const [customerName, setCustomerName] = useState('')
@@ -70,14 +71,18 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
                 <Form.ControlLabel>Nome</Form.ControlLabel>
                 <Form.Control name="customer-name" onChange={setCustomerName} />
             </Form.Group>
-            <Form.Group controlId="email-9">
+            <Select
+                fetch={"/api/get/select/squadsId"}
+                placeholder={"Selecione o squad"}
+                onSelect={setCustomerIdSquad}
+            />
+            <Form.Group controlId="email-9" style={{
+                marginTop:"20px"
+            }}>
                 <Form.ControlLabel>Email</Form.ControlLabel>
                 <Form.Control name="customer-email" type="email" onChange={setCustomerEmail} />
             </Form.Group>
-            <Form.Group controlId="password-9">
-                <Form.ControlLabel>Id do Squad</Form.ControlLabel>
-                <Form.Control name="customer-id-squad" type="number" autoComplete="off" onChange={setCustomerIdSquad} />
-            </Form.Group>
+            
             <Toggle size="lg" checkedChildren="Ativo" unCheckedChildren="Inativo" onChange={setCustomerActive} defaultChecked={true} />
             <hr/>
             <Form.Group>

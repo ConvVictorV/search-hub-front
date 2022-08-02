@@ -176,9 +176,9 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                     <StatusCell dataKey="blstatus" />
                 </Column>
 
-                <Column sortable resizable width={100}>
-                    <HeaderCell>ID Squad</HeaderCell>
-                    <Cell dataKey="idsquad" />
+                <Column sortable resizable width={200}>
+                    <HeaderCell>Squad</HeaderCell>
+                    <Cell dataKey="dsname" />
                 </Column>
                 <Column sortable width={200} flexGrow={1}>
                     <HeaderCell>Email</HeaderCell>
