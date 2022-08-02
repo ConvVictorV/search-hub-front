@@ -6,11 +6,11 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
     const [customerName, setCustomerName] = useState('')
     const [customerEmail, setCustomerEmail] = useState('')
     const [customerIdSquad, setCustomerIdSquad] = useState('')
-    const [customerActive, setCustomerActive] = useState(false)    
+    const [customerActive, setCustomerActive] = useState(true)    
 
     const toast = useToaster();
 
-    const messageLoading = (
+    const messageLoading =  (
         <Message showIcon type={"info"} duration={0}>
             Processando dados!
         </Message>
@@ -78,7 +78,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
                 <Form.ControlLabel>Id do Squad</Form.ControlLabel>
                 <Form.Control name="customer-id-squad" type="number" autoComplete="off" onChange={setCustomerIdSquad} />
             </Form.Group>
-            <Toggle size="lg" checkedChildren="Ativo" unCheckedChildren="Inativo" onChange={setCustomerActive} />
+            <Toggle size="lg" checkedChildren="Ativo" unCheckedChildren="Inativo" onChange={setCustomerActive} defaultChecked={true} />
             <hr/>
             <Form.Group>
                 <ButtonToolbar>
