@@ -27,9 +27,10 @@ function Demo(args) {
         axios.get('/api/get/projects').then(({ data }) => setTableData(data))
     }
     const updateData = () => {
-        toast.push(<Message showIcon type={"info"} duration={2000}>
-            Tabela atualizada
-        </Message>, { placement: "topCenter" }
+        toast.push(
+            <Message showIcon type={"info"} duration={2000}>
+                Tabela atualizada
+            </Message>, { placement: "topCenter" }
         )
         getData()
     }
