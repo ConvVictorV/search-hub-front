@@ -17,7 +17,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
     );
     const messageSucess = (
         <Message showIcon type={"success"} duration={5000}>
-            Sucesso!
+            Cliente criado!
         </Message>
     );
     const messageError = (
@@ -27,6 +27,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
     );
 
     const sendData = async () => {
+        toast.push(messageLoading, { placement: "topCenter" })
         axios.post('/api/post/customer',{
             nmcustomer:customerName,
             blstatus:customerActive,

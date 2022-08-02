@@ -22,11 +22,12 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
     );
     const messageSucess = (
         <Message showIcon type={"success"} duration={5000}>
-            Sucesso!
+            Cliente Atualizado!
         </Message>
     );
 
     const sendData = async () => {
+        toast.push(messageLoading, { placement: "topCenter" })
         axios.post('/api/put/customer', {
             idcustomer: customerId,
             nmcustomer: customerName,

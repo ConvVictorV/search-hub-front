@@ -24,12 +24,7 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
     );
     const messageSucess = (
         <Message showIcon type={"success"} duration={5000}>
-            Sucesso!
-        </Message>
-    );
-    const messageError = (
-        <Message showIcon type={"error"} duration={5000}>
-            Ocorreu um erro!
+            Projeto atualizado!
         </Message>
     );
 

@@ -29,8 +29,8 @@ function Demo(args) {
         axios.get('/api/get/customers').then(({ data }) => setTableData(data))
     }
     const updateData = () =>{
-        toast.push(<Message showIcon type={"success"} duration={2000}>
-        Dados atualizados
+        toast.push(<Message showIcon type={"info"} duration={2000}>
+        Tabela atualizada
     </Message>, { placement: "topCenter" })
         getData()
     }
