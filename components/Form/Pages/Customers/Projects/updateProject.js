@@ -79,11 +79,6 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
 
     return (
         <Form fluid>
-
-            <Form.Group controlId="name-9">
-                <Form.ControlLabel>Id do projeto</Form.ControlLabel>
-                <Form.Control name="project-url" defaultValue={idproject} readOnly />
-            </Form.Group>
             <Form.Group controlId="name-9">
                 <Form.ControlLabel>Digite a url do projeto</Form.ControlLabel>
                 <Form.Control name="project-url" onChange={setProjectUrl} defaultValue={projectUrl} />
