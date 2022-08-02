@@ -22,14 +22,15 @@ function Demo(args) {
         updateData()
     };
 
-    const getData = () =>{
+    const getData = () => {
         const axios = require('axios')
         axios.get('/api/get/projects').then(({ data }) => setTableData(data))
     }
-    const updateData = () =>{
+    const updateData = () => {
         toast.push(<Message showIcon type={"info"} duration={2000}>
-        Tabela atualizada
-    </Message>, { placement: "topCenter" })
+            Tabela atualizada
+        </Message>, { placement: "topCenter" }
+        )
         getData()
     }
     useEffect(() => {
