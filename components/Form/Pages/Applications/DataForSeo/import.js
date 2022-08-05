@@ -42,12 +42,12 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     })
                     .catch(e => {
                         console.log(e)
-                        errorHandle(e.response.data)
+                        typeof temp2.response.data != 'object' ? errorHandle(e.response.data) : errorHandle()
                     })
             })
             .catch(e => {
                 console.log(e)
-                errorHandle(e.response.data)
+                typeof temp2.response.data != 'object' ? errorHandle(e.response.data) : errorHandle()
             })
     }
 
