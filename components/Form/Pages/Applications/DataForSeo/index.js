@@ -54,6 +54,7 @@ function FormComponent({ footer, sendText, ...rest }) {
     return (
         <Form  {...rest} fluid>
             <Uploader
+                method={"GET"}
                 disabled={files.length > 0}
                 multiple={false}
                 style={{ width: "94%", paddingBottom: "10px", }}

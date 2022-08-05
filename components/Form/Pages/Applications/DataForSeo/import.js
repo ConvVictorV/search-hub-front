@@ -84,6 +84,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                 }}
             /> : ''}
             <Uploader
+                method={"GET"}
                 disabled={files.length > 0}
                 multiple={false}
                 style={{ paddingBottom: "10px", }}
