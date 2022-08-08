@@ -3,12 +3,13 @@ import axios from "axios"
 
 export default function handler(req, res) {
     const authorization = req.headers.authorization
-    axios.put(`${process.env.BACKENDHOST}/project`, req.body, {
+    axios.delete(`${process.env.BACKENDHOST}/words`, {
         headers: {
-            "authorization": authorization
-        }
+            "authorization": authorization,
+            ...req.body
+        },
     })
-        .then(() => res.status(200).send("Atualizado com Sucesso!"))
+        .then(() => res.status(200).send("Deletadas com Sucesso!"))
         .catch(err => { res.status(405).send(err.response?.data || "Ocorreu um erro") })
 }
 

@@ -5,9 +5,11 @@ import React from 'react';
 import TableWords from '../../../components/Tables/words';
 import ExportForm from '../../../components/Form/Pages/Applications/DataForSeo/export'
 import ImportForm from '../../../components/Form/Pages/Applications/DataForSeo/import'
+import DeleteForm from '../../../components/Form/Pages/Applications/DataForSeo/delete'
 import ReloadIcon from '@rsuite/icons/Reload';
 import ImportIcon from '@rsuite/icons/Import';
 import ExportIcon from '@rsuite/icons/Export';
+import TrashIcon from '@rsuite/icons/Trash';
 
 function Demo(args) {
     const [tableData, setTableData] = useState([])
@@ -16,12 +18,15 @@ function Demo(args) {
     const filteredCustomers = searchCustomer(search, tableData);
     const [openExportForm, setOpenExportForm] = useState(false);
     const [openImportForm, setOpenImportForm] = useState(false);
+    const [openDeleteForm, setOpenDeleteForm] = useState(false);
+    
     const [rowData, setRowData] = useState();
     const toast = useToaster();
 
     const handleClose = () => {
-        setOpenExportForm(false);
+        setOpenExportForm(false)
         setOpenImportForm(false)
+        setOpenDeleteForm(false)
         updateData()
     };
     const getData = () =>{
@@ -29,6 +34,7 @@ function Demo(args) {
         axios.get('/api/get/words').then(({ data }) => setTableData(data))
     }
     const updateData = () =>{
+        setCheckedKeys([])
         toast.push(<Message showIcon type={"info"} duration={2000}>
         Tabela atualizada
     </Message>, { placement: "topCenter" })
@@ -41,6 +47,17 @@ function Demo(args) {
     const getHeaderTable = () => {
         return (
             <ButtonToolbar style={{ paddingBottom: "18px", display: "flex", justifyContent: "end" }}>
+                {checkedKeys.length != 0 ? <IconButton icon={
+                    <TrashIcon style={{
+                        backgroundColor: 'transparent',
+                        color: 'var(--color-conversion-4)'
+                    }} />
+                } onClick={() => setOpenDeleteForm(true)} appearance={"ghost"} style={{
+                    color: "var(--color-conversion-4)",
+                    borderColor: "var(--color-conversion-4)",
+                }}>
+                    {`Deletar (${checkedKeys.length})`}
+                </IconButton> : ''}
                 <IconButton icon={
                     <ImportIcon style={{
                         backgroundColor: 'transparent',
@@ -107,6 +124,14 @@ function Demo(args) {
                     </Modal.Header>
                     <Modal.Body>
                         <ImportForm closeModal={handleClose} />
+                    </Modal.Body>
+                </Modal>
+                <Modal open={openDeleteForm} onClose={handleClose} size="xs" keyboard={false} backdrop={'static'}>
+                    <Modal.Header>
+                        <Modal.Title>Deletar palavras</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <DeleteForm closeModal={handleClose} data={tableData.filter(word=>checkedKeys.indexOf(word.idword) > -1)}/>
                     </Modal.Body>
                 </Modal>
                 <TableWords
