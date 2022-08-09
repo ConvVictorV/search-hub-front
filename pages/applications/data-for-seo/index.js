@@ -3,9 +3,9 @@ import { Container, ButtonToolbar, IconButton, Panel, Modal, Button, Message, us
 import FullWidthLayout from '../../../Layouts/fullwidth'
 import React from 'react';
 import TableWords from '../../../components/Tables/applications/dataforseo';
-import ExportForm from '../../../components/Form/Pages/Applications/dataforseo/export'
-import ImportForm from '../../../components/Form/Pages/Applications/dataforseo/import'
-import DeleteForm from '../../../components/Form/Pages/Applications/dataforseo/delete'
+import ExportForm from '../../../components/Form/Pages/Applications/DataForSeo/export'
+import ImportForm from '../../../components/Form/Pages/Applications/DataForSeo/import'
+import DeleteForm from '../../../components/Form/Pages/Applications/DataForSeo/delete'
 import ReloadIcon from '@rsuite/icons/Reload';
 import ImportIcon from '@rsuite/icons/Import';
 import ExportIcon from '@rsuite/icons/Export';
