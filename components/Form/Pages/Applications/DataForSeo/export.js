@@ -18,7 +18,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     );
     const messageSucess = (
         <Message showIcon type={"success"} duration={5000}>
-            Projeto criado!
+            Palavras exportadas!
         </Message>
     );
     const messageError = (
