@@ -5,7 +5,7 @@ import Select from '../../../Components/Select'
 import Link from 'next/link'
 
 function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
-    const [project, setProject] = useState(521)
+    const [customer, setCustomer] = useState()
     const [exportData, setExportData] = useState(data || [])
     const [files, setFiles] = useState([])
 
@@ -28,12 +28,13 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     );
 
     const sendData = async () => {
+        if(!customer) return errorHandle("Selecione o cliente!")
         axios.post('/api/get/readCsv', {
             content: await files[0].blobFile.text()
         })
             .then(({ data }) => {
                 axios.post('/api/post/words', {
-                    idproject: project,
+                    idcustomer: customer,
                     rows: data
                 })
                     .then(e => {
@@ -75,14 +76,14 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
 
     return (
         <Form fluid>
-            {exportData.length == 0 ? <Select
-                fetch={"/api/get/select/projectsId"}
-                placeholder={"Selecione o projeto"}
-                onSelect={setProject}
+            <Select
+                fetch={"/api/get/select/customersId"}
+                placeholder={"Selecione o cliente"}
+                onSelect={setCustomer}
                 style={{
                     width:"100%"
                 }}
-            /> : ''}
+            /> 
             <Uploader
                 method={"GET"}
                 disabled={files.length > 0}

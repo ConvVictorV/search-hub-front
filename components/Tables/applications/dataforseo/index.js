@@ -41,22 +41,7 @@ const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKe
     let checked = false;
     let indeterminate = false;
 
-    if (checkedKeys.length === tableData.length) {
-        checked = true;
-    } else if (checkedKeys.length === 0) {
-        checked = false;
-    } else if (checkedKeys.length > 0 && checkedKeys.length < tableData.length) {
-        indeterminate = true;
-    }
-
-    const handleCheckAll = (value, checked) => {
-        const keys = checked ? tableData.map(item => item.idword) : [];
-        setCheckedKeys(keys);
-    };
-    const handleCheck = (value, checked) => {
-        const keys = checked ? [...checkedKeys, value] : checkedKeys.filter(item => item !== value);
-        setCheckedKeys(keys);
-    };
+    
     useEffect(() => {
         if (tableData) setLoading(false)
     }, [])
@@ -87,7 +72,22 @@ const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKe
         const end = start + limit;
         return i >= start && i < end;
     }) : [];
+    if (checkedKeys.length === data.length) {
+        checked = true;
+    } else if (checkedKeys.length === 0) {
+        checked = false;
+    } else if (checkedKeys.length > 0 && checkedKeys.length < data.length) {
+        indeterminate = true;
+    }
 
+    const handleCheckAll = (value, checked) => {
+        const keys = checked ? data.map(item => item.idword) : [];
+        setCheckedKeys(keys);
+    };
+    const handleCheck = (value, checked) => {
+        const keys = checked ? [...checkedKeys, value] : checkedKeys.filter(item => item !== value);
+        setCheckedKeys(keys);
+    };
     const getData = () => {
         if (sortColumn && sortType) {
             return setPageData(tableData.sort((a, b) => {
