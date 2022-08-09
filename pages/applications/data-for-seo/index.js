@@ -15,11 +15,11 @@ function Demo(args) {
     const [tableData, setTableData] = useState([])
     const [checkedKeys, setCheckedKeys] = React.useState([]);
     const [search, setSearch] = useState("");
-    const filteredCustomers = searchCustomer(search, tableData);
     const [openExportForm, setOpenExportForm] = useState(false);
     const [openImportForm, setOpenImportForm] = useState(false);
     const [openDeleteForm, setOpenDeleteForm] = useState(false);
-    
+    const [filterData, setFilterData] = useState()
+
     const [rowData, setRowData] = useState();
     const toast = useToaster();
 
@@ -29,15 +29,15 @@ function Demo(args) {
         setOpenDeleteForm(false)
         updateData()
     };
-    const getData = () =>{
+    const getData = () => {
         const axios = require('axios')
         axios.get('/api/get/words').then(({ data }) => setTableData(data))
     }
-    const updateData = () =>{
+    const updateData = () => {
         setCheckedKeys([])
         toast.push(<Message showIcon type={"info"} duration={2000}>
-        Tabela atualizada
-    </Message>, { placement: "topCenter" })
+            Tabela atualizada
+        </Message>, { placement: "topCenter" })
         getData()
     }
     useEffect(() => {
@@ -78,7 +78,7 @@ function Demo(args) {
                     color: "var(--color-conversion-1)",
                     borderColor: "var(--color-conversion-1)",
                 }}>
-                    {'Exportar '+ (checkedKeys.length != 0 ? `(${checkedKeys.length})` : '')}
+                    {'Exportar ' + (checkedKeys.length != 0 ? `(${checkedKeys.length})` : '')}
                 </IconButton>
                 <IconButton icon={
                     <ReloadIcon style={{
@@ -95,14 +95,21 @@ function Demo(args) {
         )
     }
 
-    function searchCustomer(search, customers) {
-        if (search.length && typeof customers === "object") {
-            return customers.filter((customer) => {
-                const flatCustomer = JSON.stringify(customer).toLowerCase();
-                return flatCustomer.includes(search.toLowerCase());
+    function searchCustomer(search, data) {
+        if (filterData?.filter) {
+            if (typeof data === "object") {
+                return data.filter(row => {
+                    return row['idcustomer'] == filterData?.['filter']['idcustomer'] ? true : false
+                })
+            }
+        }
+        if (search.length && typeof data === "object") {
+            return data.filter((row) => {
+                const flatRow = JSON.stringify(row).toLowerCase();
+                return flatRow.includes(search.toLowerCase());
             });
         }
-        return customers;
+        return data;
     }
 
     return (
@@ -115,7 +122,7 @@ function Demo(args) {
                         <Modal.Title>Exportar {checkedKeys.length || ''} palavras</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <ExportForm closeModal={handleClose} data={tableData.filter(word=>checkedKeys.indexOf(word.idword) > -1)} />
+                        <ExportForm closeModal={handleClose} data={tableData.filter(word => checkedKeys.indexOf(word.idword) > -1)} />
                     </Modal.Body>
                 </Modal>
                 <Modal open={openImportForm} onClose={handleClose} size="xs" keyboard={false} backdrop={'static'}>
@@ -131,16 +138,17 @@ function Demo(args) {
                         <Modal.Title>Deletar palavras</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DeleteForm closeModal={handleClose} data={tableData.filter(word=>checkedKeys.indexOf(word.idword) > -1)}/>
+                        <DeleteForm closeModal={handleClose} data={tableData.filter(word => checkedKeys.indexOf(word.idword) > -1)} />
                     </Modal.Body>
                 </Modal>
                 <TableWords
                     checkedKeys={checkedKeys}
                     setCheckedKeys={setCheckedKeys}
-                    tableData={filteredCustomers}
+                    tableData={searchCustomer(search, tableData)}
                     setSearch={setSearch}
                     headerMenu={getHeaderTable()}
                     setRowData={setRowData}
+                    setFilterData={setFilterData}
                 />
             </Container>
 

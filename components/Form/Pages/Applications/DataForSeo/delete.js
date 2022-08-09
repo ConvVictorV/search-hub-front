@@ -9,7 +9,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const session = useSession();
     const idToken = session.data.id_token
     const [words, setWords] = useState(data)
-
+    const [customer, setCustomer] = useState()
     const toast = useToaster();
 
     const messageLoading = (
@@ -31,7 +31,8 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const sendData = async () => {
         toast.push(messageLoading, { placement: "topCenter" })
         axios.post('/api/delete/words', {
-           words: words.map(word=>word.idword)
+           words: words.map(word=>word.idword),
+           idcustomer: customer
         }, {
             headers: {
                 authorization: idToken
@@ -74,7 +75,14 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     return (
         <Form fluid>
             <Form.Group>
-                <p>Você tem certeza que deseja deletar essas palavras?</p>
+            <Select
+                    fetch={"/api/get/select/customersId"}
+                    placeholder={"Selecione o cliente"}
+                    onSelect={setCustomer}
+                    style={{
+                        width: "100%"
+                    }}
+                />
                 <ButtonToolbar style={{
                     marginTop:"20px"
                 }}>

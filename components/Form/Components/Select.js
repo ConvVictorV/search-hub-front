@@ -14,9 +14,12 @@ const Select = (props) => {
             })
     }, [])
 
-    const onSelectItem = () => {
-
+    const onSelectItem = (a) => {
+        console.log(a)
     }
+
+    const onClear = () => props.onSelect ? props.onSelect(undefined) : onSelectItem(undefined)
+    
 
     const updateData = () => {
         if (items.length === 0) {
@@ -44,6 +47,7 @@ const Select = (props) => {
             renderMenu={renderMenu}
             size={props.size || ''}
             disabled={props.disabled || false}
+            onClean={onClear}
             style={{
                 width: "94%",
                 verticalAlign: "top"
