@@ -89,7 +89,7 @@ function FormComponent({ footer, sendText, ...rest }) {
                 }}>Clique ou arraste os arquivos para fazer upload</div>
             </Uploader>
 
-            <Select placeholder="Conta Search Console" fetch="/api/get/fakeCustomersSelectName" onSelect={setAccount} />
+            <Select placeholder="Conta Search Console" fetch="/api/get/select/customersName" onSelect={setAccount} />
             <TagInput
                 trigger={['Enter']}
                 placeholder="Palavras para remover"

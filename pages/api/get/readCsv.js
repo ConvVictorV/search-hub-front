@@ -1,4 +1,3 @@
-import axios from "axios"
 const csv = require('csvtojson')
 
 export default function handler(req, res) {

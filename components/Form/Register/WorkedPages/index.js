@@ -67,7 +67,7 @@ function FormComponent({ footer, sendText, ...rest }) {
                 }}>Clique ou arraste os arquivos para fazer upload</div>
             </Uploader>
 
-            <Select placeholder="Conta Search Console" fetch="/api/get/fakeCustomersSelectId" onSelect={setCustomer} />
+            <Select placeholder="Conta Search Console" fetch="/api/get/select/customersId" onSelect={setCustomer} />
 
 
             <Form.Group>

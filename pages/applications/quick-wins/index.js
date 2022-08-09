@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { Container, ButtonToolbar, IconButton, Panel, Modal, Button, Message, useToaster } from 'rsuite'
 import FullWidthLayout from '../../../Layouts/fullwidth'
 import React from 'react';
-import TableWords from '../../../components/Tables/applications/dataforseo';
-import ExportForm from '../../../components/Form/Pages/Applications/dataforseo/export'
-import ImportForm from '../../../components/Form/Pages/Applications/dataforseo/import'
-import DeleteForm from '../../../components/Form/Pages/Applications/dataforseo/delete'
+import TableWords from '../../../components/Tables/applications/quickwins';
+import ExportForm from '../../../components/Form/Pages/Applications/quickwins/export'
+import ImportForm from '../../../components/Form/Pages/Applications/quickwins/import'
+import DeleteForm from '../../../components/Form/Pages/Applications/quickwins/delete'
 import ReloadIcon from '@rsuite/icons/Reload';
 import ImportIcon from '@rsuite/icons/Import';
 import ExportIcon from '@rsuite/icons/Export';
@@ -31,7 +31,7 @@ function Demo(args) {
     };
     const getData = () =>{
         const axios = require('axios')
-        axios.get('/api/get/words').then(({ data }) => setTableData(data))
+        axios.get('/api/get/quickwins').then(({ data }) => setTableData(data))
     }
     const updateData = () =>{
         setCheckedKeys([])
@@ -106,7 +106,7 @@ function Demo(args) {
     }
 
     return (
-        <FullWidthLayout toggleTheme={args.toggleTheme} title="DataForSeo | SearchHub" description="SearchHub Conversion" background={2} pageName="DataForSeo">
+        <FullWidthLayout toggleTheme={args.toggleTheme} title="QuickWins | SearchHub" description="SearchHub Conversion" background={2} pageName="QuickWins">
             <Container style={{
                 padding: "0px 50px",
             }}>
@@ -115,12 +115,12 @@ function Demo(args) {
                         <Modal.Title>Exportar {checkedKeys.length || ''} palavras</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <ExportForm closeModal={handleClose} data={tableData.filter(word=>checkedKeys.indexOf(word.idword) > -1)} />
+                        <ExportForm closeModal={handleClose} data={tableData.filter(word=>checkedKeys.indexOf(word.idworkedpage) > -1)} />
                     </Modal.Body>
                 </Modal>
                 <Modal open={openImportForm} onClose={handleClose} size="xs" keyboard={false} backdrop={'static'}>
                     <Modal.Header>
-                        <Modal.Title>Importar palavras</Modal.Title>
+                        <Modal.Title>Importar QuickWins</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <ImportForm closeModal={handleClose} />
@@ -131,7 +131,7 @@ function Demo(args) {
                         <Modal.Title>Deletar palavras</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DeleteForm closeModal={handleClose} data={tableData.filter(word=>checkedKeys.indexOf(word.idword) > -1)}/>
+                        <DeleteForm closeModal={handleClose} data={tableData.filter(word=>checkedKeys.indexOf(word.idworkedpage) > -1)}/>
                     </Modal.Body>
                 </Modal>
                 <TableWords

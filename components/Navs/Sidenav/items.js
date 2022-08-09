@@ -43,8 +43,8 @@ module.exports.sidenavItems = [
         active: true
     },
     {
-        url: "/register/worked-pages",
-        name: "Páginas Trabalhadas",
+        url: "/applications/quick-wins",
+        name: "QuickWins",
         icon: Dashboard,
         active: true
     },

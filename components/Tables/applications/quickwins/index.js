@@ -1,4 +1,4 @@
-import { Panel, InputGroup, Input, Pagination, Table, IconButton, Divider, Whisper, Stack, Dropdown, Badge, Button } from 'rsuite'
+import { Panel, InputGroup, Checkbox, Pagination, Table, IconButton, Divider, Whisper, Stack, Dropdown, Badge, Button } from 'rsuite'
 import React, { useEffect } from 'react';
 
 import SearchIcon from '@rsuite/icons/Search'
@@ -10,70 +10,38 @@ import MoreIcon from '@rsuite/icons/More';
 
 
 // custom cells
-const ActionCell = ({ setDrawerOpenEdit, rowData, dataKey, setRowData, ...props }) => {
-    function handleAction() {
-        setRowData(rowData);
-        setDrawerOpenEdit(true);
-    }
-    return (
-        <Cell {...props} className="link-group">
-            <div style={{ marginTop: "-8px" }}>
-                <IconButton appearance="primary" style={{
-                    background: "var(--color-conversion-1)"
-                }} onClick={handleAction} icon={<EditIcon />} />
-            </div>
-        </Cell>
-    );
-};
-const StatusCell = ({ rowData, dataKey, ...props }) => {
-    const { blstatus } = rowData
-    return (
-        <Cell {...props} className="link-group">
-            <div style={{ marginTop: "-8px" }}>
-                {blstatus && <Button appearance='ghost' style={{
-                    color: 'var(--color-conversion-7)',
-                    borderColor: 'var(--color-conversion-7)'
-                }}><Badge style={{ background: 'var(--color-conversion-7)' }} /> {"ativo"}</Button> || <Button appearance='ghost' style={{
-                    color: 'var(--color-conversion-4)',
-                    borderColor: 'var(--color-conversion-4)'
-                }}><Badge style={{ background: 'var(--color-conversion-4)' }} /> {"inativo"}</Button>}
-            </div>
-        </Cell>
-    );
-};
-const EmailCell = ({ rowData, dataKey, ...props }) => {
-    const { dsclientemail } = rowData
-    return (
-        <Cell {...props} className="link-group">
-            <div style={{ marginTop: "-8px" }}>
-                { dsclientemail ? dsclientemail.split(',').map((email,key)=>(<Button key={key} appearance='subtle' style={{
-
-                }}>{email}</Button>)) : ""}
-            </div>
-        </Cell>
-    );
-};
-const NmCustomer = ({ rowData, dataKey, ...props }) => {
-    const { nmcustomer } = rowData
-    return (
-        <Cell {...props} className="link-group">
-            {nmcustomer && capitalizeFirstLetter(nmcustomer) || "false"}
-        </Cell>
-    );
-};
-// 
-
+const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+    <Cell {...props} style={{ padding: 0 }}>
+        <div style={{ lineHeight: '46px' }}>
+            <Checkbox
+                value={rowData[dataKey]}
+                inline
+                onChange={onChange}
+                checked={checkedKeys.some(item => item === rowData[dataKey])}
+            />
+        </div>
+    </Cell>
+);
+const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+    <Cell {...props}>
+        {rowData?.dtregister?.split('T')[0]}
+    </Cell>
+);
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKeys }) => {
 
-const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, setRowData }) => {
     const [loading, setLoading] = React.useState(true);
     const [limit, setLimit] = React.useState(12);
     const [page, setPage] = React.useState(1);
     const [sortColumn, setSortColumn] = React.useState();
     const [sortType, setSortType] = React.useState();
+    let checked = false;
+    let indeterminate = false;
+
+
 
     useEffect(() => {
         if (tableData) setLoading(false)
@@ -105,7 +73,21 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
         const end = start + limit;
         return i >= start && i < end;
     }) : [];
-
+    const handleCheckAll = (value, checked) => {
+        const keys = checked ? data.map(item => item.idworkedpage) : [];
+        setCheckedKeys(keys);
+    };
+    if (checkedKeys.length === data.length) {
+        checked = true;
+    } else if (checkedKeys.length === 0) {
+        checked = false;
+    } else if (checkedKeys.length > 0 && checkedKeys.length < data.length) {
+        indeterminate = true;
+    }
+    const handleCheck = (value, checked) => {
+        const keys = checked ? [...checkedKeys, value] : checkedKeys.filter(item => item !== value);
+        setCheckedKeys(keys);
+    };
     const getData = () => {
         if (sortColumn && sortType) {
             return setPageData(tableData.sort((a, b) => {
@@ -143,9 +125,9 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                         className="rs-input"
                         type="text"
                         onChange={(event) => setSearch(event.target.value)}
-                        placeholder={`Buscar (${tableData.length + ' Clientes'})`}
+                        placeholder={`Buscar (${tableData.length + ' Quickwins'})`}
                         style={{
-                            width:"500px"
+                            width: "500px"
                         }}
                     />
                 </InputGroup>
@@ -161,33 +143,50 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                 sortType={sortType}
                 onSortColumn={handleSortColumn}
             >
-                <Column sortable resizable width={50} align="center" fixed>
-                    <HeaderCell>Id</HeaderCell>
-                    <Cell dataKey="idcustomer" />
+                <Column width={50} align="center">
+                    <HeaderCell style={{ padding: 0 }}>
+                        <div style={{ lineHeight: '40px' }}>
+                            <Checkbox
+                                inline
+                                checked={checked}
+                                indeterminate={indeterminate}
+                                onChange={handleCheckAll}
+                            />
+                        </div>
+                    </HeaderCell>
+                    <CheckCell dataKey="idworkedpage" checkedKeys={checkedKeys} onChange={handleCheck} />
                 </Column>
-
                 <Column sortable resizable width={200} fixed>
-                    <HeaderCell>Nome</HeaderCell>
-                    <NmCustomer dataKey="nmcustomer" />
+                    <HeaderCell>Palavra</HeaderCell>
+                    <Cell dataKey="dskeyword" />
                 </Column>
 
-                <Column sortable resizable width={100} >
-                    <HeaderCell>Status</HeaderCell>
-                    <StatusCell dataKey="blstatus" />
+                <Column sortable resizable width={100} align="center">
+                    <HeaderCell>Posição Inicial</HeaderCell>
+                    <Cell dataKey="dsinitposition" />
                 </Column>
 
-                <Column sortable resizable width={200}>
-                    <HeaderCell>Squad</HeaderCell>
-                    <Cell dataKey="dsname" />
+                <Column sortable resizable width={200} align="center">
+                    <HeaderCell>Url</HeaderCell>
+                    <Cell dataKey="dspageurl" />
                 </Column>
-                <Column sortable width={200} flexGrow={1}>
-                    <HeaderCell>Email</HeaderCell>
-                    <EmailCell dataKey="dsclientemail" />
+                <Column sortable width={200} flexGrow={1} align="center">
+                    <HeaderCell>Data de Competência</HeaderCell>
+                    <Cell dataKey="dtcomp" />
                 </Column>
-                <Column width={50} verticalAlign={"top"} align="center"  >
-                    <HeaderCell>Editar</HeaderCell>
-                    <ActionCell setDrawerOpenEdit={setDrawerOpenEdit} setRowData={setRowData} dataKey="idcustomer" />
+                <Column sortable width={200} flexGrow={1} align="center">
+                    <HeaderCell>Tipo</HeaderCell>
+                    <Cell dataKey="dstype" />
                 </Column>
+                <Column sortable width={200} flexGrow={1} align="center">
+                    <HeaderCell>Tipo</HeaderCell>
+                    <Cell dataKey="dscontenttype" />
+                </Column>
+                <Column sortable width={150} align="center">
+                    <HeaderCell>Implementado em</HeaderCell>
+                    <Inserted dataKey="dtimplement" />
+                </Column>
+
             </Table>
             <div style={{ padding: 20 }}>
                 <Pagination
@@ -211,4 +210,4 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
         </Panel>)
 }
 
-export default TableCustomers
+export default WordTable
