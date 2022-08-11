@@ -13,25 +13,26 @@ import ReloadIcon from '@rsuite/icons/Reload';
 function Demo(args) {
     const [tableData, setTableData] = useState([])
     const [search, setSearch] = useState("");
-    const filteredCustomers = searchCustomer(search, tableData);
+    const filteredCustomers = filter(search, tableData);
     const [openEditForm, setOpenEditForm] = useState(false);
     const [openCreateForm, setOpenCreateForm] = useState(false);
     const [rowData, setRowData] = useState();
     const toast = useToaster();
+    const [filterData, setFilterData] = useState()
 
     const handleClose = () => {
         setOpenEditForm(false);
         setOpenCreateForm(false);
         updateData()
     };
-    const getData = () =>{
+    const getData = () => {
         const axios = require('axios')
         axios.get('/api/get/customers').then(({ data }) => setTableData(data))
     }
-    const updateData = () =>{
+    const updateData = () => {
         toast.push(<Message showIcon type={"info"} duration={2000}>
-        Tabela atualizada
-    </Message>, { placement: "topCenter" })
+            Tabela atualizada
+        </Message>, { placement: "topCenter" })
         getData()
     }
     useEffect(() => {
@@ -68,14 +69,21 @@ function Demo(args) {
         )
     }
 
-    function searchCustomer(search, customers) {
-        if (search.length && typeof customers === "object") {
-            return customers.filter((customer) => {
-                const flatCustomer = JSON.stringify(customer).toLowerCase();
-                return flatCustomer.includes(search.toLowerCase());
+    function filter(search, data) {
+        if (filterData?.filter) {
+            if (typeof data === "object") {
+                return data.filter(row => {
+                    return row[Object.keys(filterData?.['filter'])[0]] == filterData?.['filter'][Object.keys(filterData?.['filter'])[0]] ? true : false
+                })
+            }
+        }
+        if (search.length && typeof data === "object") {
+            return data.filter((row) => {
+                const flatRow = JSON.stringify(row).toLowerCase();
+                return flatRow.includes(search.toLowerCase());
             });
         }
-        return customers;
+        return data;
     }
 
     return (
@@ -101,11 +109,12 @@ function Demo(args) {
                     </Modal.Body>
                 </Modal>
                 <TableCustomers
-                    tableData={filteredCustomers}
+                    tableData={filter(search,tableData)}
                     setSearch={setSearch}
                     headerMenu={getHeaderTable()}
                     setRowData={setRowData}
                     setDrawerOpenEdit={setOpenEditForm}
+                    setFilterData={setFilterData}
                 />
             </Container>
 

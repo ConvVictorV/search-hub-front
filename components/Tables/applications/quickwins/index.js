@@ -8,6 +8,7 @@ const { HeaderCell, Cell, Column } = Table;
 import EditIcon from '@rsuite/icons/Edit';
 import MoreIcon from '@rsuite/icons/More';
 
+import Select from '../../../Form/Components/Select';
 
 // custom cells
 const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
@@ -31,13 +32,22 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKeys }) => {
+const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKeys, setFilterData }) => {
 
     const [loading, setLoading] = React.useState(true);
     const [limit, setLimit] = React.useState(12);
     const [page, setPage] = React.useState(1);
     const [sortColumn, setSortColumn] = React.useState();
     const [sortType, setSortType] = React.useState();
+
+    const filterCustomerById = (id) =>{
+        id ?
+        (setFilterData({
+            filter:{
+                idcustomer:id
+            }
+        }) && setPage(1)) : setFilterData()
+    }
     let checked = false;
     let indeterminate = false;
 
@@ -113,11 +123,10 @@ const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKe
             <Stack
                 alignItems={"center"}
                 justifyContent={"space-between"}>
-                <InputGroup inside style={{
-                    marginBottom: "20px",
-                    width: "70%",
-                    height: "38px"
-                }}>
+                <Stack 
+                wrap spacing={24}
+                alignItems={"center"}>
+                <InputGroup inside>
                     <InputGroup.Addon>
                         <SearchIcon />
                     </InputGroup.Addon>
@@ -127,10 +136,14 @@ const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKe
                         onChange={(event) => setSearch(event.target.value)}
                         placeholder={`Buscar (${tableData.length + ' Quickwins'})`}
                         style={{
-                            width: "500px"
+                            width: "300px"
                         }}
                     />
                 </InputGroup>
+                <Select fetch="/api/get/select/customersId" placeholder="Filtre por cliente" onSelect={filterCustomerById}  style={{
+                width:"150px"
+                }}/>
+                </Stack>
                 {headerMenu}
             </Stack>
             {/* <hr /> */}

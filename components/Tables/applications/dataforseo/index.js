@@ -1,14 +1,8 @@
-import { Panel, InputGroup, Checkbox, Pagination, Table, IconButton, Divider, Whisper, Stack, Dropdown, Badge, Button } from 'rsuite'
-import React, { useEffect } from 'react';
-
+import { Panel, InputGroup, Checkbox, Pagination, Table, Stack } from 'rsuite'
+import { useState, useEffect } from 'react';
 import SearchIcon from '@rsuite/icons/Search'
-
 const { HeaderCell, Cell, Column } = Table;
-
-import EditIcon from '@rsuite/icons/Edit';
-import MoreIcon from '@rsuite/icons/More';
 import Select from '../../../Form/Components/Select';
-
 
 // custom cells
 const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
@@ -34,11 +28,11 @@ function capitalizeFirstLetter(string) {
 
 const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKeys, setFilterData }) => {
 
-    const [loading, setLoading] = React.useState(true);
-    const [limit, setLimit] = React.useState(12);
-    const [page, setPage] = React.useState(1);
-    const [sortColumn, setSortColumn] = React.useState();
-    const [sortType, setSortType] = React.useState();
+    const [loading, setLoading] = useState(true);
+    const [limit, setLimit] = useState(12);
+    const [page, setPage] = useState(1);
+    const [sortColumn, setSortColumn] = useState();
+    const [sortType, setSortType] = useState();
 
     const filterCustomerById = (id) =>{
         id ?

@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import SearchIcon from '@rsuite/icons/Search'
 
 const { HeaderCell, Cell, Column } = Table;
-
+import Select from '../../Form/Components/Select';
 import EditIcon from '@rsuite/icons/Edit';
 import MoreIcon from '@rsuite/icons/More';
 
@@ -68,13 +68,21 @@ function capitalizeFirstLetter(string) {
 }
 
 
-const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, setRowData }) => {
+const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, setRowData, setFilterData }) => {
     const [loading, setLoading] = React.useState(true);
     const [limit, setLimit] = React.useState(12);
     const [page, setPage] = React.useState(1);
     const [sortColumn, setSortColumn] = React.useState();
     const [sortType, setSortType] = React.useState();
 
+    const filterSquadById = (id) =>{
+        id ?
+        (setFilterData({
+            filter:{
+                idsquad:id
+            }
+        }) && setPage(1)) : setFilterData()
+    }
     useEffect(() => {
         if (tableData) setLoading(false)
     }, [])
@@ -105,7 +113,7 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
         const end = start + limit;
         return i >= start && i < end;
     }) : [];
-
+    
     const getData = () => {
         if (sortColumn && sortType) {
             return setPageData(tableData.sort((a, b) => {
@@ -126,16 +134,16 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
         }
         return data;
     };
+
     return (
         <Panel bordered style={{ backgroundColor: "var(--rs-bg-card)", padding: "0px" }} shaded>
             <Stack
                 alignItems={"center"}
                 justifyContent={"space-between"}>
-                <InputGroup inside style={{
-                    marginBottom: "20px",
-                    width: "70%",
-                    height: "38px"
-                }}>
+                <Stack 
+                wrap spacing={24}
+                alignItems={"center"}>
+                <InputGroup inside>
                     <InputGroup.Addon>
                         <SearchIcon />
                     </InputGroup.Addon>
@@ -143,12 +151,16 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                         className="rs-input"
                         type="text"
                         onChange={(event) => setSearch(event.target.value)}
-                        placeholder={`Buscar (${tableData.length + ' Clientes'})`}
+                        placeholder={`Buscar (${tableData.length + ' Palavras'})`}
                         style={{
-                            width:"500px"
+                            width: "300px"
                         }}
                     />
                 </InputGroup>
+                <Select fetch="/api/get/select/squadsId" placeholder="Filtre por squad" onSelect={filterSquadById}  style={{
+                width:"150px"
+                }}/>
+                </Stack>
                 {headerMenu}
             </Stack>
             {/* <hr /> */}

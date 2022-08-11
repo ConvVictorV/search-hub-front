@@ -95,11 +95,11 @@ function Demo(args) {
         )
     }
 
-    function searchCustomer(search, data) {
+    function filter(search, data) {
         if (filterData?.filter) {
             if (typeof data === "object") {
                 return data.filter(row => {
-                    return row['idcustomer'] == filterData?.['filter']['idcustomer'] ? true : false
+                    return row[Object.keys(filterData?.['filter'])[0]] == filterData?.['filter'][Object.keys(filterData?.['filter'])[0]] ? true : false
                 })
             }
         }
@@ -144,7 +144,7 @@ function Demo(args) {
                 <TableWords
                     checkedKeys={checkedKeys}
                     setCheckedKeys={setCheckedKeys}
-                    tableData={searchCustomer(search, tableData)}
+                    tableData={filter(search, tableData)}
                     setSearch={setSearch}
                     headerMenu={getHeaderTable()}
                     setRowData={setRowData}
