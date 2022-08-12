@@ -40,7 +40,7 @@ module.exports.sidenavItems = [
         url: "/applications/content-gap",
         name: "Content Gap",
         icon: Dashboard,
-        active: true
+        active: false
     },
     {
         url: "/applications/quick-wins",
