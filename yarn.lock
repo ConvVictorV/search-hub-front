@@ -1713,6 +1713,11 @@ next@12.1.4:
     "@next/swc-win32-ia32-msvc" "12.1.4"
     "@next/swc-win32-x64-msvc" "12.1.4"
 
+nextjs-google-analytics-gtm@^1.1.12:
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/nextjs-google-analytics-gtm/-/nextjs-google-analytics-gtm-1.1.12.tgz#3764437d6b124a5f9fd56d48af0b24641364c0e0"
+  integrity sha512-/F/Ave5qDF8lJZXvQGs6MZ2hoI/ouzXJ+MJGUf660+8RVWom2yOsfrbsIqHSd/8hpR0QG/8fnUc1Qr3ZxccrdA==
+
 ngrok@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/ngrok/-/ngrok-4.3.1.tgz#d9e77b6d647bb1f49659601f89b31efac8478523"

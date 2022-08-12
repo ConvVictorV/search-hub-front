@@ -6,12 +6,13 @@ import { CustomProvider } from 'rsuite';
 import { createContext,useEffect,useState } from 'react';
 import ptbr from 'rsuite/locales/pt_BR';
 import Head from 'next/head'
+import { GoogleAnalytics, usePagesViews } from "nextjs-google-analytics";
 
 export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }) {
-
+  usePagesViews();
   const [theme, setTheme] = useState('light');
   useEffect(()=>{
     typeof window !== 'undefined' ? setTheme(localStorage.getItem('theme') || "light") : false
