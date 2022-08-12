@@ -151,7 +151,7 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                         className="rs-input"
                         type="text"
                         onChange={(event) => setSearch(event.target.value)}
-                        placeholder={`Buscar (${tableData.length + ' Palavras'})`}
+                        placeholder={`Buscar (${tableData.length + ' Clientes'})`}
                         style={{
                             width: "300px"
                         }}
