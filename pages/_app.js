@@ -6,8 +6,8 @@ import { CustomProvider } from 'rsuite';
 import { createContext,useEffect,useState } from 'react';
 import ptbr from 'rsuite/locales/pt_BR';
 import Head from 'next/head'
-import { GoogleAnalytics, usePagesViews } from "nextjs-google-analytics";
-
+import { usePagesViews } from "nextjs-google-analytics";
+import { GoogleAnalytics } from "nextjs-google-analytics-gtm";
 export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
@@ -59,6 +59,7 @@ function Auth({ children }) {
           <meta name="description" content="Search Hub" />
           <meta key="robots" name="robots" content="noindex,nofollow" />
           <link rel="icon" href="/favicon.ico" />
+          <GoogleAnalytics />
       </Head>
       <div>Loading...</div>
       </>
