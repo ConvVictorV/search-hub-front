@@ -13,7 +13,7 @@ function DefaultLayout(args) {
             <Head>
                 <title>{args.title || 'Search Hub | Conversion'}</title>
                 <meta name="description" content={args.description || ''} />
-                {args.indexable == false ? <meta key="robots" name="robots" content="noindex,nofollow" /> : <meta key="robots" name="robots" content="index,follow" />}
+                {args.indexable == true ? <meta key="robots" name="robots" content="noindex,nofollow" /> : <meta key="robots" name="robots" content="index,follow" />}
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 

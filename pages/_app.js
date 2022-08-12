@@ -5,7 +5,7 @@ import Login from './login'
 import { CustomProvider } from 'rsuite';
 import { createContext,useEffect,useState } from 'react';
 import ptbr from 'rsuite/locales/pt_BR';
-
+import Head from 'next/head'
 
 export default function MyApp({
   Component,
@@ -51,7 +51,17 @@ function Auth({ children }) {
   const { status } = useSession({ required: true })
 
   if (status === "loading") {
-    return <div>Loading...</div>
+    return (
+      <>
+      <Head>
+          <title>Search Hub | Conversion</title>
+          <meta name="description" content="Search Hub" />
+          <meta key="robots" name="robots" content="noindex,nofollow" />
+          <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div>Loading...</div>
+      </>
+    )
   }
 
   return children
