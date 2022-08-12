@@ -50,7 +50,7 @@ export default function MyApp({
           </CustomProvider>
         </Auth>
       ) : (
-        <Login {...pageProps} />
+        <><gtag.Scripts /><Login {...pageProps} /></>
       )}
     </SessionProvider>
   )
