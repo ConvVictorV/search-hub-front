@@ -7,7 +7,7 @@ import Col from 'rsuite/Col';
 import Header from '../components/Header';
 import getBackground from '../components/Backgrounds'
 import Script from 'next/script'
-import { GoogleAnalytics } from "nextjs-google-analytics-gtm";
+
 
 function FullWidthLayout(args) {
     return (
@@ -17,7 +17,7 @@ function FullWidthLayout(args) {
                 <meta name="description" content={args.description || ''} />
                 {args.indexable == false ? <meta key="robots" name="robots" content="noindex,nofollow" /> : <meta key="robots" name="robots" content="index,follow" />}
                 <link rel="icon" href="/favicon.ico" />
-                <GoogleAnalytics />
+      
             </Head>
 
             <Container style={{

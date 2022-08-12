@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { Form, ButtonToolbar, Button, FlexboxGrid, Container, Checkbox, Schema, Panel, Icon } from 'rsuite'
 import EmailFillIcon from '@rsuite/icons/EmailFill';
 import getBackground from '../components/Backgrounds'
-import { GoogleAnalytics } from "nextjs-google-analytics-gtm";
+
 
 export default function Login(props) {
   const { status } = useSession()

@@ -15,8 +15,6 @@
     "next": "12.1.4",
     "next-auth": "^4.6.1",
     "next-session": "^4.0.4",
-    "nextjs-google-analytics": "^2.0.0",
-    "nextjs-google-analytics-gtm": "^1.1.12",
     "ngrok": "^4.3.1",
     "passport": "^0.6.0",
     "passport-google-oidc": "^0.1.0",
