@@ -22,7 +22,7 @@ function DefaultLayout(args) {
             }}>
                 <Sidenav />
                 <Container>
-                    <Header toggleTheme={args.toggleTheme} pageName={args.pageName}  />
+                    <Header toggleTheme={args.toggleTheme} breadcrumb={args.breadcrumb}  />
                     <Grid>
                         <Row>
                             <Col style={{ width: '100%', minHeight: "100vh" }}>

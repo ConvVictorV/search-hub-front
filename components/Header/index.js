@@ -79,12 +79,12 @@ export default function Header(args) {
           padding: '20px 20px 20px 50px'
         }}>
           <div>
-
-            <Breadcrumb>
+            {args.breadcrumb === undefined ?
+            (<Breadcrumb>
               {
                 breadc.map((item,index) => <Breadcrumb.Item key={index} href={item.path}>{item.name}</Breadcrumb.Item>)
               }
-            </Breadcrumb>
+            </Breadcrumb>) : <></>}
             {<h3 style={{
               paddingBottom:"50px"
             }}>{args.pageName}</h3>}
