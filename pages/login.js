@@ -24,7 +24,6 @@ export default function Login(props) {
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
         <meta key="robots" name="robots" content="noindex,nofollow" />
-        <GoogleAnalytics />
       </Head>
       <Container style={{ height: '100vh' }} backgroundColor={"var(--rs-body)"}>
         <FlexboxGrid justify="center" align="middle" style={{ height: '100%' }}>

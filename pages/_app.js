@@ -3,10 +3,11 @@ import '../styles/globals.css';
 import { SessionProvider, useSession } from "next-auth/react"
 import Login from './login'
 import { CustomProvider } from 'rsuite';
-import { createContext,useEffect,useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import ptbr from 'rsuite/locales/pt_BR';
 import Head from 'next/head'
-
+import * as gtag from '../components/Gtag'
+import { useRouter } from "next/router";
 
 export default function MyApp({
   Component,
@@ -14,16 +15,24 @@ export default function MyApp({
 }) {
 
   const [theme, setTheme] = useState('light');
-  useEffect(()=>{
+  const router = useRouter();
+  useEffect(() => {
     typeof window !== 'undefined' ? setTheme(localStorage.getItem('theme') || "light") : false
-  },[])
+    const handleRouteChange = (url) => {
+      gtag.pageview(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events])
   let toggleTheme = () => {
-    if(theme === 'light'){
+    if (theme === 'light') {
       setTheme('dark')
-      localStorage.setItem('theme','dark')
-    }else{
+      localStorage.setItem('theme', 'dark')
+    } else {
       setTheme('light');
-      localStorage.setItem('theme','light')
+      localStorage.setItem('theme', 'light')
     }
   }
 
@@ -54,17 +63,21 @@ function Auth({ children }) {
   if (status === "loading") {
     return (
       <>
-      <Head>
+        <Head>
           <title>Search Hub | Conversion</title>
           <meta name="description" content="Search Hub" />
           <meta key="robots" name="robots" content="noindex,nofollow" />
           <link rel="icon" href="/favicon.ico" />
-
-      </Head>
-      <div>Loading...</div>
+        </Head>
+        <gtag.Scripts />
+        <div>Loading..</div>
       </>
     )
   }
 
-  return children
+  return (
+    <>
+      <gtag.Scripts />
+      {children}
+    </>)
 }
