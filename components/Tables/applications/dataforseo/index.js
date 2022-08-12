@@ -25,7 +25,14 @@ const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
+const NmCustomer = ({ rowData, dataKey, ...props }) => {
+    const { nmcustomer } = rowData
+    return (
+        <Cell {...props} className="link-group">
+            {nmcustomer && capitalizeFirstLetter(nmcustomer) || "false"}
+        </Cell>
+    );
+};
 const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKeys, setFilterData }) => {
 
     const [loading, setLoading] = useState(true);
@@ -184,8 +191,8 @@ const WordTable = ({ tableData, setSearch, headerMenu, checkedKeys, setCheckedKe
                     <Cell dataKey="dscity" />
                 </Column>
                 <Column sortable width={200} flexGrow={1} align="center">
-                    <HeaderCell>Parametro</HeaderCell>
-                    <Cell dataKey="dsparameter" />
+                    <HeaderCell>Cliente</HeaderCell>
+                    <NmCustomer dataKey="nmcustomer" />
                 </Column>
                 <Column sortable width={150} align="center">
                     <HeaderCell>Inserida em</HeaderCell>
