@@ -9,6 +9,8 @@ import Link from 'next/link'
 import { Form, ButtonToolbar, Button, FlexboxGrid, Container, Checkbox, Schema, Panel, Icon } from 'rsuite'
 import EmailFillIcon from '@rsuite/icons/EmailFill';
 import getBackground from '../components/Backgrounds'
+import Script from 'next/script'
+
 export default function Login(props) {
   const { status } = useSession()
   const router = useRouter()
@@ -24,6 +26,17 @@ export default function Login(props) {
         <meta key="robots" name="robots" content="noindex,nofollow" />
       </Head>
       <Container style={{ height: '100vh' }} backgroundColor={"var(--rs-body)"}>
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id=%27+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-NMH86KG');
+        `}
+      </Script>
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NMH86KG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <FlexboxGrid justify="center" align="middle" style={{ height: '100%' }}>
           <FlexboxGrid.Item colspan={12} justify="center" align="middle">
             <Image src={'/searchhub-white.png'} width={389} height={78} alt="Logo branca SearchHUB" />
