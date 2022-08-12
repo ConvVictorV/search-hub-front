@@ -1,4 +1,8 @@
 const { Dashboard } = require('@rsuite/icons/');
+import PeoplesIcon from '@rsuite/icons/Peoples';
+import SingleSourceIcon from '@rsuite/icons/SingleSource';
+import PageIcon from '@rsuite/icons/Page';
+
 module.exports.sidenavItems = [
     {
         url: "/dashboard/demo",
@@ -27,13 +31,13 @@ module.exports.sidenavItems = [
     {
         url: "/customers",
         name: "Clientes",
-        icon: Dashboard,
+        icon: PeoplesIcon,
         active: true
     },
     {
         url: "/customers/projects",
         name: "Projetos",
-        icon: Dashboard,
+        icon: SingleSourceIcon,
         active: true
     },
     {
@@ -45,7 +49,7 @@ module.exports.sidenavItems = [
     {
         url: "/applications/quick-wins",
         name: "QuickWins",
-        icon: Dashboard,
+        icon: PageIcon,
         active: true
     },
     {
@@ -55,4 +59,3 @@ module.exports.sidenavItems = [
         active: true
     }
 ]
-
