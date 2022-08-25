@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { Form, useToaster, Message, Button, ButtonToolbar, RadioGroup, Radio } from 'rsuite'
+import { Form, useToaster, Message, Button, ButtonToolbar, RadioGroup, Radio, Toggle } from 'rsuite'
 import Select from '../../../Components/Select'
 
 function FormComponent({ closeModal, footer, sendText, ...rest }) {
@@ -11,7 +11,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
     const [projectNrGa, setProjectNrGa] = useState(0)
     const [projectType, setProjectType] = useState("institucional e blog")
     const [projectAccount, setProjectAccount] = useState("")
-
+    const [projectReport, setProjectReport] = useState(false)
     const toast = useToaster();
 
     const messageLoading = (
@@ -98,6 +98,11 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
                 placeholder={"Selecione a conta do GSC"}
                 onSelect={setProjectAccount}
             />
+            <Form.ControlLabel style={{
+                display:"block",
+                padding:"20px 0px 5px"
+            }}>Receber relátorio semanal:</Form.ControlLabel>
+            <Toggle size="lg" checkedChildren="Sim" unCheckedChildren="Não" onChange={setProjectReport} defaultChecked={projectReport} />
             <RadioGroup name="radioList" inline appearance="picker" onChange={setProjectType} defaultValue="institucional e blog" style={{
                 width: "94%",
                 padding: "0px 10px",

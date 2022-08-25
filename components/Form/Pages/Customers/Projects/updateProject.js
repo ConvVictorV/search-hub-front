@@ -1,19 +1,20 @@
 import axios from 'axios'
 import { useSession } from 'next-auth/react';
 import { useState } from 'react'
-import { Form, useToaster, Message, Button, ButtonToolbar, RadioGroup, Radio } from 'rsuite'
+import { Form, useToaster, Message, Button, ButtonToolbar, RadioGroup, Radio, Toggle } from 'rsuite'
 import Select from '../../../Components/Select'
 
 function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
 
     const session = useSession();
     const idToken = session.data.id_token
-    const { idproject, dsurlsite, dstype, dsaccountgsc, dssitenamegsc, nrviewIdga } = rowData
+    const { idproject, dsurlsite, dstype, dsaccountgsc, dssitenamegsc, nrviewIdga, dsreport } = rowData
     const [projectUrl, setProjectUrl] = useState(dsurlsite || '')
     const [projectSitename, setProjectSitename] = useState(dssitenamegsc || '')
     const [projectNrGa, setProjectNrGa] = useState(nrviewIdga || 0)
     const [projectType, setProjectType] = useState(dstype || "Institucional e Blog")
     const [projectAccount, setProjectAccount] = useState(dsaccountgsc || "")
+    const [projectReport, setProjectReport] = useState(dsreport || false)
 
     const toast = useToaster();
 
@@ -37,7 +38,8 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
             dstype: projectType,
             dsaccountgsc: projectAccount,
             dssitenamegsc: projectSitename,
-            nrviewIdga: projectNrGa
+            nrviewIdga: projectNrGa,
+            dsreport: projectReport
         }, {
             headers: {
                 authorization: idToken
@@ -95,6 +97,11 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
                 <Form.ControlLabel>Conta GSC</Form.ControlLabel>
                 <Form.Control name="project-account" onChange={setProjectAccount} defaultValue={projectAccount} />
             </Form.Group>
+            <Form.ControlLabel style={{
+                display:"block",
+                paddingBottom:"5px"
+            }}>Receber relátorio semanal:</Form.ControlLabel>
+            <Toggle size="lg" checkedChildren="Sim" unCheckedChildren="Não" onChange={setProjectReport} defaultChecked={projectReport} />
             <RadioGroup name="radioList" inline appearance="picker" onChange={setProjectType} defaultValue={projectType} style={{
                 width: "94%",
                 padding: "0px 10px",

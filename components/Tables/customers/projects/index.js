@@ -175,6 +175,10 @@ const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, se
                     <HeaderCell>Id GA</HeaderCell>
                     <Cell dataKey="nrviewIdga" />
                 </Column>
+                <Column sortable width={100}>
+                    <HeaderCell>Report</HeaderCell>
+                    <Cell dataKey="dsreport" />
+                </Column>
                 <Column width={50} verticalAlign={"top"} align="center">
                     <HeaderCell>Editar</HeaderCell>
                     <ActionCell setDrawerOpenEdit={setDrawerOpenEdit} setRowData={setRowData} dataKey="idcustomer" />
