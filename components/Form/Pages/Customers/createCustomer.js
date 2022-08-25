@@ -5,6 +5,7 @@ import Select from '../../Components/Select'
 
 function FormComponent({ closeModal, footer, sendText, ...rest }) {
     const [customerName, setCustomerName] = useState('')
+    const [customerDomain, setCustomerDomain] = useState('')
     const [customerEmail, setCustomerEmail] = useState('')
     const [customerIdSquad, setCustomerIdSquad] = useState('')
     const [customerActive, setCustomerActive] = useState(true)    
@@ -31,6 +32,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
         toast.push(messageLoading, { placement: "topCenter" })
         axios.post('/api/post/customer',{
             nmcustomer:customerName,
+            dsdomain: customerDomain,
             blstatus:customerActive,
             idsquad:customerIdSquad,
             dsclientemail:customerEmail,
@@ -70,6 +72,13 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
             <Form.Group controlId="name-9">
                 <Form.ControlLabel>Nome</Form.ControlLabel>
                 <Form.Control name="customer-name" onChange={setCustomerName} />
+            </Form.Group>
+            <Form.Group controlId="name-9">
+                <Form.ControlLabel>Domínio</Form.ControlLabel>
+                <Form.Control name="customer-domain" onChange={setCustomerDomain} onBlur={() => {
+                    const formatedDomain = (customerDomain.indexOf('://') > -1 ? customerDomain.split('/')[2] : customerDomain.split('/')[0]).replace('www.', '')
+                    setCustomerDomain(formatedDomain)
+                    document.getElementsByName("customer-domain")[0].value = formatedDomain}} />
             </Form.Group>
             <Select
                 fetch={"/api/get/select/squadsId"}

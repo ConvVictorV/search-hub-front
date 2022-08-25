@@ -8,13 +8,13 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
     const session = useSession();
     const idToken = session.data.id_token
     const toast = useToaster();
-    const { blstatus, dsclientemail, idcustomer, idsquad, nmcustomer, dsname } = data
+    const { blstatus, dsclientemail, idcustomer, idsquad, nmcustomer, dsname, dsdomain } = data
     const [customerId, setCustomerId] = useState(idcustomer || '')
     const [customerName, setCustomerName] = useState(nmcustomer || '')
     const [customerEmail, setCustomerEmail] = useState(dsclientemail || '')
     const [customerIdSquad, setCustomerIdSquad] = useState(idsquad || '')
     const [customerActive, setCustomerActive] = useState(blstatus || false)
-
+    const [customerDomain, setCustomerDomain] = useState(dsdomain || '')
 
     const messageLoading = (
         <Message showIcon type={"info"} duration={0}>
@@ -32,6 +32,7 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
         axios.post('/api/put/customer', {
             idcustomer: customerId,
             nmcustomer: customerName,
+            dsdomain: customerDomain,
             blstatus: customerActive,
             idsquad: customerIdSquad,
             dsclientemail: customerEmail,
@@ -79,6 +80,13 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
             <Form.Group controlId="name-9">
                 <Form.ControlLabel>Nome</Form.ControlLabel>
                 <Form.Control name="customer-name" onChange={setCustomerName} defaultValue={nmcustomer} />
+            </Form.Group>
+            <Form.Group controlId="name-9">
+                <Form.ControlLabel>Domínio</Form.ControlLabel>
+                <Form.Control name="customer-domain" defaultValue={customerDomain} onChange={setCustomerDomain} onBlur={() => {
+                    const formatedDomain = (customerDomain.indexOf('://') > -1 ? customerDomain.split('/')[2] : customerDomain.split('/')[0]).replace('www.', '')
+                    setCustomerDomain(formatedDomain)
+                    document.getElementsByName("customer-domain")[0].value = formatedDomain}} />
             </Form.Group>
             <Select
                 fetch={"/api/get/select/squadsId"}

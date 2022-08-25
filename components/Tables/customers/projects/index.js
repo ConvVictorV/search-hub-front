@@ -101,7 +101,7 @@ const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, se
                     // number column
                     return sortType === 'asc' ? topRow - bottomRow : bottomRow - topRow
                 }else{
-                    topRow= topRow.trim().toUpperCase() || "z"
+                    topRow= topRow?.trim().toUpperCase() || "z"
                     bottomRow= bottomRow?.trim().toUpperCase() || "z"
                     
                     // string column

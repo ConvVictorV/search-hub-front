@@ -128,7 +128,7 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                     // number column
                     return sortType === 'asc' ? topRow - bottomRow : bottomRow - topRow
                 }else{
-                    topRow= topRow.trim().toUpperCase() || "z"
+                    topRow= topRow?.trim().toUpperCase() || "z"
                     bottomRow= bottomRow?.trim().toUpperCase() || "z"
                     
                     // string column
@@ -199,6 +199,10 @@ const TableCustomers = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, s
                 <Column sortable width={200} flexGrow={1}>
                     <HeaderCell>Email</HeaderCell>
                     <EmailCell dataKey="dsclientemail" />
+                </Column>
+                <Column sortable width={200} flexGrow={1}>
+                    <HeaderCell>Dominio</HeaderCell>
+                    <Cell dataKey="dsdomain" />
                 </Column>
                 <Column width={50} verticalAlign={"top"} align="center"  >
                     <HeaderCell>Editar</HeaderCell>
