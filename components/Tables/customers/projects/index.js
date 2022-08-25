@@ -26,17 +26,17 @@ const ActionCell = ({ setDrawerOpenEdit, rowData, dataKey, setRowData, ...props 
     );
 };
 const StatusCell = ({ rowData, dataKey, ...props }) => {
-    const { blstatus } = rowData
+    const { dsreport } = rowData
     return (
         <Cell {...props} className="link-group">
             <div style={{ marginTop: "-8px" }}>
-                {blstatus && <Button appearance='ghost' style={{
+                {dsreport && <Button appearance='ghost' style={{
                     color: 'var(--color-conversion-7)',
                     borderColor: 'var(--color-conversion-7)'
-                }}><Badge style={{ background: 'var(--color-conversion-7)' }} /> {"ativo"}</Button> || <Button appearance='ghost' style={{
+                }}><Badge style={{ background: 'var(--color-conversion-7)' }} /> {"sim"}</Button> || <Button appearance='ghost' style={{
                     color: 'var(--color-conversion-4)',
                     borderColor: 'var(--color-conversion-4)'
-                }}><Badge style={{ background: 'var(--color-conversion-4)' }} /> {"inativo"}</Button>}
+                }}><Badge style={{ background: 'var(--color-conversion-4)' }} /> {"não"}</Button>}
             </div>
         </Cell>
     );
@@ -175,9 +175,9 @@ const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, se
                     <HeaderCell>Id GA</HeaderCell>
                     <Cell dataKey="nrviewIdga" />
                 </Column>
-                <Column sortable width={100}>
+                <Column sortable resizable width={100} >
                     <HeaderCell>Report</HeaderCell>
-                    <Cell dataKey="dsreport" />
+                    <StatusCell dataKey="dsreport" />
                 </Column>
                 <Column width={50} verticalAlign={"top"} align="center">
                     <HeaderCell>Editar</HeaderCell>
