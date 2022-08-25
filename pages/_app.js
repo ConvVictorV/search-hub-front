@@ -1,23 +1,24 @@
-import 'rsuite/dist/rsuite.min.css';
-import '../styles/globals.css';
-import { SessionProvider, useSession } from "next-auth/react"
-import Login from './login'
-import { CustomProvider } from 'rsuite';
-import { createContext, useEffect, useState } from 'react';
-import ptbr from 'rsuite/locales/pt_BR';
-import Head from 'next/head'
-import * as gtag from '../components/Gtag'
+import { SessionProvider, useSession } from "next-auth/react";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { CustomProvider } from "rsuite";
+import "rsuite/dist/rsuite.min.css";
+import ptbr from "rsuite/locales/pt_BR";
+import * as gtag from "../components/Gtag";
+import "../styles/globals.css";
+import Login from "./login";
 
 export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }) {
-
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState("light");
   const router = useRouter();
   useEffect(() => {
-    typeof window !== 'undefined' ? setTheme(localStorage.getItem('theme') || "light") : false
+    typeof window !== "undefined"
+      ? setTheme(localStorage.getItem("theme") || "light")
+      : false;
     const handleRouteChange = (url) => {
       gtag.pageview(url);
     };
@@ -25,16 +26,16 @@ export default function MyApp({
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, [router.events])
+  }, [router.events]);
   let toggleTheme = () => {
-    if (theme === 'light') {
-      setTheme('dark')
-      localStorage.setItem('theme', 'dark')
+    if (theme === "light") {
+      setTheme("dark");
+      localStorage.setItem("theme", "dark");
     } else {
-      setTheme('light');
-      localStorage.setItem('theme', 'light')
+      setTheme("light");
+      localStorage.setItem("theme", "light");
     }
-  }
+  };
 
   return (
     <SessionProvider
@@ -42,23 +43,31 @@ export default function MyApp({
       // Re-fetch session every 5 minutes
       refetchInterval={5 * 60}
       // Re-fetches session when window is focused
-      refetchOnWindowFocus={true}>
+      refetchOnWindowFocus={true}
+    >
       {Component.auth ? (
         <Auth>
           <CustomProvider theme={theme} locale={ptbr}>
-            <Component toggleTheme={toggleTheme} {...pageProps} session={session} />
+            <Component
+              toggleTheme={toggleTheme}
+              {...pageProps}
+              session={session}
+            />
           </CustomProvider>
         </Auth>
       ) : (
-        <><gtag.Scripts /><Login {...pageProps} /></>
+        <>
+          <gtag.Scripts />
+          <Login {...pageProps} />
+        </>
       )}
     </SessionProvider>
-  )
+  );
 }
 
 function Auth({ children }) {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
-  const { status } = useSession({ required: true })
+  const { status } = useSession({ required: true });
 
   if (status === "loading") {
     return (
@@ -72,12 +81,13 @@ function Auth({ children }) {
         <gtag.Scripts />
         <div>Loading..</div>
       </>
-    )
+    );
   }
 
   return (
     <>
       <gtag.Scripts />
       {children}
-    </>)
+    </>
+  );
 }
