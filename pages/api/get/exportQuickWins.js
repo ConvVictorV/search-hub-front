@@ -11,7 +11,7 @@ export default function handler(req, res) {
             .on('data', (row) => { csv += row })
             .on('end', () => res.status(200).send(csv))
     }
-    axios.get(`${process.env.BACKENDHOST}/quickwins/${idcustomer || ''}`)
+    return axios.get(`${process.env.BACKENDHOST}/quickwins/${idcustomer || ''}`)
         .then(({ data }) => {
             fastcsv
                 .write(data, { headers: true })

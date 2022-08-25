@@ -6,12 +6,12 @@ export default function handler(req, res) {
     const { content } = req.body || {}
     let csv = ''
     if (content) {
-        fastcsv
+        return fastcsv
             .write(content, { headers: true })
             .on('data', (row) => { csv += row })
             .on('end', () => res.status(200).send(csv))
     }
-    axios.get(`${process.env.BACKENDHOST}/words/${idcustomer || ''}`)
+    return axios.get(`${process.env.BACKENDHOST}/words/${idcustomer || ''}`)
         .then(({ data }) => {
             fastcsv
                 .write(data, { headers: true })
