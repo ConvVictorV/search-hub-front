@@ -89,19 +89,23 @@ const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, se
 
     const getData = () => {
         if (sortColumn && sortType) {
-            return data.sort((a, b) => {
-                let x = a[sortColumn];
-                let y = b[sortColumn];
-                if (typeof x === 'string') {
-                    x = x.charCodeAt();
-                }
-                if (typeof y === 'string') {
-                    y = y.charCodeAt();
-                }
-                if (sortType === 'asc') {
-                    return x - y;
-                } else {
-                    return y - x;
+            return tableData.sort((t, b) => {
+                let topRow = t[sortColumn];
+                let bottomRow = b[sortColumn];
+                if(new Date(topRow) != 'Invalid Date'){
+                    // console.log("Date type")
+                    //date column
+                    return sortType === 'asc' ? new Date(topRow).getTime() - new Date(bottomRow).getTime() : new Date(bottomRow).getTime() - new Date(topRow).getTime()
+                }else if(!isNaN(parseInt(topRow))){
+                    // console.log("Number type")
+                    // number column
+                    return sortType === 'asc' ? topRow - bottomRow : bottomRow - topRow
+                }else{
+                    topRow= topRow.trim().toUpperCase() || "z"
+                    bottomRow= bottomRow?.trim().toUpperCase() || "z"
+                    // console.log("String type")
+                    // string column
+                    return sortType === 'asc' ? topRow.localeCompare(bottomRow) : bottomRow?.localeCompare(topRow)
                 }
             });
         }
