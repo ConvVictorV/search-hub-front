@@ -105,8 +105,8 @@ const TableProjects = ({
   const [sortType, setSortType] = React.useState();
 
   useEffect(() => {
-    if (tableData) setLoading(false);
-  }, []);
+    if (tableData.length > 0) setLoading(false);
+  }, [tableData]);
   const filterSquadById = (id) => {
     id
       ? setFilterData({

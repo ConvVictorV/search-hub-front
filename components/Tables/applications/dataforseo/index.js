@@ -58,8 +58,8 @@ const WordTable = ({
   let indeterminate = false;
 
   useEffect(() => {
-    if (tableData) setLoading(false);
-  }, []);
+    if (tableData.length > 0) setLoading(false);
+  }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {
     setPage(1);
