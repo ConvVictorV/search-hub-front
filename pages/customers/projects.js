@@ -15,6 +15,8 @@ function Demo(args) {
     const [openEditForm, setOpenEditForm] = useState(false);
     const [openCreateForm, setOpenCreateForm] = useState(false);
     const [rowData, setRowData] = useState();
+    const [filterData, setFilterData] = useState()
+
     const toast = useToaster()
     const handleClose = () => {
         setOpenEditForm(false);
@@ -37,7 +39,22 @@ function Demo(args) {
     useEffect(() => {
         getData()
     }, [])
-
+    function filter(search, data) {
+        if (filterData?.filter) {
+            if (typeof data === "object") {
+                return data.filter(row => {
+                    return row[Object.keys(filterData?.['filter'])[0]] == filterData?.['filter'][Object.keys(filterData?.['filter'])[0]] ? true : false
+                })
+            }
+        }
+        if (search.length && typeof data === "object") {
+            return data.filter((row) => {
+                const flatRow = JSON.stringify(row).toLowerCase();
+                return flatRow.includes(search.toLowerCase());
+            });
+        }
+        return data;
+    }
     const getHeaderTable = () => {
         return (
             <ButtonToolbar style={{ paddingBottom: "18px", display: "flex", justifyContent: "end" }}>
@@ -101,11 +118,12 @@ function Demo(args) {
                     </Modal.Body>
                 </Modal>
                 <TableProjects
-                    tableData={filteredCustomers}
+                    tableData={filter(search,tableData)}
                     setSearch={setSearch}
                     headerMenu={getHeaderTable()}
                     setRowData={setRowData}
                     setDrawerOpenEdit={setOpenEditForm}
+                    setFilterData={setFilterData}
                 />
             </Container>
 

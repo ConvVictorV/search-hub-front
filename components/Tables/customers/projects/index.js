@@ -7,7 +7,7 @@ const { HeaderCell, Cell, Column } = Table;
 
 import EditIcon from '@rsuite/icons/Edit';
 import MoreIcon from '@rsuite/icons/More';
-
+import Select from '../../../Form/Components/Select';
 
 // custom cells
 const ActionCell = ({ setDrawerOpenEdit, rowData, dataKey, setRowData, ...props }) => {
@@ -56,7 +56,7 @@ function capitalizeFirstLetter(string) {
 }
 
 
-const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, setRowData }) => {
+const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, setRowData, setFilterData }) => {
     const [loading, setLoading] = React.useState(true);
     const [limit, setLimit] = React.useState(12);
     const [page, setPage] = React.useState(1);
@@ -66,7 +66,14 @@ const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, se
     useEffect(() => {
         if (tableData) setLoading(false)
     }, [])
-
+    const filterSquadById = (id) =>{
+        id ?
+        (setFilterData({
+            filter:{
+                idsquad:id
+            }
+        }) && setPage(1)) : setFilterData()
+    }
     const handleChangeLimit = dataKey => {
         setPage(1);
         setLimit(dataKey);
@@ -116,11 +123,10 @@ const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, se
             <Stack
                 alignItems={"center"}
                 justifyContent={"space-between"}>
-                <InputGroup inside style={{
-                    marginBottom: "20px",
-                    width: "70%",
-                    height: "38px"
-                }}>
+                    <Stack 
+                wrap spacing={24}
+                alignItems={"center"}>
+                <InputGroup inside>
                     <InputGroup.Addon>
                         <SearchIcon />
                     </InputGroup.Addon>
@@ -134,8 +140,13 @@ const TableProjects = ({ setDrawerOpenEdit, tableData, setSearch, headerMenu, se
                         }}
                     />
                 </InputGroup>
-                {headerMenu}
+                <Select fetch="/api/get/select/squadsId" placeholder="Filtre por squad" onSelect={filterSquadById}  style={{
+                width:"150px"
+                }}/>
             </Stack>
+            {headerMenu}
+            </Stack>
+            
             {/* <hr /> */}
             <Table
                 virtualized
