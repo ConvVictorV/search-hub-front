@@ -39,7 +39,8 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
             dstype: projectType,
             dsaccountgsc: projectAccount,
             dssitenamegsc: projectSitename,
-            nrviewIdga: projectNrGa
+            nrviewIdga: projectNrGa,
+            dsreport: projectReport
         }).then((s)=>{
             console.log(s)
             sucessHandle()
