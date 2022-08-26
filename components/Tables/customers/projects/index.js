@@ -161,6 +161,10 @@ const TableProjects = ({
             ? topRow.localeCompare(bottomRow)
             : bottomRow?.localeCompare(topRow);
         }
+      }).filter((v, i) => {
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
       });
     }
     return data;
@@ -209,11 +213,11 @@ const TableProjects = ({
         sortType={sortType}
         onSortColumn={handleSortColumn}
       >
-        <Column sortable resizable width={100} align="center" fixed>
+        <Column sortable resizable width={75} align="center" fixed>
           <HeaderCell>Id Cliente</HeaderCell>
           <Cell dataKey="idcustomer" />
         </Column>
-        <Column sortable resizable width={100} align="center" fixed>
+        <Column sortable resizable width={75} align="center" fixed>
           <HeaderCell>Id Projeto</HeaderCell>
           <Cell dataKey="idproject" />
         </Column>
@@ -222,11 +226,11 @@ const TableProjects = ({
           <Cell dataKey="dsurlsite" />
         </Column>
 
-        <Column sortable resizable width={100}>
+        <Column sortable resizable width={50}>
           <HeaderCell>Tipo do Site</HeaderCell>
           <Cell dataKey="dstype" />
         </Column>
-        <Column sortable width={100}>
+        <Column sortable width={90}>
           <HeaderCell>Conta GSC</HeaderCell>
           <Cell dataKey="dsaccountgsc" />
         </Column>
