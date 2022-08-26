@@ -183,7 +183,7 @@ const TableProjects = ({
               onChange={(event) => setSearch(event.target.value)}
               placeholder={`Buscar (${tableData.length + " Projetos"})`}
               style={{
-                width: "500px",
+                width: "300px",
               }}
             />
           </InputGroup>
@@ -217,12 +217,12 @@ const TableProjects = ({
           <HeaderCell>Id Projeto</HeaderCell>
           <Cell dataKey="idproject" />
         </Column>
-        <Column sortable resizable width={200} fixed>
+        <Column sortable resizable width={150} fixed>
           <HeaderCell>Url do Site</HeaderCell>
           <Cell dataKey="dsurlsite" />
         </Column>
 
-        <Column sortable resizable width={150}>
+        <Column sortable resizable width={100}>
           <HeaderCell>Tipo do Site</HeaderCell>
           <Cell dataKey="dstype" />
         </Column>
@@ -230,7 +230,7 @@ const TableProjects = ({
           <HeaderCell>Conta GSC</HeaderCell>
           <Cell dataKey="dsaccountgsc" />
         </Column>
-        <Column sortable width={200} flexGrow={1}>
+        <Column sortable width={100}>
           <HeaderCell>Sitename GSC</HeaderCell>
           <Cell dataKey="dssitenamegsc" />
         </Column>
