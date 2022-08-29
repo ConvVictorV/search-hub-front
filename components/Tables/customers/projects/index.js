@@ -221,7 +221,7 @@ const TableProjects = ({
           <HeaderCell>Id Projeto</HeaderCell>
           <Cell dataKey="idproject" />
         </Column>
-        <Column sortable resizable width={150} fixed>
+        <Column sortable resizable width={150} fixed flexGrow={1}>
           <HeaderCell>Url do Site</HeaderCell>
           <Cell dataKey="dsurlsite" />
         </Column>
