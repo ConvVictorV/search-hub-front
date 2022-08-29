@@ -242,7 +242,7 @@ const TableProjects = ({
           <HeaderCell>Id GA</HeaderCell>
           <Cell dataKey="nrviewIdga" />
         </Column>
-        <Column sortable resizable width={100}>
+        <Column sortable resizable width={75}>
           <HeaderCell>Report</HeaderCell>
           <StatusCell dataKey="dsreport" />
         </Column>
