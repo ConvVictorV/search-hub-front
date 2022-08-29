@@ -226,19 +226,19 @@ const TableProjects = ({
           <Cell dataKey="dsurlsite" />
         </Column>
 
-        <Column sortable resizable width={50}>
+        <Column sortable width={50} resizable>
           <HeaderCell>Tipo do Site</HeaderCell>
           <Cell dataKey="dstype" />
         </Column>
-        <Column sortable width={90}>
+        <Column sortable width={90} resizable>
           <HeaderCell>Conta GSC</HeaderCell>
           <Cell dataKey="dsaccountgsc" />
         </Column>
-        <Column sortable width={100}>
+        <Column sortable width={100} resizable>
           <HeaderCell>Sitename GSC</HeaderCell>
           <Cell dataKey="dssitenamegsc" />
         </Column>
-        <Column sortable width={100}>
+        <Column sortable width={100} resizable>
           <HeaderCell>Id GA</HeaderCell>
           <Cell dataKey="nrviewIdga" />
         </Column>
