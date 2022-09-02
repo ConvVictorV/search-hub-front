@@ -55,6 +55,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             style={{
               color: "var(--color-conversion-7)",
               borderColor: "var(--color-conversion-7)",
+              width:"100%"
             }}
           >
             <Badge style={{ background: "var(--color-conversion-7)" }} />{" "}
@@ -66,6 +67,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             style={{
               color: "var(--color-conversion-4)",
               borderColor: "var(--color-conversion-4)",
+              width:"100%"
             }}
           >
             <Badge style={{ background: "var(--color-conversion-4)" }} />{" "}

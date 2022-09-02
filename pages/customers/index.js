@@ -126,7 +126,7 @@ function Demo(args) {
     >
       <Container
         style={{
-          padding: "0px 50px",
+          padding: "0px 20px 0px 50px",
         }}
       >
         <Modal

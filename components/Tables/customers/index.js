@@ -54,6 +54,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             style={{
               color: "var(--color-conversion-7)",
               borderColor: "var(--color-conversion-7)",
+              width:"100%"
             }}
           >
             <Badge style={{ background: "var(--color-conversion-7)" }} />{" "}
@@ -65,6 +66,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             style={{
               color: "var(--color-conversion-4)",
               borderColor: "var(--color-conversion-4)",
+              width:"100%"
             }}
           >
             <Badge style={{ background: "var(--color-conversion-4)" }} />{" "}
@@ -255,11 +257,11 @@ const TableCustomers = ({
           <HeaderCell>Squad</HeaderCell>
           <Cell dataKey="dsname" />
         </Column>
-        <Column sortable width={200} flexGrow={1}>
+        <Column sortable resizable width={200}>
           <HeaderCell>Email</HeaderCell>
           <EmailCell dataKey="dsclientemail" />
         </Column>
-        <Column sortable width={200} flexGrow={1}>
+        <Column sortable resizable width={200} flexGrow={1}>
           <HeaderCell>Dominio</HeaderCell>
           <Cell dataKey="dsdomain" />
         </Column>
