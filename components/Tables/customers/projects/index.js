@@ -174,14 +174,15 @@ const TableProjects = ({
     return data;
   };
   return (
-    <Panel
-      bordered
-      style={{ backgroundColor: "var(--rs-bg-card)", padding: "0px" }}
-      shaded
-    >
+    <Panel className="nopadding">
       <Stack alignItems={"center"} justifyContent={"space-between"}>
         <Stack wrap spacing={24} alignItems={"center"}>
-          <InputGroup inside>
+          <InputGroup inside 
+            style={{
+              outlineStyle: "none",
+              boxShadow: "none",
+              borderColor: "transparent",
+            }}>
             <InputGroup.Addon>
               <SearchIcon />
             </InputGroup.Addon>
@@ -192,6 +193,12 @@ const TableProjects = ({
               placeholder={`Buscar (${tableData.length + " Projetos"})`}
               style={{
                 width: "300px",
+                border: "none!important",
+                outlineStyle: "none",
+                boxShadow: "none",
+                borderColor: "transparent",
+                borderLeft: "solid 3px var(--color-conversion-1)",
+                background: "var(--rs-btn-subtle-hover-bg)"
               }}
             />
           </InputGroup>
@@ -216,6 +223,8 @@ const TableProjects = ({
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
+        cellBordered
+        bordered
       >
         <Column sortable resizable width={75} align="center" fixed>
           <HeaderCell>#</HeaderCell>

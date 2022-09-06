@@ -44,6 +44,12 @@ a {
   border: none;
   color: var(--rs-gray-900);
 }
+body.rs-theme-dark .rs-table-cell[role="columnheader"] {
+  background: #0f131a!important;
+  border: none;
+  color: white;
+}
+
 
 .rs-table {
   border-radius: 6px;

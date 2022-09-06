@@ -254,6 +254,8 @@ const WordTable = ({
                 outlineStyle: "none",
                 boxShadow: "none",
                 borderColor: "transparent",
+                borderLeft: "solid 3px var(--color-conversion-1)",
+                background: "var(--rs-btn-subtle-hover-bg)"
               }}
             />
           </InputGroup>
