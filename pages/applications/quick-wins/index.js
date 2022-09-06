@@ -1,16 +1,22 @@
-import ExportIcon from "@rsuite/icons/Export";
-import ImportIcon from "@rsuite/icons/Import";
+import FunnelIcon from "@rsuite/icons/Funnel";
+import MoreIcon from "@rsuite/icons/More";
 import ReloadIcon from "@rsuite/icons/Reload";
-import TrashIcon from "@rsuite/icons/Trash";
 import React, { useEffect, useState } from "react";
+
 import {
   ButtonToolbar,
   Container,
+  Dropdown,
   IconButton,
   Message,
   Modal,
+  Popover,
+  Stack,
+  Tooltip,
   useToaster,
+  Whisper,
 } from "rsuite";
+import Select from "../../../components/Form/Components/Select";
 import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/delete";
 import ExportForm from "../../../components/Form/Pages/Applications/quickwins/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
@@ -24,7 +30,8 @@ function Demo(args) {
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
-  const [filterData, setFilterData] = useState();
+  const [filterData, setFilterData] = useState([]);
+  const [filterActive, setFilterActive] = useState(false);
 
   const [rowData, setRowData] = useState();
   const toast = useToaster();
@@ -39,6 +46,22 @@ function Demo(args) {
     const axios = require("axios");
     axios.get("/api/get/quickwins").then(({ data }) => setTableData(data));
   };
+  const filterCustomerById = (id) => {
+    const removeCustomerFilter = () => {
+      const filters = filterData.filter(
+        (item) => item.indexOf("idcustomer") == -1
+      );
+      setFilterData(filters);
+      console.log(filterData);
+    };
+    const addCustomerFilter = () => {
+      removeCustomerFilter();
+      const filters = [...filterData, `idcustomer|is|${id}`] || filters;
+      setFilterData(filters);
+    };
+    id ? addCustomerFilter() && setPage(1) : removeCustomerFilter();
+  };
+
   const updateData = () => {
     setCheckedKeys([]);
     toast.push(
@@ -52,105 +75,150 @@ function Demo(args) {
   useEffect(() => {
     getData();
   }, []);
+  const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
+    const handleSelect = (eventKey) => {
+      onClose();
+      switch (eventKey) {
+        case 1:
+          setOpenImportForm(true);
+          break;
+        case 2:
+          setOpenExportForm(true);
+          break;
+        case 3:
+          setOpenDeleteForm(true);
+          break;
+      }
+    };
+    return (
+      <Popover ref={ref} className={className} style={{ left, top }} full>
+        <Dropdown.Menu onSelect={handleSelect}>
+          <Dropdown.Item eventKey={1}>Importar</Dropdown.Item>
+          <Dropdown.Item eventKey={2}>{`Exportar ${
+            checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
+          }`}</Dropdown.Item>
+          {checkedKeys.length != 0 ? (
+            <Dropdown.Item
+              eventKey={3}
+            >{`Deletar (${checkedKeys.length})`}</Dropdown.Item>
+          ) : (
+            ""
+          )}
+        </Dropdown.Menu>
+      </Popover>
+    );
+  };
 
   const getHeaderTable = () => {
     return (
-      <ButtonToolbar
+      <Stack
+        wrap
+        spacing={24}
+        alignItems={"center"}
         style={{
-          paddingBottom: "18px",
-          display: "flex",
-          justifyContent: "end",
+          padding: "20px",
         }}
       >
-        {checkedKeys.length != 0 ? (
-          <IconButton
-            icon={
-              <TrashIcon
-                style={{
-                  backgroundColor: "transparent",
-                  color: "var(--color-conversion-4)",
-                }}
-              />
-            }
-            onClick={() => setOpenDeleteForm(true)}
-            appearance={"ghost"}
-            style={{
-              color: "var(--color-conversion-4)",
-              borderColor: "var(--color-conversion-4)",
-            }}
+        <Select
+          fetch="/api/get/select/customersId"
+          placeholder="Filtre por cliente"
+          onSelect={filterCustomerById}
+          style={{
+            width: "150px",
+          }}
+        />
+        <ButtonToolbar>
+          <Whisper
+            trigger="hover"
+            placement="top"
+            speaker={<Tooltip>Filtrar</Tooltip>}
           >
-            {`Deletar (${checkedKeys.length})`}
-          </IconButton>
-        ) : (
-          ""
-        )}
-        <IconButton
-          icon={
-            <ImportIcon
+            <IconButton
+              style={
+                !filterActive
+                  ? {
+                      backgroundColor: "transparent",
+                      color: "var(--color-conversion-1)",
+                    }
+                  : {
+                      backgroundColor: "var(--color-conversion-1)",
+                      color: "white",
+                    }
+              }
+              icon={<FunnelIcon />}
+              appearance={"subtle"}
+              onClick={() => setFilterActive(!filterActive)}
+            ></IconButton>
+          </Whisper>
+          <Whisper
+            trigger="hover"
+            placement="top"
+            speaker={<Tooltip>Atualizar tabela</Tooltip>}
+          >
+            <IconButton
+              icon={
+                <ReloadIcon
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "var(--color-conversion-1)",
+                  }}
+                />
+              }
+              onClick={() => updateData()}
+              appearance={"subtle"}
               style={{
-                backgroundColor: "transparent",
                 color: "var(--color-conversion-1)",
+                borderColor: "var(--color-conversion-1)",
               }}
-            />
-          }
-          onClick={() => setOpenImportForm(true)}
-          appearance={"ghost"}
-          style={{
-            color: "var(--color-conversion-1)",
-            borderColor: "var(--color-conversion-1)",
-          }}
-        >
-          Importar
-        </IconButton>
-        <IconButton
-          icon={
-            <ExportIcon
+            ></IconButton>
+          </Whisper>
+          <Whisper
+            trigger="click"
+            placement="bottomEnd"
+            speaker={renderSpeaker}
+          >
+            <IconButton
+              icon={
+                <MoreIcon
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "var(--color-conversion-1)",
+                  }}
+                />
+              }
+              appearance={"subtle"}
               style={{
-                backgroundColor: "transparent",
                 color: "var(--color-conversion-1)",
+                borderColor: "var(--color-conversion-1)",
               }}
-            />
-          }
-          onClick={() => setOpenExportForm(true)}
-          appearance={"ghost"}
-          style={{
-            color: "var(--color-conversion-1)",
-            borderColor: "var(--color-conversion-1)",
-          }}
-        >
-          {"Exportar " +
-            (checkedKeys.length != 0 ? `(${checkedKeys.length})` : "")}
-        </IconButton>
-        <IconButton
-          icon={
-            <ReloadIcon
-              style={{
-                backgroundColor: "transparent",
-                color: "var(--color-conversion-1)",
-              }}
-            />
-          }
-          onClick={() => updateData()}
-          appearance={"ghost"}
-          style={{
-            color: "var(--color-conversion-1)",
-            borderColor: "var(--color-conversion-1)",
-          }}
-        >
-          Atualizar
-        </IconButton>
-      </ButtonToolbar>
+            ></IconButton>
+          </Whisper>
+        </ButtonToolbar>
+      </Stack>
     );
   };
 
   function filter(search, data) {
-    if (filterData?.filter) {
+    let filteredData = [...data];
+    console.log(filteredData);
+    if (filterData.length > 0) {
       if (typeof data === "object") {
-        return data.filter((row) => {
-          return row[Object.keys(filterData?.["filter"])[0]] ==
-            filterData?.["filter"][Object.keys(filterData?.["filter"])[0]]
-            ? true
-            : false;
+        filterData.map((filterString) => {
+          filterString = filterString.split("|");
+          const column = filterString[0];
+          const type = filterString[1];
+          const value = filterString[2];
+          filteredData = filteredData.filter((row) => {
+            const rowColumn = row[column];
+            switch (type) {
+              case "is":
+                return rowColumn == value;
+              case "is not":
+                return rowColumn != value;
+              case "contains":
+                return rowColumn.indexOf(value) > -1;
+            }
+          });
         });
       }
     }
@@ -160,7 +228,7 @@ function Demo(args) {
         return flatRow.includes(search.toLowerCase());
       });
     }
-    return data;
+    return filteredData;
   }
 
   return (
@@ -237,6 +305,8 @@ function Demo(args) {
           setSearch={setSearch}
           headerMenu={getHeaderTable()}
           setRowData={setRowData}
+          filterActive={filterActive}
+          filterData={filterData}
           setFilterData={setFilterData}
         />
       </Container>

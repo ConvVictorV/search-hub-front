@@ -35,7 +35,19 @@ a {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+.nopadding .rs-panel-body{
+  padding:0px!important;
+  background-color: var(--rs-body);
+}
+.rs-table-cell[role="columnheader"] {
+  background: #f0f2f8!important;
+  border: none;
+  color: var(--rs-gray-900);
+}
 
+.rs-table {
+  border-radius: 6px;
+}
 /* OVERRIDE */
 .rs-sidenav-header:hover {
   cursor:pointer

@@ -107,7 +107,7 @@ export default function Header(args) {
             {
               <h3
                 style={{
-                  paddingBottom: "50px",
+                  paddingBottom: "0px",
                 }}
               >
                 {args.pageName}

@@ -13,8 +13,7 @@ const Select = (props) => {
     });
   }, []);
 
-  const onSelectItem = (a) => {
-  };
+  const onSelectItem = (a) => {};
 
   const onClear = () =>
     props.onSelect ? props.onSelect(undefined) : onSelectItem(undefined);

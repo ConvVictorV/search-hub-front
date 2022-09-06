@@ -55,7 +55,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             style={{
               color: "var(--color-conversion-7)",
               borderColor: "var(--color-conversion-7)",
-              width:"100%"
+              width: "100%",
             }}
           >
             <Badge style={{ background: "var(--color-conversion-7)" }} />{" "}
@@ -67,7 +67,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             style={{
               color: "var(--color-conversion-4)",
               borderColor: "var(--color-conversion-4)",
-              width:"100%"
+              width: "100%",
             }}
           >
             <Badge style={{ background: "var(--color-conversion-4)" }} />{" "}
@@ -143,31 +143,33 @@ const TableProjects = ({
 
   const getData = () => {
     if (sortColumn && sortType) {
-      return tableData.sort((t, b) => {
-        let topRow = t[sortColumn];
-        let bottomRow = b[sortColumn];
-        if (new Date(topRow) != "Invalid Date") {
-          //date column
-          return sortType === "asc"
-            ? new Date(topRow).getTime() - new Date(bottomRow).getTime()
-            : new Date(bottomRow).getTime() - new Date(topRow).getTime();
-        } else if (!isNaN(parseInt(topRow))) {
-          // number column
-          return sortType === "asc" ? topRow - bottomRow : bottomRow - topRow;
-        } else {
-          topRow = topRow?.trim().toUpperCase() || "z";
-          bottomRow = bottomRow?.trim().toUpperCase() || "z";
+      return tableData
+        .sort((t, b) => {
+          let topRow = t[sortColumn];
+          let bottomRow = b[sortColumn];
+          if (new Date(topRow) != "Invalid Date") {
+            //date column
+            return sortType === "asc"
+              ? new Date(topRow).getTime() - new Date(bottomRow).getTime()
+              : new Date(bottomRow).getTime() - new Date(topRow).getTime();
+          } else if (!isNaN(parseInt(topRow))) {
+            // number column
+            return sortType === "asc" ? topRow - bottomRow : bottomRow - topRow;
+          } else {
+            topRow = topRow?.trim().toUpperCase() || "z";
+            bottomRow = bottomRow?.trim().toUpperCase() || "z";
 
-          // string column
-          return sortType === "asc"
-            ? topRow.localeCompare(bottomRow)
-            : bottomRow?.localeCompare(topRow);
-        }
-      }).filter((v, i) => {
-        const start = limit * (page - 1);
-        const end = start + limit;
-        return i >= start && i < end;
-      });
+            // string column
+            return sortType === "asc"
+              ? topRow.localeCompare(bottomRow)
+              : bottomRow?.localeCompare(topRow);
+          }
+        })
+        .filter((v, i) => {
+          const start = limit * (page - 1);
+          const end = start + limit;
+          return i >= start && i < end;
+        });
     }
     return data;
   };
@@ -216,7 +218,7 @@ const TableProjects = ({
         onSortColumn={handleSortColumn}
       >
         <Column sortable resizable width={75} align="center" fixed>
-          <HeaderCell>Id Cliente</HeaderCell>
+          <HeaderCell>#</HeaderCell>
           <Cell dataKey="idcustomer" />
         </Column>
         <Column sortable resizable width={75} align="center" fixed>
@@ -249,7 +251,7 @@ const TableProjects = ({
           <StatusCell dataKey="dsreport" />
         </Column>
         <Column width={50} verticalAlign={"top"} align="center">
-          <HeaderCell>Editar</HeaderCell>
+          <HeaderCell>...</HeaderCell>
           <ActionCell
             setDrawerOpenEdit={setDrawerOpenEdit}
             setRowData={setRowData}

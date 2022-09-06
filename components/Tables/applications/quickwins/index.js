@@ -1,11 +1,30 @@
 import React, { useEffect } from "react";
-import { Checkbox, InputGroup, Pagination, Panel, Stack, Table } from "rsuite";
+import {
+  Button,
+  ButtonToolbar,
+  Checkbox,
+  Dropdown,
+  IconButton,
+  Input,
+  InputGroup,
+  Notification,
+  Pagination,
+  Panel,
+  Popover,
+  Radio,
+  RadioGroup,
+  Stack,
+  Table,
+  Tag,
+  TagGroup,
+  useToaster,
+  Whisper,
+} from "rsuite";
 
+import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
 
 const { HeaderCell, Cell, Column } = Table;
-
-import Select from "../../../Form/Components/Select";
 
 // custom cells
 const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
@@ -33,23 +52,20 @@ const WordTable = ({
   headerMenu,
   checkedKeys,
   setCheckedKeys,
+  filterActive,
   setFilterData,
+  filterData,
 }) => {
   const [loading, setLoading] = React.useState(true);
   const [limit, setLimit] = React.useState(12);
   const [page, setPage] = React.useState(1);
   const [sortColumn, setSortColumn] = React.useState();
   const [sortType, setSortType] = React.useState();
+  const [filterColumn, setFilterColumn] = React.useState("");
+  const [filterType, setFilterType] = React.useState("");
+  const [filterValue, setFilterValue] = React.useState("");
 
-  const filterCustomerById = (id) => {
-    id
-      ? setFilterData({
-          filter: {
-            idcustomer: id,
-          },
-        }) && setPage(1)
-      : setFilterData();
-  };
+  const toaster = useToaster();
   let checked = false;
   let indeterminate = false;
 
@@ -105,6 +121,69 @@ const WordTable = ({
       : checkedKeys.filter((item) => item !== value);
     setCheckedKeys(keys);
   };
+  const getMessage = (key) => {
+    let type = "";
+    let value = "";
+    return (
+      <Notification header={"Adicionar filtro"} type="info" duration={0}>
+        A coluna <b>{key}</b>
+        <RadioGroup name="filterType" onChange={(t) => (type = t)}>
+          <Radio value="is">é igual à</Radio>
+          <Radio value="is not">é diferente de</Radio>
+          <Radio value="contains">contém</Radio>
+        </RadioGroup>
+        <Input placeholder="Valor" onChange={(v) => (value = v)} />
+        <hr />
+        <ButtonToolbar>
+          <Button
+            appearance="default"
+            onClick={() => {
+              toaster.clear();
+            }}
+          >
+            Cancelar
+          </Button>
+          <Button
+            appearance="primary"
+            style={{
+              background: "var(--color-conversion-1)",
+            }}
+            onClick={() => {
+              toaster.clear();
+              if (key == "" || type == "" || value == "") return;
+              const nextTags =
+                [...filterData, `${key}|${type}|${value}`] || filterData;
+              setFilterData(nextTags);
+            }}
+          >
+            Aplicar
+          </Button>
+        </ButtonToolbar>
+      </Notification>
+    );
+  };
+
+  const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
+    const keys = Object.keys(tableData[0] || {});
+    const handleSelect = (eventKey) => {
+      onClose();
+      const message = getMessage(keys[eventKey]);
+      toaster.push(message, { placement: "topEnd" });
+    };
+    return (
+      <Popover ref={ref} className={className} style={{ left, top }} full>
+        <Dropdown.Menu onSelect={handleSelect}>
+          {keys.map((key, index) => {
+            return (
+              <Dropdown.Item eventKey={index} key={index}>
+                {key}
+              </Dropdown.Item>
+            );
+          })}
+        </Dropdown.Menu>
+      </Popover>
+    );
+  };
   const getData = () => {
     if (sortColumn && sortType) {
       return setPageData(
@@ -133,15 +212,37 @@ const WordTable = ({
     }
     return data;
   };
+  const removeTag = (tag) => {
+    const nextTags = filterData.filter((item) => item !== tag);
+    setFilterData(nextTags);
+  };
+
+  const renderFilters = () => {
+    return (
+      <TagGroup>
+        {filterData.map((tag, index) => (
+          <Tag key={index} closable onClose={() => removeTag(tag)}>
+            <span style={{ textTransform: "capitalize" }}>
+              {tag.split("|")[0]}
+            </span>{" "}
+            {tag.split("|")[1]} <span>{tag.split("|")[2]}</span>
+          </Tag>
+        ))}
+      </TagGroup>
+    );
+  };
   return (
-    <Panel
-      bordered
-      style={{ backgroundColor: "var(--rs-bg-card)", padding: "0px" }}
-      shaded
-    >
+    <Panel className="nopadding">
       <Stack alignItems={"center"} justifyContent={"space-between"}>
         <Stack wrap spacing={24} alignItems={"center"}>
-          <InputGroup inside>
+          <InputGroup
+            inside
+            style={{
+              outlineStyle: "none",
+              boxShadow: "none",
+              borderColor: "transparent",
+            }}
+          >
             <InputGroup.Addon>
               <SearchIcon />
             </InputGroup.Addon>
@@ -152,20 +253,44 @@ const WordTable = ({
               placeholder={`Buscar (${tableData.length + " Quickwins"})`}
               style={{
                 width: "300px",
+                border: "none!important",
+                outlineStyle: "none",
+                boxShadow: "none",
+                borderColor: "transparent",
               }}
             />
           </InputGroup>
-          <Select
-            fetch="/api/get/select/customersId"
-            placeholder="Filtre por cliente"
-            onSelect={filterCustomerById}
-            style={{
-              width: "150px",
-            }}
-          />
         </Stack>
         {headerMenu}
       </Stack>
+      {filterActive ? (
+        <Stack
+          alignItems={"flex-start"}
+          style={{
+            paddingBottom: "6px",
+          }}
+        >
+          <Whisper
+            trigger="click"
+            placement="bottomStart"
+            speaker={renderSpeaker}
+          >
+            <IconButton
+              size="xs"
+              icon={<PlusIcon />}
+              style={{
+                marginRight: "6px",
+                background: "var(--color-conversion-1)",
+                color: "white",
+              }}
+            />
+          </Whisper>
+          {renderFilters()}
+        </Stack>
+      ) : (
+        ""
+      )}
+
       {/* <hr /> */}
       <Table
         virtualized
@@ -175,6 +300,8 @@ const WordTable = ({
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
+        cellBordered
+        bordered
       >
         <Column width={50} align="center">
           <HeaderCell style={{ padding: 0 }}>
@@ -216,7 +343,7 @@ const WordTable = ({
           <Cell dataKey="dstype" />
         </Column>
         <Column sortable width={200} flexGrow={1} align="center">
-          <HeaderCell>Tipo</HeaderCell>
+          <HeaderCell>Tipo do site</HeaderCell>
           <Cell dataKey="dscontenttype" />
         </Column>
         <Column sortable width={150} align="center">

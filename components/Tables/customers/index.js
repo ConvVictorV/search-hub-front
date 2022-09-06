@@ -54,7 +54,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             style={{
               color: "var(--color-conversion-7)",
               borderColor: "var(--color-conversion-7)",
-              width:"100%"
+              width: "100%",
             }}
           >
             <Badge style={{ background: "var(--color-conversion-7)" }} />{" "}
@@ -66,7 +66,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             style={{
               color: "var(--color-conversion-4)",
               borderColor: "var(--color-conversion-4)",
-              width:"100%"
+              width: "100%",
             }}
           >
             <Badge style={{ background: "var(--color-conversion-4)" }} />{" "}
@@ -239,7 +239,7 @@ const TableCustomers = ({
         onSortColumn={handleSortColumn}
       >
         <Column sortable resizable width={50} align="center" fixed>
-          <HeaderCell>Id</HeaderCell>
+          <HeaderCell>#</HeaderCell>
           <Cell dataKey="idcustomer" />
         </Column>
 
@@ -266,7 +266,7 @@ const TableCustomers = ({
           <Cell dataKey="dsdomain" />
         </Column>
         <Column width={50} verticalAlign={"top"} align="center">
-          <HeaderCell>Editar</HeaderCell>
+          <HeaderCell>...</HeaderCell>
           <ActionCell
             setDrawerOpenEdit={setDrawerOpenEdit}
             setRowData={setRowData}

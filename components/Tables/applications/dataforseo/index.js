@@ -140,11 +140,7 @@ const WordTable = ({
     return data;
   };
   return (
-    <Panel
-      bordered
-      style={{ backgroundColor: "var(--rs-bg-card)", padding: "0px" }}
-      shaded
-    >
+    <Panel style={{ backgroundColor: "var(--rs-bg-card)", padding: "0px" }}>
       <Stack alignItems={"center"} justifyContent={"space-between"}>
         <Stack wrap spacing={24} alignItems={"center"}>
           <InputGroup inside>
@@ -181,6 +177,8 @@ const WordTable = ({
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
+        cellBordered
+        bordered
       >
         <Column width={50} align="center">
           <HeaderCell style={{ padding: 0 }}>
