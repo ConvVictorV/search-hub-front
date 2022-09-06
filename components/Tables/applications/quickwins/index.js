@@ -40,7 +40,7 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   </Cell>
 );
 const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
-  <Cell {...props}>{rowData?.dtregister?.split("T")[0]}</Cell>
+  <Cell {...props}>{rowData?.dtimplement?.split("T")[0]}</Cell>
 );
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
