@@ -61,9 +61,6 @@ const WordTable = ({
   const [page, setPage] = React.useState(1);
   const [sortColumn, setSortColumn] = React.useState();
   const [sortType, setSortType] = React.useState();
-  const [filterColumn, setFilterColumn] = React.useState("");
-  const [filterType, setFilterType] = React.useState("");
-  const [filterValue, setFilterValue] = React.useState("");
 
   const toaster = useToaster();
   let checked = false;
@@ -334,19 +331,19 @@ const WordTable = ({
           <HeaderCell>Url</HeaderCell>
           <Cell dataKey="dspageurl" />
         </Column>
-        <Column sortable width={200} flexGrow={1} align="center">
+        <Column sortable resizable width={200} flexGrow={1} align="center">
           <HeaderCell>Data de Competência</HeaderCell>
           <Cell dataKey="dtcomp" />
         </Column>
-        <Column sortable width={200} flexGrow={1} align="center">
+        <Column sortable resizable width={200} flexGrow={1} align="center">
           <HeaderCell>Tipo</HeaderCell>
           <Cell dataKey="dstype" />
         </Column>
-        <Column sortable width={200} flexGrow={1} align="center">
+        <Column sortable resizable width={200} flexGrow={1} align="center">
           <HeaderCell>Tipo do site</HeaderCell>
           <Cell dataKey="dscontenttype" />
         </Column>
-        <Column sortable width={150} align="center">
+        <Column sortable resizable  width={150} align="center">
           <HeaderCell>Implementado em</HeaderCell>
           <Inserted dataKey="dtimplement" />
         </Column>
