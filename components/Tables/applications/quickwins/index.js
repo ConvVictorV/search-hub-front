@@ -161,19 +161,20 @@ const WordTable = ({
   };
 
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
+    const manualKeys = [{"value":"dskeyword","label":"Palavra Chave"}, {"value":"dsinitposition","label":"Posição Inicial"}, {"value":"dspageurl","label":"Url"}, {"value":"dtcomp","label":"Data de Competência"}, {"value":"dsuser","label":"Usuário"}, {"value":"dtimplement","label":"Data de Implementação"}, {"value":"nmsquad","label":"Squad"}]
     const keys = Object.keys(tableData[0] || {});
     const handleSelect = (eventKey) => {
       onClose();
-      const message = getMessage(keys[eventKey]);
+      const message = getMessage(manualKeys[eventKey].value);
       toaster.push(message, { placement: "topEnd" });
     };
     return (
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
-          {keys.map((key, index) => {
+          {manualKeys.map((key, index) => {
             return (
               <Dropdown.Item eventKey={index} key={index}>
-                {key}
+                {key.label}
               </Dropdown.Item>
             );
           })}
