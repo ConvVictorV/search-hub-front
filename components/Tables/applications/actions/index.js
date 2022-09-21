@@ -39,6 +39,15 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
     </div>
   </Cell>
 );
+
+const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+  <Cell {...props}>
+    <a href={rowData?.link || ""} target={"_blank"} rel="noopener noreferrer">
+      {rowData?.key || ""}
+    </a>
+  </Cell>
+);
+
 const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   <Cell {...props}>{rowData?.dtimplement?.split("T")[0]}</Cell>
 );
@@ -67,7 +76,9 @@ const WordTable = ({
   let indeterminate = false;
 
   useEffect(() => {
-    if (tableData.length > 0) setLoading(false);
+    if (tableData.length > 0) {
+      setLoading(false);
+    }
   }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {
@@ -93,6 +104,28 @@ const WordTable = ({
         })
       : [];
   };
+  tableData = tableData.map((issue) => {
+    const {
+      summary,
+      project,
+      customfield_10081: urls,
+      customfield_10084: arquivos,
+      customfield_10073: palavras,
+      customfield_10074: status,
+    } = issue.fields;
+    return {
+      id: issue.id,
+      key: issue.key,
+      link: "https://conversionbr.atlassian.net/browse/" + issue.key,
+      summary,
+      projectName: project.name,
+      projectId: project.id,
+      urls,
+      arquivos,
+      palavras,
+      status: (status && status[0].value) || "",
+    };
+  });
   const data =
     typeof tableData == "object"
       ? tableData.filter((v, i) => {
@@ -161,16 +194,10 @@ const WordTable = ({
   };
 
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
-    const manualKeys = [
-      { value: "dskeyword", label: "Palavra Chave" },
-      { value: "dsinitposition", label: "Posição Inicial" },
-      { value: "dspageurl", label: "Url" },
-      { value: "dtcomp", label: "Data de Competência" },
-      { value: "dsuser", label: "Usuário" },
-      { value: "dtimplement", label: "Data de Implementação" },
-      { value: "nmsquad", label: "Squad" },
-    ];
+    //format: {"value":"","label":""}
     const keys = Object.keys(tableData[0] || {});
+    const manualKeys = keys;
+
     const handleSelect = (eventKey) => {
       onClose();
       const message = getMessage(manualKeys[eventKey].value);
@@ -323,40 +350,35 @@ const WordTable = ({
             </div>
           </HeaderCell>
           <CheckCell
-            dataKey="idworkedpage"
+            dataKey="id"
             checkedKeys={checkedKeys}
             onChange={handleCheck}
           />
         </Column>
-        <Column sortable resizable width={200} fixed>
-          <HeaderCell>Palavra</HeaderCell>
-          <Cell dataKey="dskeyword" />
+        <Column sortable resizable width={110} fixed>
+          <HeaderCell>Link da Task</HeaderCell>
+          <LinkCell dataKey="link" />
         </Column>
-
         <Column sortable resizable width={100} align="center">
-          <HeaderCell>Posição Inicial</HeaderCell>
-          <Cell dataKey="dsinitposition" />
+          <HeaderCell>Projeto</HeaderCell>
+          <Cell dataKey="projectName" />
         </Column>
 
         <Column sortable resizable width={200} align="center">
-          <HeaderCell>Url</HeaderCell>
-          <Cell dataKey="dspageurl" />
+          <HeaderCell>Urls Trabalhadas</HeaderCell>
+          <Cell dataKey="urls" />
         </Column>
         <Column sortable resizable width={200} flexGrow={1} align="center">
-          <HeaderCell>Data de Competência</HeaderCell>
-          <Cell dataKey="dtcomp" />
+          <HeaderCell>Arquivos envolvidos</HeaderCell>
+          <Cell dataKey="arquivos" />
         </Column>
         <Column sortable resizable width={200} flexGrow={1} align="center">
-          <HeaderCell>Tipo</HeaderCell>
-          <Cell dataKey="dstype" />
+          <HeaderCell>Palavras-chave</HeaderCell>
+          <Cell dataKey="palavras" />
         </Column>
         <Column sortable resizable width={200} flexGrow={1} align="center">
-          <HeaderCell>Tipo do site</HeaderCell>
-          <Cell dataKey="dscontenttype" />
-        </Column>
-        <Column sortable resizable width={150} align="center">
-          <HeaderCell>Implementado em</HeaderCell>
-          <Inserted dataKey="dtimplement" />
+          <HeaderCell>Status</HeaderCell>
+          <Cell dataKey="status" />
         </Column>
       </Table>
       <div style={{ padding: 20 }}>

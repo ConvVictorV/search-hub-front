@@ -58,4 +58,10 @@ module.exports.sidenavItems = [
     icon: Dashboard,
     active: true,
   },
+  {
+    url: "/applications/actions",
+    name: "Registro de ações",
+    icon: Dashboard,
+    active: true,
+  },
 ];

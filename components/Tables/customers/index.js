@@ -199,12 +199,14 @@ const TableCustomers = ({
     <Panel className="nopadding">
       <Stack alignItems={"center"} justifyContent={"space-between"}>
         <Stack wrap spacing={24} alignItems={"center"}>
-          <InputGroup inside 
+          <InputGroup
+            inside
             style={{
               outlineStyle: "none",
               boxShadow: "none",
               borderColor: "transparent",
-            }}>
+            }}
+          >
             <InputGroup.Addon>
               <SearchIcon />
             </InputGroup.Addon>
@@ -220,7 +222,7 @@ const TableCustomers = ({
                 boxShadow: "none",
                 borderColor: "transparent",
                 borderLeft: "solid 3px var(--color-conversion-1)",
-                background: "var(--rs-btn-subtle-hover-bg)"
+                background: "var(--rs-btn-subtle-hover-bg)",
               }}
             />
           </InputGroup>
