@@ -363,6 +363,10 @@ const WordTable = ({
           <Cell dataKey="palavras" />
         </Column>
         <Column sortable resizable width={150} align="center">
+          <HeaderCell>Finalizado em</HeaderCell>
+          <Cell dataKey="statusDate" />
+        </Column>
+        <Column sortable resizable width={150} align="center">
           <HeaderCell>Status</HeaderCell>
           <Cell dataKey="status" />
         </Column>

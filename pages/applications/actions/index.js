@@ -54,6 +54,7 @@ function Demo(args) {
           customfield_10084: arquivos,
           customfield_10073: palavras,
           customfield_10074: status,
+          customfield_10086: statusDate,
           assignee
         } = issue.fields;
         return {
@@ -61,6 +62,7 @@ function Demo(args) {
           key: issue.key,
           link: "https://conversionbr.atlassian.net/browse/" + issue.key,
           summary,
+          statusDate,
           project: project.key,
           urls,
           arquivos,
