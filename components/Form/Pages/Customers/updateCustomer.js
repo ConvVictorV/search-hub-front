@@ -23,6 +23,7 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
     nmcustomer,
     dsname,
     dsdomain,
+    jirakey
   } = data;
   const [customerId, setCustomerId] = useState(idcustomer || "");
   const [customerName, setCustomerName] = useState(nmcustomer || "");
@@ -30,7 +31,7 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
   const [customerIdSquad, setCustomerIdSquad] = useState(idsquad || "");
   const [customerActive, setCustomerActive] = useState(blstatus || false);
   const [customerDomain, setCustomerDomain] = useState(dsdomain || "");
-
+  const [customerJiraKey, setCustomerJiraKey] = useState(jirakey || "");
   const messageLoading = (
     <Message showIcon type={"info"} duration={0}>
       Processando dados!
@@ -54,6 +55,7 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
           blstatus: customerActive,
           idsquad: customerIdSquad,
           dsclientemail: customerEmail,
+          jirakey: customerJiraKey
         },
         {
           headers: {
@@ -127,6 +129,14 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
             document.getElementsByName("customer-domain")[0].value =
               formatedDomain;
           }}
+        />
+      </Form.Group>
+      <Form.Group controlId="name-9">
+        <Form.ControlLabel>Projeto Jira</Form.ControlLabel>
+        <Form.Control
+          name="customer-jirakey"
+          onChange={setCustomerJiraKey}
+          defaultValue={jirakey}
         />
       </Form.Group>
       <Select

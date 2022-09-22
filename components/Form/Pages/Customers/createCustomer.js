@@ -15,6 +15,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
   const [customerDomain, setCustomerDomain] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerIdSquad, setCustomerIdSquad] = useState("");
+  const [customerJiraKey, setCustomerJiraKey] = useState("");
   const [customerActive, setCustomerActive] = useState(true);
 
   const toast = useToaster();
@@ -44,6 +45,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
         blstatus: customerActive,
         idsquad: customerIdSquad,
         dsclientemail: customerEmail,
+        jirakey: customerJiraKey
       })
       .then((s) => {
         sucessHandle();
@@ -98,6 +100,10 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
               formatedDomain;
           }}
         />
+      </Form.Group>
+      <Form.Group controlId="name-9">
+        <Form.ControlLabel>Projeto Jira</Form.ControlLabel>
+        <Form.Control name="customer-jirakey" onChange={setCustomerJiraKey} />
       </Form.Group>
       <Select
         fetch={"/api/get/select/squadsId"}

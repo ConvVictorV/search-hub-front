@@ -276,6 +276,10 @@ const TableCustomers = ({
           <HeaderCell>Dominio</HeaderCell>
           <Cell dataKey="dsdomain" />
         </Column>
+        <Column sortable resizable width={100}>
+          <HeaderCell>Jira</HeaderCell>
+          <Cell dataKey="jirakey" />
+        </Column>
         <Column width={50} verticalAlign={"top"} align="center">
           <HeaderCell>...</HeaderCell>
           <ActionCell
