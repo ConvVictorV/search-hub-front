@@ -44,19 +44,44 @@ function Demo(args) {
   };
   const getData = () => {
     const axios = require("axios");
-    axios.get("/api/get/jiraIssues").then(({ data }) => setTableData(data));
+    axios.get("/api/get/jiraIssues").then(({ data }) => {
+      console.log(data[0])
+      setTableData(data.map((issue) => { 
+        const {
+          summary,
+          project,
+          customfield_10081: urls,
+          customfield_10084: arquivos,
+          customfield_10073: palavras,
+          customfield_10074: status,
+          assignee
+        } = issue.fields;
+        return {
+          id: issue.id,
+          key: issue.key,
+          link: "https://conversionbr.atlassian.net/browse/" + issue.key,
+          summary,
+          project: project.key,
+          urls,
+          arquivos,
+          assigneeImage: assignee?.avatarUrls['32x32'] || '',
+          assigneeName: assignee?.displayName,
+          palavras,
+          status: (status && status[0].value) || "",
+        };
+      }));
+    });
   };
   const filterCustomerById = (id) => {
     const removeCustomerFilter = () => {
       const filters = filterData.filter(
-        (item) => item.indexOf("idcustomer") == -1
+        (item) => item.indexOf("project") == -1
       );
       setFilterData(filters);
-      console.log(filterData);
     };
     const addCustomerFilter = () => {
       removeCustomerFilter();
-      const filters = [...filterData, `idcustomer|is|${id}`] || filters;
+      const filters = [...filterData, `project|is|${id}`] || filters;
       setFilterData(filters);
     };
     id ? addCustomerFilter() && setPage(1) : removeCustomerFilter();
@@ -93,12 +118,13 @@ function Demo(args) {
     return (
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
-          <Dropdown.Item eventKey={1}>Importar</Dropdown.Item>
+          <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
           <Dropdown.Item eventKey={2}>{`Exportar ${
             checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
           }`}</Dropdown.Item>
           {checkedKeys.length != 0 ? (
             <Dropdown.Item
+              disabled
               eventKey={3}
             >{`Deletar (${checkedKeys.length})`}</Dropdown.Item>
           ) : (
@@ -120,7 +146,7 @@ function Demo(args) {
         }}
       >
         <Select
-          fetch="/api/get/select/customersId"
+          fetch="/api/get/select/customersJiraKeys"
           placeholder="Filtre por cliente"
           onSelect={filterCustomerById}
           style={{
@@ -199,8 +225,7 @@ function Demo(args) {
   };
 
   function filter(search, data) {
-    let filteredData = [...data];
-    console.log(filteredData);
+    let filteredData = [...tableData];
     if (filterData.length > 0) {
       if (typeof data === "object") {
         filterData.map((filterString) => {
@@ -216,7 +241,7 @@ function Demo(args) {
               case "is not":
                 return rowColumn != value;
               case "contains":
-                return rowColumn.indexOf(value) > -1;
+                return rowColumn?.indexOf(value) > -1;
             }
           });
         });

@@ -19,10 +19,14 @@ import {
   TagGroup,
   useToaster,
   Whisper,
+  Avatar,
+  Tooltip,
+  Badge
 } from "rsuite";
 
 import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
+import UserIcon from "@rsuite/icons/legacy/User";
 
 const { HeaderCell, Cell, Column } = Table;
 
@@ -48,12 +52,16 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   </Cell>
 );
 
-const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
-  <Cell {...props}>{rowData?.dtimplement?.split("T")[0]}</Cell>
+const AssigneeCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+  <Cell {...props} style={{ padding: 0, paddingTop: 5 }}>
+    <Whisper placement="top" speaker={rowData.assigneeName ? <Tooltip>
+     {rowData.assigneeName || ''}
+  </Tooltip> : <div></div>}>
+      <Avatar size="md" style={{maxWidth:"35px",maxHeight:"35px"}} circle src={rowData.assigneeImage || null }><UserIcon /></Avatar>
+    </Whisper>
+  </Cell>
 );
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
+
 
 const WordTable = ({
   tableData,
@@ -104,28 +112,7 @@ const WordTable = ({
         })
       : [];
   };
-  tableData = tableData.map((issue) => {
-    const {
-      summary,
-      project,
-      customfield_10081: urls,
-      customfield_10084: arquivos,
-      customfield_10073: palavras,
-      customfield_10074: status,
-    } = issue.fields;
-    return {
-      id: issue.id,
-      key: issue.key,
-      link: "https://conversionbr.atlassian.net/browse/" + issue.key,
-      summary,
-      projectName: project.name,
-      projectId: project.id,
-      urls,
-      arquivos,
-      palavras,
-      status: (status && status[0].value) || "",
-    };
-  });
+  
   const data =
     typeof tableData == "object"
       ? tableData.filter((v, i) => {
@@ -135,7 +122,7 @@ const WordTable = ({
         })
       : [];
   const handleCheckAll = (value, checked) => {
-    const keys = checked ? data.map((item) => item.idworkedpage) : [];
+    const keys = checked ? data.map((item) => item.id) : [];
     setCheckedKeys(keys);
   };
   if (checkedKeys.length === data.length) {
@@ -196,7 +183,7 @@ const WordTable = ({
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
     //format: {"value":"","label":""}
     const keys = Object.keys(tableData[0] || {});
-    const manualKeys = keys;
+    const manualKeys = keys.map(key=>{return {value:key,label:key}});
 
     const handleSelect = (eventKey) => {
       onClose();
@@ -283,7 +270,7 @@ const WordTable = ({
               className="rs-input"
               type="text"
               onChange={(event) => setSearch(event.target.value)}
-              placeholder={`Buscar (${tableData.length + " Quickwins"})`}
+              placeholder={`Buscar (${tableData.length + " Ações"})`}
               style={{
                 width: "300px",
                 border: "none!important",
@@ -355,16 +342,15 @@ const WordTable = ({
             onChange={handleCheck}
           />
         </Column>
-        <Column sortable resizable width={110} fixed>
-          <HeaderCell>Link da Task</HeaderCell>
+        <Column sortable resizable width={110} align="center">
+          <HeaderCell>Responsável</HeaderCell>
+          <AssigneeCell dataKey="assignee" />
+        </Column>
+        <Column sortable resizable width={100} fixed align="center">
+          <HeaderCell>Link</HeaderCell>
           <LinkCell dataKey="link" />
         </Column>
-        <Column sortable resizable width={100} align="center">
-          <HeaderCell>Projeto</HeaderCell>
-          <Cell dataKey="projectName" />
-        </Column>
-
-        <Column sortable resizable width={200} align="center">
+        <Column sortable resizable width={200} flexGrow={2} align="center">
           <HeaderCell>Urls Trabalhadas</HeaderCell>
           <Cell dataKey="urls" />
         </Column>
@@ -376,7 +362,7 @@ const WordTable = ({
           <HeaderCell>Palavras-chave</HeaderCell>
           <Cell dataKey="palavras" />
         </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
+        <Column sortable resizable width={150} align="center">
           <HeaderCell>Status</HeaderCell>
           <Cell dataKey="status" />
         </Column>
