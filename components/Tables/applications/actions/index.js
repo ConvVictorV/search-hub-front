@@ -183,7 +183,20 @@ const WordTable = ({
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
     //format: {"value":"","label":""}
     const keys = Object.keys(tableData[0] || {});
-    const manualKeys = keys.map(key=>{return {value:key,label:key}});
+    const manualKeys = [
+      {"value":"id","label":"Id"},
+      {"value":"key","label":"Key da task"},
+      {"value":"link","label":"Link da task"},
+      {"value":"summary","label":"Titulo"},
+      {"value":"statusDate","label":"Data de implementação"},
+      {"value":"resolutiondate","label":"Data de finalização da task"},
+      {"value":"project","label":"Projeto"},
+      {"value":"urls","label":"Urls trabalhadas"},
+      {"value":"arquivos","label":"Arquivos utilizados"},
+      {"value":"assigneeName","label":"Responsável"},
+      {"value":"palavras","label":"Palavras trabalhadas"},
+      {"value":"status","label":"Status de implementação"},
+    ]
 
     const handleSelect = (eventKey) => {
       onClose();

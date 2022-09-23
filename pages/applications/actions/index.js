@@ -1,5 +1,4 @@
 import FunnelIcon from "@rsuite/icons/Funnel";
-import MoreIcon from "@rsuite/icons/More";
 import ReloadIcon from "@rsuite/icons/Reload";
 import React, { useEffect, useState } from "react";
 
@@ -17,11 +16,10 @@ import {
   Whisper,
 } from "rsuite";
 import Select from "../../../components/Form/Components/Select";
-import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/delete";
-import ExportForm from "../../../components/Form/Pages/Applications/quickwins/export";
-import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
+import ExportForm from "../../../components/Form/Pages/Applications/actions/export";
 import TableWords from "../../../components/Tables/applications/actions";
 import FullWidthLayout from "../../../Layouts/fullwidth";
+import FileDownloadIcon from '@rsuite/icons/FileDownload';
 
 function Demo(args) {
   const [tableData, setTableData] = useState([]);
@@ -45,35 +43,7 @@ function Demo(args) {
   const getData = () => {
     const axios = require("axios");
     axios.get("/api/get/jiraIssues").then(({ data }) => {
-      console.log(data[0])
-      setTableData(data.map((issue) => { 
-        const {
-          summary,
-          project,
-          customfield_10081: urls,
-          customfield_10084: arquivos,
-          customfield_10073: palavras,
-          customfield_10074: status,
-          customfield_10086: statusDate,
-          assignee,
-          resolutiondate
-        } = issue.fields;
-        return {
-          id: issue.id,
-          key: issue.key,
-          link: "https://conversionbr.atlassian.net/browse/" + issue.key,
-          summary,
-          statusDate,
-          resolutiondate: resolutiondate?.split("T")[0],
-          project: project.key,
-          urls,
-          arquivos,
-          assigneeImage: assignee?.avatarUrls['32x32'] || '',
-          assigneeName: assignee?.displayName,
-          palavras,
-          status: (status && status[0].value) || "",
-        };
-      }));
+      setTableData(data);
     });
   };
   const filterCustomerById = (id) => {
@@ -104,40 +74,6 @@ function Demo(args) {
   useEffect(() => {
     getData();
   }, []);
-  const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
-    const handleSelect = (eventKey) => {
-      onClose();
-      switch (eventKey) {
-        case 1:
-          setOpenImportForm(true);
-          break;
-        case 2:
-          setOpenExportForm(true);
-          break;
-        case 3:
-          setOpenDeleteForm(true);
-          break;
-      }
-    };
-    return (
-      <Popover ref={ref} className={className} style={{ left, top }} full>
-        <Dropdown.Menu onSelect={handleSelect}>
-          <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
-          <Dropdown.Item eventKey={2}>{`Exportar ${
-            checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
-          }`}</Dropdown.Item>
-          {checkedKeys.length != 0 ? (
-            <Dropdown.Item
-              disabled
-              eventKey={3}
-            >{`Deletar (${checkedKeys.length})`}</Dropdown.Item>
-          ) : (
-            ""
-          )}
-        </Dropdown.Menu>
-      </Popover>
-    );
-  };
 
   const getHeaderTable = () => {
     return (
@@ -202,18 +138,15 @@ function Demo(args) {
               }}
             ></IconButton>
           </Whisper>
-          <Whisper
-            trigger="click"
-            placement="bottomEnd"
-            speaker={renderSpeaker}
-          >
+          
             <IconButton
               icon={
-                <MoreIcon
+                <FileDownloadIcon
                   style={{
                     backgroundColor: "transparent",
                     color: "var(--color-conversion-1)",
                   }}
+                  onClick={()=>{setOpenExportForm(true)}}
                 />
               }
               appearance={"subtle"}
@@ -222,7 +155,7 @@ function Demo(args) {
                 borderColor: "var(--color-conversion-1)",
               }}
             ></IconButton>
-          </Whisper>
+        
         </ButtonToolbar>
       </Stack>
     );
@@ -287,44 +220,12 @@ function Demo(args) {
             <ExportForm
               closeModal={handleClose}
               data={tableData.filter(
-                (word) => checkedKeys.indexOf(word.idworkedpage) > -1
+                (word) => checkedKeys.indexOf(word.id) > -1
               )}
             />
           </Modal.Body>
         </Modal>
-        <Modal
-          open={openImportForm}
-          onClose={handleClose}
-          size="xs"
-          keyboard={false}
-          backdrop={"static"}
-        >
-          <Modal.Header>
-            <Modal.Title>Importar</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <ImportForm closeModal={handleClose} />
-          </Modal.Body>
-        </Modal>
-        <Modal
-          open={openDeleteForm}
-          onClose={handleClose}
-          size="xs"
-          keyboard={false}
-          backdrop={"static"}
-        >
-          <Modal.Header>
-            <Modal.Title>Deletar</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <DeleteForm
-              closeModal={handleClose}
-              data={tableData.filter(
-                (word) => checkedKeys.indexOf(word.idworkedpage) > -1
-              )}
-            />
-          </Modal.Body>
-        </Modal>
+
         <TableWords
           checkedKeys={checkedKeys}
           setCheckedKeys={setCheckedKeys}
