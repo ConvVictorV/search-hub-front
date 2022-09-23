@@ -16,7 +16,7 @@ import {
   Whisper,
 } from "rsuite";
 import Select from "../../../components/Form/Components/Select";
-import ExportForm from "../../../components/Form/Pages/Applications/actions/export";
+import ExportForm from "../../../components/Form/Pages/Applications/Actions/export";
 import TableWords from "../../../components/Tables/applications/actions";
 import FullWidthLayout from "../../../Layouts/fullwidth";
 import FileDownloadIcon from '@rsuite/icons/FileDownload';
