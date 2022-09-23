@@ -351,6 +351,10 @@ const WordTable = ({
           <LinkCell dataKey="link" />
         </Column>
         <Column sortable resizable width={200} flexGrow={2} align="center">
+          <HeaderCell>Titulo</HeaderCell>
+          <Cell dataKey="summary" />
+        </Column>
+        <Column sortable resizable width={200} flexGrow={2} align="center">
           <HeaderCell>Urls Trabalhadas</HeaderCell>
           <Cell dataKey="urls" />
         </Column>
@@ -363,7 +367,11 @@ const WordTable = ({
           <Cell dataKey="palavras" />
         </Column>
         <Column sortable resizable width={150} align="center">
-          <HeaderCell>Finalizado em</HeaderCell>
+          <HeaderCell>Task finalizada em</HeaderCell>
+          <Cell dataKey="resolutiondate" />
+        </Column>
+        <Column sortable resizable width={150} align="center">
+          <HeaderCell>Implementado em</HeaderCell>
           <Cell dataKey="statusDate" />
         </Column>
         <Column sortable resizable width={150} align="center">
