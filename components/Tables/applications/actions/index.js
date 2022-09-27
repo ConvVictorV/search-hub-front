@@ -28,6 +28,7 @@ import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
 import UserIcon from "@rsuite/icons/legacy/User";
 import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
+import LinkIcon from "@rsuite/icons/legacy/ExternalLink"
 
 const { HeaderCell, Cell, Column } = Table;
 const rowKey = "id";
@@ -48,8 +49,14 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 
 const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   <Cell {...props}>
-    <a href={rowData?.link || ""} target={"_blank"} rel="noopener noreferrer">
+    <a style={{
+        color: "var(--rs-text-link-hover)",
+        textDecoration: "underline"
+    }} href={rowData?.link || ""} target={"_blank"} rel="noopener noreferrer">
       {rowData?.key || ""}
+      <LinkIcon style={{
+        marginLeft:"5px"
+      }} />
     </a>
   </Cell>
 );
