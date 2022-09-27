@@ -66,11 +66,16 @@ function Sidenav() {
             />
           </Sidenav.Header>
 
-          <Sidenav.Body>
+          <Sidenav.Body style={{
+            height:"100%"
+          }}>
             <Nav
               activeKey={activeKey}
               onSelect={setActiveKey}
               onSelectCapture={setActiveKey}
+              style={{
+                height:"100%"
+              }}
             >
               {sidenavItems.map((item, key) =>
                 item.active ? (
@@ -87,15 +92,21 @@ function Sidenav() {
                   ""
                 )
               )}
-              <hr />
+              <hr/>
               <Nav.Menu
-                placement="rightStart"
+                placement="rightEnd"
                 title="Gerenciar"
                 icon={<GearCircleIcon />}
-                open
                 eventKey={10}
                 active={false}
+                style={{
+                  position:"absolute",
+                  bottom:"50px",
+                  borderTop: "1px solid var(--rs-border-primary)",
+                  borderBottom: "1px solid var(--rs-border-primary)"
+                }}
               >
+                
                 {settingsItems.map((item, key) =>
                   item.active ? (
                     <Link href={item.url || "/"} passHref key={key}>
@@ -111,7 +122,9 @@ function Sidenav() {
                     ""
                   )
                 )}
+                
               </Nav.Menu>
+             
             </Nav>
           </Sidenav.Body>
         </Sidenav>

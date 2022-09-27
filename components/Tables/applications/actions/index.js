@@ -148,7 +148,7 @@ const renderRowExpanded = (rowData) => {
           <h4>Urls Trabalhadas</h4>
           <ol>
             {rowData.urls == null
-              ? "Campo vazio"
+              ? <li key={1}>Campo vazio</li>
               : (rowData.urls || "").split(",").length == 1
               ? (rowData.urls || "").split("\n").map((row, index) =>
                   row == "\n" || row == "" ? (
@@ -188,7 +188,7 @@ const renderRowExpanded = (rowData) => {
           <h4>Palavras-chave</h4>
           <ol>
             {rowData.palavras == null
-              ? "Campo vazio"
+              ? <li key={1}>Campo vazio</li>
               : (rowData.palavras || "")
                   .split(",")
                   .map(
@@ -201,7 +201,7 @@ const renderRowExpanded = (rowData) => {
           <h4>Arquivos envolvidos</h4>
           <ol>
             {rowData.arquivos == null
-              ? "Campo vazio"
+              ? <li key={1}>Campo vazio</li>
               : (rowData.arquivos || "").split(",").length == 1
               ? (rowData.arquivos || "").split("\n").map((row, index) =>
                   row == "\n" || row == "" ? (
