@@ -76,6 +76,19 @@ export default function Login(props) {
                 </svg>
                 Entrar com o Google
               </Button>
+
+              <h1
+        style={{
+          paddingTop: "30px",
+          textAlign: "center",
+          color: "white",
+          fontSize: "18px",
+          fontWeight: "normal",
+          fontStyle: "italic",
+        }}
+      >
+        Crie e gerencie <b>estratégias de SEO</b> que funcionam e dão resultados!
+      </h1>
             </div>
           </FlexboxGrid.Item>
         </FlexboxGrid>

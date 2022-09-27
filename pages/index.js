@@ -29,12 +29,12 @@ function Home(args) {
         style={{
           textAlign: "center",
           color: "white",
-          fontSize: "38px",
+          fontSize: "24px",
           fontWeight: "normal",
           fontStyle: "italic",
         }}
       >
-        Seja bem vindo, {(session?.data?.user?.name).split(" ")[0]}
+        Crie e gerencie <b>estratégias de SEO</b> que funcionam e dão resultados!
       </h1>
     </DefaultLayout>
   );
