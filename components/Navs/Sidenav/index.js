@@ -1,3 +1,4 @@
+import GearCircleIcon from "@rsuite/icons/Gear";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,9 +11,10 @@ function Sidenav() {
   );
   const [activeKey, setActiveKey] = useState(1);
   const { sidenavItems } = require("./items");
+  const { settingsItems } = require("./settings");
   const route = useRouter();
   return (
-    <div>
+    <div style={{ zIndex: 3 }}>
       <Sidebar
         style={{ display: "flex", flexDirection: "column" }}
         width={expanded == true || expanded == "true" ? 260 : 56}
@@ -85,6 +87,31 @@ function Sidenav() {
                   ""
                 )
               )}
+              <hr />
+              <Nav.Menu
+                placement="rightStart"
+                title="Gerenciar"
+                icon={<GearCircleIcon />}
+                open
+                eventKey={10}
+                active={false}
+              >
+                {settingsItems.map((item, key) =>
+                  item.active ? (
+                    <Link href={item.url || "/"} passHref key={key}>
+                      <Nav.Item
+                        active={item.url === route.pathname}
+                        eventKey={"10-" + key}
+                        icon={<item.icon /> || false}
+                      >
+                        {item.name || ""}
+                      </Nav.Item>
+                    </Link>
+                  ) : (
+                    ""
+                  )
+                )}
+              </Nav.Menu>
             </Nav>
           </Sidenav.Body>
         </Sidenav>

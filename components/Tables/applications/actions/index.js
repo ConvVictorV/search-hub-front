@@ -25,10 +25,10 @@ import {
 
 import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
 import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
+import LinkIcon from "@rsuite/icons/legacy/ExternalLink";
 import UserIcon from "@rsuite/icons/legacy/User";
 import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
-import LinkIcon from "@rsuite/icons/legacy/ExternalLink"
 
 const { HeaderCell, Cell, Column } = Table;
 const rowKey = "id";
@@ -49,14 +49,21 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 
 const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   <Cell {...props}>
-    <a style={{
+    <a
+      style={{
         color: "var(--rs-text-link-hover)",
-        textDecoration: "underline"
-    }} href={rowData?.link || ""} target={"_blank"} rel="noopener noreferrer">
+        textDecoration: "underline",
+      }}
+      href={rowData?.link || ""}
+      target={"_blank"}
+      rel="noopener noreferrer"
+    >
       {rowData?.key || ""}
-      <LinkIcon style={{
-        marginLeft:"5px"
-      }} />
+      <LinkIcon
+        style={{
+          marginLeft: "5px",
+        }}
+      />
     </a>
   </Cell>
 );
@@ -105,7 +112,9 @@ const ExpandCell = ({
       }}
       icon={
         expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
-          <CollaspedOutlineIcon style={{color: "var(--color-conversion-1)"}} />
+          <CollaspedOutlineIcon
+            style={{ color: "var(--color-conversion-1)" }}
+          />
         ) : (
           <ExpandOutlineIcon />
         )
@@ -138,58 +147,98 @@ const renderRowExpanded = (rowData) => {
         <div className="expandable-col">
           <h4>Urls Trabalhadas</h4>
           <ol>
-            {rowData.urls == null ? "Campo vazio" : 
-            (rowData.urls || "").split(",").length == 1
-              ? (rowData.urls || "").split("\n").map((row, index) => (
-                row == "\n" || row == "" ? 
-                  "" :  
-                  <li key={index}>
-                    <a key={index} target="_blank" rel="noopener noreferrer" href={row?.trim() || "#"}>
-                      {row?.trim() || ""}
-                    </a>
-                  </li>
-                ))
-              : (rowData.urls || "").split(",").map((row, index) => (
-                row == "\n" || row == "" ? 
-                  "" :  
-                  <li key={index}>
-                    <a key={index} target="_blank" rel="noopener noreferrer" href={row?.trim() || "#"}>
-                      {row?.trim() || ""}
-                    </a>
-                  </li>
-                ))}
+            {rowData.urls == null
+              ? "Campo vazio"
+              : (rowData.urls || "").split(",").length == 1
+              ? (rowData.urls || "").split("\n").map((row, index) =>
+                  row == "\n" || row == "" ? (
+                    ""
+                  ) : (
+                    <li key={index}>
+                      <a
+                        key={index}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={row?.trim() || "#"}
+                      >
+                        {row?.trim() || ""}
+                      </a>
+                    </li>
+                  )
+                )
+              : (rowData.urls || "").split(",").map((row, index) =>
+                  row == "\n" || row == "" ? (
+                    ""
+                  ) : (
+                    <li key={index}>
+                      <a
+                        key={index}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={row?.trim() || "#"}
+                      >
+                        {row?.trim() || ""}
+                      </a>
+                    </li>
+                  )
+                )}
           </ol>
         </div>
         <div className="expandable-col">
           <h4>Palavras-chave</h4>
           <ol>
-            { rowData.palavras == null ? "Campo vazio" : (rowData.palavras || "").split(",").map((row, index) => (
-              row && <li key={index}>{row?.trim() || ""}</li>
-            ))}
+            {rowData.palavras == null
+              ? "Campo vazio"
+              : (rowData.palavras || "")
+                  .split(",")
+                  .map(
+                    (row, index) =>
+                      row && <li key={index}>{row?.trim() || ""}</li>
+                  )}
           </ol>
         </div>
         <div className="expandable-col">
           <h4>Arquivos envolvidos</h4>
           <ol>
-            { rowData.arquivos == null ? "Campo vazio" : (rowData.arquivos || "").split(",").length == 1
-              ? (rowData.arquivos || "").split("\n").map((row, index) => (
-                row == "\n" || row == "" ? 
-                  "" :  
-                  (<li key={index}>
-                    <a key={index} target="_blank" rel="noopener noreferrer" href={(row.split(" ").map(word=>{
-                      return word.indexOf("http") > - 1 ? 
-                      word : ""
-                    })).toString().replace(/,/g,"")}>{row.split(" ").length == 1 ? row : row.split(" ").map(word=>{
-                      return word.indexOf("http") == - 1 ? 
-                      (word+ " ").replace(":","") : ""
-                    })}</a>
-                    
-                    
-                  </li>)
-                ))
+            {rowData.arquivos == null
+              ? "Campo vazio"
+              : (rowData.arquivos || "").split(",").length == 1
+              ? (rowData.arquivos || "").split("\n").map((row, index) =>
+                  row == "\n" || row == "" ? (
+                    ""
+                  ) : (
+                    <li key={index}>
+                      <a
+                        key={index}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={row
+                          .split(" ")
+                          .map((word) => {
+                            return word.indexOf("http") > -1 ? word : "";
+                          })
+                          .toString()
+                          .replace(/,/g, "")}
+                      >
+                        {row.split(" ").length == 1
+                          ? row
+                          : row.split(" ").map((word) => {
+                              return word.indexOf("http") == -1
+                                ? (word + " ").replace(":", "")
+                                : "";
+                            })}
+                      </a>
+                    </li>
+                  )
+                )
               : (rowData.arquivos || "").split(",").map((row, index) => (
                   <li key={index}>
-                    <a key={index} target="_blank" rel="noopener noreferrer" href={row?.trim() || "#"}>
+                    <a
+                      key={index}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={row?.trim() || "#"}
+                    >
                       {row?.trim() || ""}
                     </a>
                   </li>
@@ -538,7 +587,7 @@ const WordTable = ({
           <Cell dataKey="palavras" />
         </Column>
         <Column sortable resizable width={150} align="center">
-        <HeaderCell>Task finalizada em</HeaderCell>
+          <HeaderCell>Task finalizada em</HeaderCell>
           <Cell dataKey="resolutiondate" />
         </Column>
         <Column sortable resizable width={150} align="center">

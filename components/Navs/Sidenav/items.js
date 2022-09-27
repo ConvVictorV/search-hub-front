@@ -1,7 +1,6 @@
 const { Dashboard } = require("@rsuite/icons/");
+import ListIcon from "@rsuite/icons/List";
 import PageIcon from "@rsuite/icons/Page";
-import PeoplesIcon from "@rsuite/icons/Peoples";
-import SingleSourceIcon from "@rsuite/icons/SingleSource";
 
 module.exports.sidenavItems = [
   {
@@ -29,18 +28,6 @@ module.exports.sidenavItems = [
     active: false,
   },
   {
-    url: "/customers",
-    name: "Clientes",
-    icon: PeoplesIcon,
-    active: true,
-  },
-  {
-    url: "/customers/projects",
-    name: "Projetos",
-    icon: SingleSourceIcon,
-    active: true,
-  },
-  {
     url: "/applications/content-gap",
     name: "Content Gap",
     icon: Dashboard,
@@ -54,14 +41,14 @@ module.exports.sidenavItems = [
   },
   {
     url: "/applications/data-for-seo",
-    name: "Gerenciador Data for SEO",
+    name: "Data For SEO",
     icon: Dashboard,
     active: true,
   },
   {
     url: "/applications/actions",
     name: "Registro de ações",
-    icon: Dashboard,
+    icon: ListIcon,
     active: true,
   },
 ];

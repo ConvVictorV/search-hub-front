@@ -62,13 +62,16 @@ button.rs-pagination-btn.rs-pagination-btn-active {
   color: var(--color-conversion-1);
   border-color: var(--color-conversion-1);
 }
-.rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active{
+.rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active, .rs-dropdown-expand .rs-dropdown-item-active{
   color:var(--color-conversion-1)!important;
 }
 .rs-table-cell-header-icon-sort{
   color: var(--color-conversion-1);
 }
-.rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active::after {
+.rs-dropdown.rs-dropdown-selected-within .rs-sidenav-item-icon, .rs-dropdown-selected-within .rs-dropdown-toggle.rs-sidenav-item{
+  color:var(--color-conversion-1)!important;
+}
+.rs-sidenav-default .rs-sidenav-item.rs-sidenav-item-active::after , .rs-dropdown-expand .rs-dropdown-item-active::after {
   content: "";
   width: 2px;
   height: 100%;
