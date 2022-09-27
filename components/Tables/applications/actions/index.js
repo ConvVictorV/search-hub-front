@@ -98,7 +98,7 @@ const ExpandCell = ({
       }}
       icon={
         expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
-          <CollaspedOutlineIcon />
+          <CollaspedOutlineIcon style={{color: "var(--color-conversion-1)"}} />
         ) : (
           <ExpandOutlineIcon />
         )
