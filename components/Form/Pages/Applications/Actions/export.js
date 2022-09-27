@@ -8,7 +8,6 @@ import {
   Notification,
   useToaster,
 } from "rsuite";
-import Select from "../../../Components/Select";
 
 function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
   const [projectCustomer, setProjectCustomer] = useState(false);

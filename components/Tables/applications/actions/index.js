@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  Avatar,
   Button,
   ButtonToolbar,
   Checkbox,
@@ -17,18 +18,19 @@ import {
   Table,
   Tag,
   TagGroup,
+  Tooltip,
   useToaster,
   Whisper,
-  Avatar,
-  Tooltip,
-  Badge
 } from "rsuite";
 
+import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
+import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
+import UserIcon from "@rsuite/icons/legacy/User";
 import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
-import UserIcon from "@rsuite/icons/legacy/User";
 
 const { HeaderCell, Cell, Column } = Table;
+const rowKey = "id";
 
 // custom cells
 const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
@@ -52,16 +54,145 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   </Cell>
 );
 
-const AssigneeCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+const AssigneeCell = ({
+  rowData,
+  onChange,
+  checkedKeys,
+  dataKey,
+  ...props
+}) => (
   <Cell {...props} style={{ padding: 0, paddingTop: 5 }}>
-    <Whisper placement="top" speaker={rowData.assigneeName ? <Tooltip>
-     {rowData.assigneeName || ''}
-  </Tooltip> : <div></div>}>
-      <Avatar size="md" style={{maxWidth:"35px",maxHeight:"35px"}} circle src={rowData.assigneeImage || null }><UserIcon /></Avatar>
+    <Whisper
+      placement="top"
+      speaker={
+        rowData.assigneeName ? (
+          <Tooltip>{rowData.assigneeName || ""}</Tooltip>
+        ) : (
+          <div></div>
+        )
+      }
+    >
+      <Avatar
+        size="md"
+        style={{ maxWidth: "35px", maxHeight: "35px" }}
+        circle
+        src={rowData.assigneeImage || null}
+      >
+        <UserIcon />
+      </Avatar>
     </Whisper>
   </Cell>
 );
+const ExpandCell = ({
+  rowData,
+  dataKey,
+  expandedRowKeys,
+  onChange,
+  ...props
+}) => (
+  <Cell {...props} style={{ padding: 5 }}>
+    <IconButton
+      appearance="subtle"
+      onClick={() => {
+        onChange(rowData);
+      }}
+      icon={
+        expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
+          <CollaspedOutlineIcon />
+        ) : (
+          <ExpandOutlineIcon />
+        )
+      }
+    />
+  </Cell>
+);
+const renderRowExpanded = (rowData) => {
+  const imgUrl =
+    rowData.assigneeImage ||
+    "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/622a540615521d00726eea42/36790f2b-0803-4269-9524-430c9bdb75148/32";
 
+  return (
+    <div id="expandable">
+      <div id="expandable-header">
+        <Avatar
+          circle
+          size={"lg"}
+          style={{
+            backgroundColor: "transparent",
+          }}
+          src={imgUrl.substring(0, imgUrl.length - 2) + "64"}
+        />
+        <div className="expandable-header-text">
+          <p>{rowData.assigneeName || "Sem responsável"}</p>
+          <h4>{rowData.summary}</h4>
+        </div>
+      </div>
+      <div id="expandable-body">
+        <div className="expandable-col">
+          <h4>Urls Trabalhadas</h4>
+          <ol>
+            {rowData.urls == null ? "Campo vazio" : 
+            (rowData.urls || "").split(",").length == 1
+              ? (rowData.urls || "").split("\n").map((row, index) => (
+                row == "\n" || row == "" ? 
+                  "" :  
+                  <li key={index}>
+                    <a key={index} target="_blank" rel="noopener noreferrer" href={row?.trim() || "#"}>
+                      {row?.trim() || ""}
+                    </a>
+                  </li>
+                ))
+              : (rowData.urls || "").split(",").map((row, index) => (
+                row == "\n" || row == "" ? 
+                  "" :  
+                  <li key={index}>
+                    <a key={index} target="_blank" rel="noopener noreferrer" href={row?.trim() || "#"}>
+                      {row?.trim() || ""}
+                    </a>
+                  </li>
+                ))}
+          </ol>
+        </div>
+        <div className="expandable-col">
+          <h4>Palavras-chave</h4>
+          <ol>
+            { rowData.palavras == null ? "Campo vazio" : (rowData.palavras || "").split(",").map((row, index) => (
+              row && <li key={index}>{row?.trim() || ""}</li>
+            ))}
+          </ol>
+        </div>
+        <div className="expandable-col">
+          <h4>Arquivos envolvidos</h4>
+          <ol>
+            { rowData.arquivos == null ? "Campo vazio" : (rowData.arquivos || "").split(",").length == 1
+              ? (rowData.arquivos || "").split("\n").map((row, index) => (
+                row == "\n" || row == "" ? 
+                  "" :  
+                  (<li key={index}>
+                    <a key={index} target="_blank" rel="noopener noreferrer" href={(row.split(" ").map(word=>{
+                      return word.indexOf("http") > - 1 ? 
+                      word : ""
+                    })).toString().replace(/,/g,"")}>{row.split(" ").length == 1 ? row : row.split(" ").map(word=>{
+                      return word.indexOf("http") == - 1 ? 
+                      (word+ " ").replace(":","") : ""
+                    })}</a>
+                    
+                    
+                  </li>)
+                ))
+              : (rowData.arquivos || "").split(",").map((row, index) => (
+                  <li key={index}>
+                    <a key={index} target="_blank" rel="noopener noreferrer" href={row?.trim() || "#"}>
+                      {row?.trim() || ""}
+                    </a>
+                  </li>
+                ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const WordTable = ({
   tableData,
@@ -78,6 +209,25 @@ const WordTable = ({
   const [page, setPage] = React.useState(1);
   const [sortColumn, setSortColumn] = React.useState();
   const [sortType, setSortType] = React.useState();
+  const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
+
+  const handleExpanded = (rowData, dataKey) => {
+    let open = false;
+    const nextExpandedRowKeys = [];
+
+    expandedRowKeys.forEach((key) => {
+      if (key === rowData[rowKey]) {
+        open = true;
+      } else {
+        nextExpandedRowKeys.push(key);
+      }
+    });
+
+    if (!open) {
+      nextExpandedRowKeys.push(rowData[rowKey]);
+    }
+    setExpandedRowKeys(nextExpandedRowKeys);
+  };
 
   const toaster = useToaster();
   let checked = false;
@@ -112,7 +262,6 @@ const WordTable = ({
         })
       : [];
   };
-  
   const data =
     typeof tableData == "object"
       ? tableData.filter((v, i) => {
@@ -184,19 +333,19 @@ const WordTable = ({
     //format: {"value":"","label":""}
     const keys = Object.keys(tableData[0] || {});
     const manualKeys = [
-      {"value":"id","label":"Id"},
-      {"value":"key","label":"Key da task"},
-      {"value":"link","label":"Link da task"},
-      {"value":"summary","label":"Titulo"},
-      {"value":"statusDate","label":"Data de implementação"},
-      {"value":"resolutiondate","label":"Data de finalização da task"},
-      {"value":"project","label":"Projeto"},
-      {"value":"urls","label":"Urls trabalhadas"},
-      {"value":"arquivos","label":"Arquivos utilizados"},
-      {"value":"assigneeName","label":"Responsável"},
-      {"value":"palavras","label":"Palavras trabalhadas"},
-      {"value":"status","label":"Status de implementação"},
-    ]
+      { value: "id", label: "Id" },
+      { value: "key", label: "Key da task" },
+      { value: "link", label: "Link da task" },
+      { value: "summary", label: "Titulo" },
+      { value: "statusDate", label: "Data de implementação" },
+      { value: "resolutiondate", label: "Data de finalização da task" },
+      { value: "project", label: "Projeto" },
+      { value: "urls", label: "Urls trabalhadas" },
+      { value: "arquivos", label: "Arquivos utilizados" },
+      { value: "assigneeName", label: "Responsável" },
+      { value: "palavras", label: "Palavras trabalhadas" },
+      { value: "status", label: "Status de implementação" },
+    ];
 
     const handleSelect = (eventKey) => {
       onClose();
@@ -330,12 +479,18 @@ const WordTable = ({
       <Table
         virtualized
         autoHeight
+        expandedRowKeys={expandedRowKeys}
+        onRowClick={(data) => {}}
+        shouldUpdateScroll={false}
+        renderRowExpanded={renderRowExpanded}
+        rowKey={rowKey}
         data={getData()}
         loading={loading}
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
         cellBordered
+        rowExpandedHeight={300}
         bordered
       >
         <Column width={50} align="center">
@@ -355,32 +510,28 @@ const WordTable = ({
             onChange={handleCheck}
           />
         </Column>
-        <Column sortable resizable width={110} align="center">
-          <HeaderCell>Responsável</HeaderCell>
-          <AssigneeCell dataKey="assignee" />
+        <Column width={70} align="center">
+          <HeaderCell>#</HeaderCell>
+          <ExpandCell
+            dataKey="id"
+            expandedRowKeys={expandedRowKeys}
+            onChange={handleExpanded}
+          />
         </Column>
         <Column sortable resizable width={100} fixed align="center">
           <HeaderCell>Link</HeaderCell>
           <LinkCell dataKey="link" />
         </Column>
-        <Column sortable resizable width={200} flexGrow={2} align="center">
+        <Column sortable width={200} flexGrow={1} align="center">
           <HeaderCell>Titulo</HeaderCell>
           <Cell dataKey="summary" />
         </Column>
-        <Column sortable resizable width={200} flexGrow={2} align="center">
-          <HeaderCell>Urls Trabalhadas</HeaderCell>
-          <Cell dataKey="urls" />
-        </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
-          <HeaderCell>Arquivos envolvidos</HeaderCell>
-          <Cell dataKey="arquivos" />
-        </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
+        <Column sortable resizable width={200} align="center">
           <HeaderCell>Palavras-chave</HeaderCell>
           <Cell dataKey="palavras" />
         </Column>
         <Column sortable resizable width={150} align="center">
-          <HeaderCell>Task finalizada em</HeaderCell>
+        <HeaderCell>Task finalizada em</HeaderCell>
           <Cell dataKey="resolutiondate" />
         </Column>
         <Column sortable resizable width={150} align="center">

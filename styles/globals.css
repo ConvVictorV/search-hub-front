@@ -113,3 +113,26 @@ color: white;
 .rs-form-control.rs-form-control-wrapper {
   max-width: 94%!important;
 }
+
+
+#expandable-header{
+  display: flex;
+  gap: 20px;
+  padding: 12px;
+}
+#expandable-body{
+  padding: 12px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+.expandable-col{
+ overflow-y: auto;
+ overflow-x: hidden;
+ max-height: 180px;
+ width: 33%;
+}
+#expandable-body h4{
+  font-weight: normal;
+  padding-left: 40px;
+}

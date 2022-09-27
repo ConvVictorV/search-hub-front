@@ -23,7 +23,7 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
     nmcustomer,
     dsname,
     dsdomain,
-    jirakey
+    jirakey,
   } = data;
   const [customerId, setCustomerId] = useState(idcustomer || "");
   const [customerName, setCustomerName] = useState(nmcustomer || "");
@@ -55,7 +55,7 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
           blstatus: customerActive,
           idsquad: customerIdSquad,
           dsclientemail: customerEmail,
-          jirakey: customerJiraKey
+          jirakey: customerJiraKey,
         },
         {
           headers: {

@@ -14,7 +14,9 @@ export default function handler(req, res) {
       .on("end", () => res.status(200).send(csv));
   }
   return axios
-    .get(`https://southamerica-east1-iconic-rampart-279113.cloudfunctions.net/jira-integration`)
+    .get(
+      `https://southamerica-east1-iconic-rampart-279113.cloudfunctions.net/jira-integration`
+    )
     .then(({ data }) => {
       fastcsv
         .write(data, { headers: true })
@@ -23,5 +25,7 @@ export default function handler(req, res) {
         })
         .on("end", () => res.status(200).send(csv));
     })
-    .catch((err) =>{res.status(500).send(err)});
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 }

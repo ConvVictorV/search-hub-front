@@ -45,7 +45,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
         blstatus: customerActive,
         idsquad: customerIdSquad,
         dsclientemail: customerEmail,
-        jirakey: customerJiraKey
+        jirakey: customerJiraKey,
       })
       .then((s) => {
         sucessHandle();

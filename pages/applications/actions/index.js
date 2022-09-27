@@ -2,14 +2,13 @@ import FunnelIcon from "@rsuite/icons/Funnel";
 import ReloadIcon from "@rsuite/icons/Reload";
 import React, { useEffect, useState } from "react";
 
+import FileDownloadIcon from "@rsuite/icons/FileDownload";
 import {
   ButtonToolbar,
   Container,
-  Dropdown,
   IconButton,
   Message,
   Modal,
-  Popover,
   Stack,
   Tooltip,
   useToaster,
@@ -19,7 +18,6 @@ import Select from "../../../components/Form/Components/Select";
 import ExportForm from "../../../components/Form/Pages/Applications/Actions/export";
 import TableWords from "../../../components/Tables/applications/actions";
 import FullWidthLayout from "../../../Layouts/fullwidth";
-import FileDownloadIcon from '@rsuite/icons/FileDownload';
 
 function Demo(args) {
   const [tableData, setTableData] = useState([]);
@@ -138,24 +136,25 @@ function Demo(args) {
               }}
             ></IconButton>
           </Whisper>
-          
-            <IconButton
-              icon={
-                <FileDownloadIcon
-                  style={{
-                    backgroundColor: "transparent",
-                    color: "var(--color-conversion-1)",
-                  }}
-                  onClick={()=>{setOpenExportForm(true)}}
-                />
-              }
-              appearance={"subtle"}
-              style={{
-                color: "var(--color-conversion-1)",
-                borderColor: "var(--color-conversion-1)",
-              }}
-            ></IconButton>
-        
+
+          <IconButton
+            icon={
+              <FileDownloadIcon
+                style={{
+                  backgroundColor: "transparent",
+                  color: "var(--color-conversion-1)",
+                }}
+                onClick={() => {
+                  setOpenExportForm(true);
+                }}
+              />
+            }
+            appearance={"subtle"}
+            style={{
+              color: "var(--color-conversion-1)",
+              borderColor: "var(--color-conversion-1)",
+            }}
+          ></IconButton>
         </ButtonToolbar>
       </Stack>
     );
