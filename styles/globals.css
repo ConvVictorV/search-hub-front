@@ -132,6 +132,10 @@ color: white;
  max-height: 180px;
  width: 33%;
 }
+.expandable-col ol li a{
+  color: var(--rs-text-link-hover);
+  text-decoration: underline;
+}
 #expandable-body h4{
   font-weight: normal;
   padding-left: 40px;
