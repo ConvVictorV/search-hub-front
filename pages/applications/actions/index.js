@@ -195,10 +195,10 @@ function Demo(args) {
   return (
     <FullWidthLayout
       toggleTheme={args.toggleTheme}
-      title="Registro de Ações | SearchHub"
+      title="Ações do projeto | SearchHub"
       description="SearchHub Conversion"
       background={2}
-      pageName="Registro de ações"
+      pageName="Ações do projeto"
     >
       <Container
         style={{

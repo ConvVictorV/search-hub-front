@@ -1,6 +1,9 @@
 const { Dashboard } = require("@rsuite/icons/");
 import ListIcon from "@rsuite/icons/List";
 import PageIcon from "@rsuite/icons/Page";
+import PencilSquare from "@rsuite/icons/legacy/PencilSquare";
+import Bolt from "@rsuite/icons/legacy/Bolt";
+import Creative from "@rsuite/icons/legacy/Creative";
 
 module.exports.sidenavItems = [
   {
@@ -34,21 +37,21 @@ module.exports.sidenavItems = [
     active: false,
   },
   {
-    url: "/applications/quick-wins",
-    name: "QuickWins",
-    icon: PageIcon,
-    active: true,
-  },
-  {
-    url: "/applications/data-for-seo",
-    name: "Data For SEO",
-    icon: Dashboard,
+    url: "/applications/palavras-estrategicas",
+    name: "Palavras Estratégicas",
+    icon: Creative,
     active: true,
   },
   {
     url: "/applications/actions",
-    name: "Registro de ações",
-    icon: ListIcon,
+    name: "Ações do projeto",
+    icon: Bolt,
+    active: true,
+  },
+  {
+    url: "/applications/quick-wins",
+    name: "QuickWins",
+    icon: PencilSquare,
     active: true,
   },
 ];

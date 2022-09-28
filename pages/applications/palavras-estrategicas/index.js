@@ -11,10 +11,10 @@ import {
   Modal,
   useToaster,
 } from "rsuite";
-import DeleteForm from "../../../components/Form/Pages/Applications/DataForSeo/delete";
-import ExportForm from "../../../components/Form/Pages/Applications/DataForSeo/export";
-import ImportForm from "../../../components/Form/Pages/Applications/DataForSeo/import";
-import TableWords from "../../../components/Tables/applications/dataforseo";
+import DeleteForm from "../../../components/Form/Pages/Applications/palavras-estrategicas/delete";
+import ExportForm from "../../../components/Form/Pages/Applications/palavras-estrategicas/export";
+import ImportForm from "../../../components/Form/Pages/Applications/palavras-estrategicas/import";
+import TableWords from "../../../components/Tables/applications/palavras-estrategicas";
 import FullWidthLayout from "../../../Layouts/fullwidth";
 
 function Demo(args) {
@@ -166,10 +166,10 @@ function Demo(args) {
   return (
     <FullWidthLayout
       toggleTheme={args.toggleTheme}
-      title="DataForSeo | SearchHub"
+      title="Palavras Estratégicas | SearchHub"
       description="SearchHub Conversion"
       background={2}
-      pageName="DataForSeo"
+      pageName="Palavras Estratégicas"
     >
       <Container
         style={{

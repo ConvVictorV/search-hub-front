@@ -84,6 +84,9 @@ function Sidenav() {
                       active={item.url === route.pathname}
                       eventKey={key}
                       icon={<item.icon /> || false}
+                      style={{
+                        lineHeight:"15px"
+                      }}
                     >
                       {item.name || ""}
                     </Nav.Item>
