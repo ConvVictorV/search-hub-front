@@ -399,7 +399,7 @@ const WordTable = ({
       { value: "urls", label: "Urls trabalhadas" },
       { value: "arquivos", label: "Arquivos utilizados" },
       { value: "assigneeName", label: "Responsável" },
-      { value: "palavras", label: "Palavras trabalhadas" },
+      { value: "palavras", label: "Palavras-chave" },
       { value: "status", label: "Status de implementação" },
     ];
 
