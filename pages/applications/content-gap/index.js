@@ -51,7 +51,7 @@ function ContentGap(args) {
                     width: "100%",
                   }}
                 >
-                  <Panel header="PORTAL" eventKey={1} id="panel1">
+                  <Panel header="PORTAL." eventKey={1} id="panel1">
                     <Placeholder.Paragraph rows={6} />
                   </Panel>
                   <Panel header="SEMRUSH" eventKey={2} id="panel2">
