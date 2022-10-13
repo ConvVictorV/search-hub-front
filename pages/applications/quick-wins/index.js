@@ -1,6 +1,7 @@
 import FunnelIcon from "@rsuite/icons/Funnel";
 import MoreIcon from "@rsuite/icons/More";
 import ReloadIcon from "@rsuite/icons/Reload";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import {
@@ -32,7 +33,7 @@ function Demo(args) {
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
-
+  const route = useRouter()
   const [rowData, setRowData] = useState();
   const toast = useToaster();
 
@@ -73,7 +74,12 @@ function Demo(args) {
     getData();
   };
   useEffect(() => {
-    getData();
+    if(localStorage.getItem('customerName')){
+      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
+      route.push("/"+routePath+"/customer/"+localStorage.getItem('customerName'))
+    }else{
+      getData();
+    }
   }, []);
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
     const handleSelect = (eventKey) => {
@@ -199,8 +205,7 @@ function Demo(args) {
   };
 
   function filter(search, data) {
-    let filteredData = [...data];
-    console.log(filteredData);
+    let filteredData = [...data]; 
     if (filterData.length > 0) {
       if (typeof data === "object") {
         filterData.map((filterString) => {

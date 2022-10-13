@@ -14,12 +14,13 @@ import {
   useToaster,
   Whisper,
 } from "rsuite";
-import Select from "../../../components/Form/Components/Select";
-import ExportForm from "../../../components/Form/Pages/Applications/Actions/export";
-import TableWords from "../../../components/Tables/applications/actions";
-import FullWidthLayout from "../../../Layouts/fullwidth";
+import Select from "../../../../../components/Form/Components/Select";
+import ExportForm from "../../../../../components/Form/Pages/Applications/Actions/export";
+import TableWords from "../../../../../components/Tables/applications/actions";
+import FullWidthLayout from "../../../../../Layouts/fullwidth";
 import { useRouter } from "next/router";
-function Demo(args) {
+
+function Demo({customer, ...args}) {
   const [tableData, setTableData] = useState([]);
   const [checkedKeys, setCheckedKeys] = React.useState([]);
   const [search, setSearch] = useState("");
@@ -28,10 +29,12 @@ function Demo(args) {
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
-
+  const [jiraKey,setJiraKey] = useState()
+  
+  const router = useRouter()
+  const namecustomer = router.query.namecustomer?.toLowerCase().replace(/ /g,'').replace(/-/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\(/g,'').replace(/\)/g,'');
   const [rowData, setRowData] = useState();
   const toast = useToaster();
-  const route = useRouter()
 
   const handleClose = () => {
     setOpenExportForm(false);
@@ -43,7 +46,14 @@ function Demo(args) {
     const axios = require("axios");
     axios.get("/api/get/jiraIssues").then(({ data }) => {
       setTableData(data);
-    });
+    }).then(()=>{
+      axios.get('/api/get/select/customersJiraKeys').then(({data})=>{
+        const jira = data.filter(({label})=>{
+          return label.toLowerCase().replace(/ /g,'').replace(/-/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\(/g,'').replace(/\)/g,'') == namecustomer
+        })[0]
+        jira && filterCustomerById(jira.value)
+      })
+    })
   };
   const filterCustomerById = (id) => {
     const removeCustomerFilter = () => {
@@ -71,13 +81,8 @@ function Demo(args) {
     getData();
   };
   useEffect(() => {
-    if(localStorage.getItem('customerName')){
-      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-      route.push("/"+routePath+"/customer/"+localStorage.getItem('customerName'))
-    }else{
-      getData();
-    }
-  }, []);
+    namecustomer && getData();
+  }, [namecustomer]);
 
   const getHeaderTable = () => {
     return (

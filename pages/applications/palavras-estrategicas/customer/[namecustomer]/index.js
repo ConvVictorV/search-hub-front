@@ -2,7 +2,6 @@ import ExportIcon from "@rsuite/icons/Export";
 import ImportIcon from "@rsuite/icons/Import";
 import ReloadIcon from "@rsuite/icons/Reload";
 import TrashIcon from "@rsuite/icons/Trash";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import {
   ButtonToolbar,
@@ -12,24 +11,52 @@ import {
   Modal,
   useToaster,
 } from "rsuite";
-import DeleteForm from "../../../components/Form/Pages/Applications/palavras-estrategicas/delete";
-import ExportForm from "../../../components/Form/Pages/Applications/palavras-estrategicas/export";
-import ImportForm from "../../../components/Form/Pages/Applications/palavras-estrategicas/import";
-import TableWords from "../../../components/Tables/applications/palavras-estrategicas";
-import FullWidthLayout from "../../../Layouts/fullwidth";
+import DeleteForm from "../../../../../components/Form/Pages/Applications/palavras-estrategicas/delete";
+import ExportForm from "../../../../../components/Form/Pages/Applications/palavras-estrategicas/export";
+import ImportForm from "../../../../../components/Form/Pages/Applications/palavras-estrategicas/import";
+import TableWords from "../../../../../components/Tables/applications/palavras-estrategicas";
+import FullWidthLayout from "../../../../../Layouts/fullwidth";
+import { useRouter } from 'next/router'
+import axios from "axios";
 
-function Demo(args) {
+// This function gets called at build time on server-side.
+// It may be called again, on a serverless function, if
+// revalidation is enabled and a new request comes in
+export async function getStaticProps() {
+  const res_customers = await fetch(`${process.env.BACKENDHOST}/customers`)
+  const customers = await res_customers.json()
+  return {
+    props: {
+      customers
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 60, // In seconds
+  }
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { namecustomer: 'customer-customer' } }, { params: { namecustomer: 'customer' } }, { params: { namecustomer: '123-customer' } }, { params: { namecustomer: 'customer-123' } }],
+    fallback: true, // can also be true or 'blocking'
+  }
+}
+
+function Demo({ customers, ...args }) {
+  const router = useRouter()
+  const namecustomer = router.query.namecustomer?.toLowerCase().replace(/ /g,'').replace(/-/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\(/g,'').replace(/\)/g,'');
   const [tableData, setTableData] = useState([]);
   const [checkedKeys, setCheckedKeys] = React.useState([]);
   const [search, setSearch] = useState("");
+
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
+
   const [filterData, setFilterData] = useState();
 
-  const [rowData, setRowData] = useState();
   const toast = useToaster();
-  const route = useRouter()
 
   const handleClose = () => {
     setOpenExportForm(false);
@@ -38,8 +65,9 @@ function Demo(args) {
     updateData();
   };
   const getData = () => {
-    const axios = require("axios");
-    axios.get("/api/get/words").then(({ data }) => setTableData(data));
+    axios.get(`/api/get/words/${localStorage.getItem('customerId') && localStorage.getItem('customerId') != 'undefined' && '?idcustomer='+localStorage.getItem('customerId')}`).then(({data})=>{
+      setTableData(data)
+    })
   };
   const updateData = () => {
     setCheckedKeys([]);
@@ -52,13 +80,8 @@ function Demo(args) {
     getData();
   };
   useEffect(() => {
-    if(localStorage.getItem('customerName')){
-      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-      route.push("/"+routePath+"/customer/"+localStorage.getItem('customerName'))
-    }else{
-      getData();
-    }
-  }, []);
+    namecustomer && getData();
+  }, [namecustomer]);
 
   const getHeaderTable = () => {
     return (
@@ -154,26 +177,10 @@ function Demo(args) {
     if (filterData?.filter) {
       if (typeof data === "object") {
         return data.filter((row) => {
-          return (row[Object.keys(filterData?.["filter"])[0]] ==
+          return row[Object.keys(filterData?.["filter"])[0]] ==
             filterData?.["filter"][Object.keys(filterData?.["filter"])[0]]
             ? true
-            : false) || [{
-              "idword": 0,
-              "idcustomer": 0,
-              "dsurldomain": "sem dados",
-              "dskeyword": "sem dados",
-              "dscategoryword": "sem dados",
-              "dslocation": "sem dados",
-              "dscity": "sem dados",
-              "dtlastexecution": "sem dados",
-              "dtregister": "sem dados",
-              "dstaskid": "sem dados",
-              "dtlasttask": "sem dados",
-              "dtworked": "sem dados",
-              "dsparameter": "sem dados",
-              "dspriority": "sem dados",
-              "nmcustomer": "sem dados"
-          }]
+            : false;
         });
       }
     }
@@ -214,7 +221,7 @@ function Demo(args) {
           <Modal.Body>
             <ExportForm
               closeModal={handleClose}
-              data={tableData.filter(
+              data={tableData?.filter(
                 (word) => checkedKeys.indexOf(word.idword) > -1
               )}
             />
@@ -247,7 +254,7 @@ function Demo(args) {
           <Modal.Body>
             <DeleteForm
               closeModal={handleClose}
-              data={tableData.filter(
+              data={tableData?.filter(
                 (word) => checkedKeys.indexOf(word.idword) > -1
               )}
             />
@@ -259,8 +266,8 @@ function Demo(args) {
           tableData={filter(search, tableData)}
           setSearch={setSearch}
           headerMenu={getHeaderTable()}
-          setRowData={setRowData}
           setFilterData={setFilterData}
+          noData
         />
       </Container>
     </FullWidthLayout>

@@ -1,25 +1,56 @@
 import FunnelIcon from "@rsuite/icons/Funnel";
+import MoreIcon from "@rsuite/icons/More";
 import ReloadIcon from "@rsuite/icons/Reload";
 import React, { useEffect, useState } from "react";
 
-import FileDownloadIcon from "@rsuite/icons/FileDownload";
 import {
   ButtonToolbar,
   Container,
+  Dropdown,
   IconButton,
   Message,
   Modal,
+  Popover,
   Stack,
   Tooltip,
   useToaster,
   Whisper,
 } from "rsuite";
-import Select from "../../../components/Form/Components/Select";
-import ExportForm from "../../../components/Form/Pages/Applications/Actions/export";
-import TableWords from "../../../components/Tables/applications/actions";
-import FullWidthLayout from "../../../Layouts/fullwidth";
-import { useRouter } from "next/router";
-function Demo(args) {
+
+import DeleteForm from "../../../../../components/Form/Pages/Applications/quickwins/delete";
+import ExportForm from "../../../../../components/Form/Pages/Applications/quickwins/export";
+import ImportForm from "../../../../../components/Form/Pages/Applications/quickwins/import";
+import TableWords from "../../../../../components/Tables/applications/quickwins";
+import FullWidthLayout from "../../../../../Layouts/fullwidth";
+import { useRouter } from 'next/router'
+import axios from "axios";
+
+// This function gets called at build time on server-side.
+// It may be called again, on a serverless function, if
+// revalidation is enabled and a new request comes in
+export async function getStaticProps() {
+  const res_customers = await fetch(`${process.env.BACKENDHOST}/customers`)
+  const customers = await res_customers.json()
+  return {
+    props: {
+      customers
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 60, // In seconds
+  }
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { namecustomer: 'customer-customer' } }, { params: { namecustomer: 'customer' } }, { params: { namecustomer: '123-customer' } }, { params: { namecustomer: 'customer-123' } }],
+    fallback: true, // can also be true or 'blocking'
+  }
+}
+function Demo({ customers, ...args }) {
+  const router = useRouter()
+  const namecustomer = router.query.namecustomer?.toLowerCase().replace(/ /g,'').replace(/-/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\(/g,'').replace(/\)/g,'');
   const [tableData, setTableData] = useState([]);
   const [checkedKeys, setCheckedKeys] = React.useState([]);
   const [search, setSearch] = useState("");
@@ -31,7 +62,6 @@ function Demo(args) {
 
   const [rowData, setRowData] = useState();
   const toast = useToaster();
-  const route = useRouter()
 
   const handleClose = () => {
     setOpenExportForm(false);
@@ -40,24 +70,25 @@ function Demo(args) {
     updateData();
   };
   const getData = () => {
-    const axios = require("axios");
-    axios.get("/api/get/jiraIssues").then(({ data }) => {
-      setTableData(data);
-    });
+    axios.get(`/api/get/quickwins${localStorage.getItem('customerId') && localStorage.getItem('customerId') != 'undefined' && '?idcustomer='+localStorage.getItem('customerId')}`).then(({data})=>{
+      setTableData(data)
+    })
   };
   const filterCustomerById = (id) => {
     const removeCustomerFilter = () => {
       const filters = filterData.filter(
-        (item) => item.indexOf("project") == -1
+        (item) => item.indexOf("idcustomer") == -1
       );
       setFilterData(filters);
+      console.log(filterData);
     };
     const addCustomerFilter = () => {
       removeCustomerFilter();
-      const filters = [...filterData, `project|is|${id}`] || filters;
+      const filters = [...filterData, `idcustomer|is|${id}`] || filters;
       setFilterData(filters);
+      return true
     };
-    id ? addCustomerFilter() && setPage(1) : removeCustomerFilter();
+    id ? (addCustomerFilter() && setPage(1)) : removeCustomerFilter();
   };
 
   const updateData = () => {
@@ -71,13 +102,41 @@ function Demo(args) {
     getData();
   };
   useEffect(() => {
-    if(localStorage.getItem('customerName')){
-      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-      route.push("/"+routePath+"/customer/"+localStorage.getItem('customerName'))
-    }else{
-      getData();
-    }
-  }, []);
+    namecustomer && getData();
+  }, [namecustomer]);
+  const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
+    const handleSelect = (eventKey) => {
+      onClose();
+      switch (eventKey) {
+        case 1:
+          setOpenImportForm(true);
+          break;
+        case 2:
+          setOpenExportForm(true);
+          break;
+        case 3:
+          setOpenDeleteForm(true);
+          break;
+      }
+    };
+    return (
+      <Popover ref={ref} className={className} style={{ left, top }} full>
+        <Dropdown.Menu onSelect={handleSelect}>
+          <Dropdown.Item eventKey={1}>Importar</Dropdown.Item>
+          <Dropdown.Item eventKey={2}>{`Exportar ${
+            checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
+          }`}</Dropdown.Item>
+          {checkedKeys.length != 0 ? (
+            <Dropdown.Item
+              eventKey={3}
+            >{`Deletar (${checkedKeys.length})`}</Dropdown.Item>
+          ) : (
+            ""
+          )}
+        </Dropdown.Menu>
+      </Popover>
+    );
+  };
 
   const getHeaderTable = () => {
     return (
@@ -89,14 +148,6 @@ function Demo(args) {
           padding: "20px",
         }}
       >
-        <Select
-          fetch="/api/get/select/customersJiraKeys"
-          placeholder="Filtre por cliente"
-          onSelect={filterCustomerById}
-          style={{
-            width: "150px",
-          }}
-        />
         <ButtonToolbar>
           <Whisper
             trigger="hover"
@@ -142,32 +193,34 @@ function Demo(args) {
               }}
             ></IconButton>
           </Whisper>
-
-          <IconButton
-            icon={
-              <FileDownloadIcon
-                style={{
-                  backgroundColor: "transparent",
-                  color: "var(--color-conversion-1)",
-                }}
-                onClick={() => {
-                  setOpenExportForm(true);
-                }}
-              />
-            }
-            appearance={"subtle"}
-            style={{
-              color: "var(--color-conversion-1)",
-              borderColor: "var(--color-conversion-1)",
-            }}
-          ></IconButton>
+          <Whisper
+            trigger="click"
+            placement="bottomEnd"
+            speaker={renderSpeaker}
+          >
+            <IconButton
+              icon={
+                <MoreIcon
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "var(--color-conversion-1)",
+                  }}
+                />
+              }
+              appearance={"subtle"}
+              style={{
+                color: "var(--color-conversion-1)",
+                borderColor: "var(--color-conversion-1)",
+              }}
+            ></IconButton>
+          </Whisper>
         </ButtonToolbar>
       </Stack>
     );
   };
 
   function filter(search, data) {
-    let filteredData = [...tableData];
+    let filteredData = [...data];
     if (filterData.length > 0) {
       if (typeof data === "object") {
         filterData.map((filterString) => {
@@ -183,7 +236,7 @@ function Demo(args) {
               case "is not":
                 return rowColumn != value;
               case "contains":
-                return rowColumn?.indexOf(value) > -1;
+                return rowColumn.indexOf(value) > -1;
             }
           });
         });
@@ -201,10 +254,10 @@ function Demo(args) {
   return (
     <FullWidthLayout
       toggleTheme={args.toggleTheme}
-      title="Ações do projeto | SearchHub"
+      title="QuickWins | SearchHub"
       description="SearchHub Conversion"
       background={2}
-      pageName="Ações do projeto"
+      pageName="QuickWins"
     >
       <Container
         style={{
@@ -219,18 +272,52 @@ function Demo(args) {
           backdrop={"static"}
         >
           <Modal.Header>
-            <Modal.Title>Exportar {checkedKeys.length || ""}</Modal.Title>
+            <Modal.Title>
+              Exportar {checkedKeys.length || ""} palavras
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <ExportForm
               closeModal={handleClose}
               data={tableData.filter(
-                (word) => checkedKeys.indexOf(word.id) > -1
+                (word) => checkedKeys.indexOf(word.idworkedpage) > -1
               )}
             />
           </Modal.Body>
         </Modal>
-
+        <Modal
+          open={openImportForm}
+          onClose={handleClose}
+          size="xs"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Importar QuickWins</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <ImportForm closeModal={handleClose} />
+          </Modal.Body>
+        </Modal>
+        <Modal
+          open={openDeleteForm}
+          onClose={handleClose}
+          size="xs"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Deletar palavras</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <DeleteForm
+              closeModal={handleClose}
+              data={tableData.filter(
+                (word) => checkedKeys.indexOf(word.idworkedpage) > -1
+              )}
+            />
+          </Modal.Body>
+        </Modal>
         <TableWords
           checkedKeys={checkedKeys}
           setCheckedKeys={setCheckedKeys}

@@ -67,7 +67,10 @@ const WordTable = ({
   let indeterminate = false;
 
   useEffect(() => {
-    if (tableData.length > 0) setLoading(false);
+    if (tableData?.length > 0) setLoading(false);
+    setTimeout(()=>{
+      setLoading(false);
+    },5000)
   }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {
@@ -303,7 +306,7 @@ const WordTable = ({
       <Table
         virtualized
         autoHeight
-        data={getData()}
+        data={getData().length == 0 ? [] : getData()}
         loading={loading}
         sortColumn={sortColumn}
         sortType={sortType}

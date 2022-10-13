@@ -290,9 +290,10 @@ const WordTable = ({
   let indeterminate = false;
 
   useEffect(() => {
-    if (tableData.length > 0) {
+    if (tableData.length > 0) setLoading(false);
+    setTimeout(()=>{
       setLoading(false);
-    }
+    },5000)
   }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {

@@ -1,4 +1,5 @@
 import SearchIcon from "@rsuite/icons/Search";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Checkbox, InputGroup, Pagination, Panel, Stack, Table } from "rsuite";
 import Select from "../../../Form/Components/Select";
@@ -58,7 +59,10 @@ const WordTable = ({
   let indeterminate = false;
 
   useEffect(() => {
-    if (tableData.length > 0) setLoading(false);
+    if (tableData?.length > 0) setLoading(false);
+    setTimeout(()=>{
+      setLoading(false);
+    },5000)
   }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {
@@ -158,7 +162,7 @@ const WordTable = ({
               className="rs-input"
               type="text"
               onChange={(event) => setSearch(event.target.value)}
-              placeholder={`Buscar (${tableData.length + " Palavras"})`}
+              placeholder={`Buscar (${tableData?.length + " Palavras"})`}
               style={{
                 width: "300px",
                 border: "none!important",
@@ -170,14 +174,7 @@ const WordTable = ({
               }}
             />
           </InputGroup>
-          <Select
-            fetch="/api/get/select/customersId"
-            placeholder="Filtre por cliente"
-            onSelect={filterCustomerById}
-            style={{
-              width: "150px",
-            }}
-          />
+          
         </Stack>
         {headerMenu}
       </Stack>
@@ -248,7 +245,7 @@ const WordTable = ({
           boundaryLinks
           maxButtons={5}
           size="xs"
-          total={tableData.length}
+          total={tableData?.length}
           layout={["-", "limit", "|", "pager", "skip"]}
           limitOptions={[10, 50, 100]}
           limit={limit}

@@ -7,10 +7,11 @@ import {
   Dropdown,
   FlexboxGrid,
   Navbar,
+  Tag,
   Tooltip,
   Whisper,
 } from "rsuite";
-
+import Select from '../Form/Components/Select'
 export default function Header(args) {
   const [session, setSession] = useState({});
   const [breadc, setBreadc] = useState([]);
@@ -26,8 +27,8 @@ export default function Header(args) {
         i = i.slice(0, i.length - 1);
         arr[index] = router.query[i];
       }
-      str = str + arr[index] + "/";
-      if (str != "/") hlinks.push(str.replaceAll("/", ""));
+      str = arr[index] + "/";
+      if (str != "/") hlinks.push(str.replace(/\//g, ''));
     });
 
     for (let i = 0; i < hlinks.length; i++) {
@@ -54,6 +55,7 @@ export default function Header(args) {
     setBreadc(hlinks);
   }, []);
   const { AvatarGroup, Badge, Avatar } = require("rsuite/esm/");
+  const route = useRouter()
   const renderIconButton = (props, ref) => {
     return (
       <Whisper
@@ -85,6 +87,49 @@ export default function Header(args) {
   return (
     <div className="header">
       <Navbar style={{ background: "transparent", minHeight: "120px" }}>
+        <div>
+          <FlexboxGrid
+            align="top"
+            justify="space-between"
+            style={{
+              padding: "20px 20px 20px 50px",
+            }}
+          >
+
+            <span style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              fontSize: '11px',
+              color: 'var(--color-conversion-1)'
+            }}>
+              {(route && route.pathname.split('/')[1] == 'applications') && <Select
+                fetch="/api/get/select/customersId"
+                placeholder="Filtre por cliente"
+                style={{
+                  width: "300px",
+                }}
+              />}
+              {localStorage.getItem('customerName') && (
+              <div>
+                <span>{"Cliente Selecionado: "}</span>
+                <Tag style={{marginTop: '10px'}} closable onClose={()=>{
+                  localStorage.removeItem('customerName');
+                  const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
+                  window.location.href = "/"+routePath
+                }}>{localStorage.getItem('customerName')}</Tag></div>)}
+            </span>
+            <Dropdown placement="bottomEnd" renderToggle={renderIconButton}>
+              <Dropdown.Item onSelect={args.toggleTheme}>
+                Mudar tema
+              </Dropdown.Item>
+              <Dropdown.Item onSelect={handleSignout} icon={<ExitIcon />}>
+                Sair
+              </Dropdown.Item>
+            </Dropdown>
+          </FlexboxGrid>
+
+        </div>
         <FlexboxGrid
           align="top"
           justify="space-between"
@@ -96,9 +141,7 @@ export default function Header(args) {
             {args.breadcrumb === undefined ? (
               <Breadcrumb>
                 {breadc.map((item, index) => (
-                  <Breadcrumb.Item key={index} href={item.path}>
-                    {item.name}
-                  </Breadcrumb.Item>
+                  item.name != "Undefined" && <Breadcrumb.Item active={index > 2} key={index} href={item.path}>{item.name}</Breadcrumb.Item>
                 ))}
               </Breadcrumb>
             ) : (
@@ -113,16 +156,6 @@ export default function Header(args) {
                 {args.pageName}
               </h3>
             }
-          </div>
-          <div>
-            <Dropdown placement="bottomEnd" renderToggle={renderIconButton}>
-              <Dropdown.Item onSelect={args.toggleTheme}>
-                Mudar tema
-              </Dropdown.Item>
-              <Dropdown.Item onSelect={handleSignout} icon={<ExitIcon />}>
-                Sair
-              </Dropdown.Item>
-            </Dropdown>
           </div>
         </FlexboxGrid>
       </Navbar>

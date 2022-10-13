@@ -101,7 +101,7 @@ function Sidenav() {
                 title="Gerenciar"
                 icon={<GearCircleIcon />}
                 eventKey={10}
-                active={false}
+                active={"false"}
                 style={{
                   position:"absolute",
                   bottom:"50px",

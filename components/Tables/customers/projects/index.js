@@ -108,6 +108,9 @@ const TableProjects = ({
 
   useEffect(() => {
     if (tableData.length > 0) setLoading(false);
+    setTimeout(()=>{
+      setLoading(false);
+    },10000)
   }, [tableData]);
   const filterSquadById = (id) => {
     id
