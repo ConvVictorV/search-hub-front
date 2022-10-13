@@ -67,6 +67,7 @@ function Demo({customer, ...args}) {
       setFilterData(filters);
     };
     id ? addCustomerFilter() && setPage(1) : removeCustomerFilter();
+    id == 0 && addCustomerFilter() && setPage(1)
   };
 
   const updateData = () => {
