@@ -96,29 +96,34 @@ export default function Header(args) {
             }}
           >
 
-            <span style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              fontSize: '11px',
-              color: 'var(--color-conversion-1)'
-            }}>
-              {(route && route.pathname.split('/')[1] == 'applications') && (<Select
-                fetch="/api/get/select/customersId"
-                placeholder="Filtre por cliente"
-                style={{
-                  width: "300px",
-                }}
-              /> && localStorage.getItem('customerName') && (
-                <div>
-                  <span>{"Cliente Selecionado: "}</span>
-                  <Tag style={{marginTop: '10px'}} closable onClose={()=>{
-                    localStorage.removeItem('customerName');
-                    const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-                    window.location.href = "/"+routePath
-                  }}>{localStorage.getItem('customerName')}</Tag></div>))}
-              
-            </span>
+
+            {(route && route.pathname.split('/')[1] == 'applications') && (
+              <span style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                fontSize: '11px',
+                color: 'var(--color-conversion-1)'
+              }}><Select
+                  fetch="/api/get/select/customersId"
+                  placeholder="Filtre por cliente"
+                  style={{
+                    width: "300px",
+                  }}
+                />
+                {localStorage.getItem('customerName') &&
+                  (<div>
+                    <span>{"Cliente Selecionado: "}</span>
+                    <Tag style={{ marginTop: '10px' }} closable onClose={() => {
+                      localStorage.removeItem('customerName');
+                      const routePath = (route.pathname.split('/')[1]) + "/" + (route.pathname.split('/')[2])
+                      window.location.href = "/" + routePath
+                    }}>{localStorage.getItem('customerName')}</Tag>
+                  </div>)}
+                  </span>
+            )}
+
+
             <Dropdown placement="bottomEnd" renderToggle={renderIconButton}>
               <Dropdown.Item onSelect={args.toggleTheme}>
                 Mudar tema
