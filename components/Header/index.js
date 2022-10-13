@@ -97,7 +97,7 @@ export default function Header(args) {
           >
 
 
-            {(route && route.pathname.split('/')[1] == 'applications') && (
+            {(route && route.pathname.split('/')[1] == 'applications') ? (
               <span style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -121,7 +121,7 @@ export default function Header(args) {
                     }}>{localStorage.getItem('customerName')}</Tag>
                   </div>)}
                   </span>
-            )}
+            ) : <div></div>}
 
 
             <Dropdown placement="bottomEnd" renderToggle={renderIconButton}>
