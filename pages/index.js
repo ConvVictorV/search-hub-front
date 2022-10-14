@@ -1,7 +1,19 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import DefaultLayout from "../Layouts/default";
+import DefaultLayout from "../Layouts/default"; import {
+  Breadcrumb,
+  Dropdown,
+  FlexboxGrid,
+  Navbar,
+  Tag,
+  Tooltip,
+  Whisper,
+} from "rsuite";
+import Select from '../components/Form/Components/Select'
+import { useRouter } from "next/router";
+
 function Home(args) {
+  const route = useRouter();
   const session = useSession();
   return (
     <DefaultLayout
@@ -36,6 +48,25 @@ function Home(args) {
       >
         Crie e gerencie <b>estratégias de SEO</b> que funcionam e dão resultados!
       </h1>
+      
+      <span style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        fontSize: '11px',
+        color: 'var(--color-conversion-1)'
+      }}><Select
+          fetch="/api/get/select/customersId"
+          placeholder="Filtre por cliente"
+          size="lg"
+          style={{
+            width: "100%",
+            maxWidth: "500px",
+            margin:"50px auto"
+          }}
+        />
+      </span>
+      
     </DefaultLayout>
   );
 }

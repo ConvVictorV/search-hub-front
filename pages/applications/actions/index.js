@@ -89,14 +89,7 @@ function Demo(args) {
           padding: "20px",
         }}
       >
-        <Select
-          fetch="/api/get/select/customersJiraKeys"
-          placeholder="Filtre por cliente"
-          onSelect={filterCustomerById}
-          style={{
-            width: "150px",
-          }}
-        />
+        <div></div>
         <ButtonToolbar>
           <Whisper
             trigger="hover"

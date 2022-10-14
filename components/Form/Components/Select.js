@@ -17,23 +17,23 @@ const Select = (props) => {
   }, []);
 
   const onSelectItem = (a) => {
+    const customer = customers.filter(customer => customer.value == a)[0]
+    const customerName = (customer.label).toLowerCase().replace(/ /g, '-').replace(/\(/g, '').replace(/\)/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    const routePath = route.pathname == '/' ? "/applications/palavras-estrategicas" : (route.pathname.split('/')[1]) + "/" + (route.pathname.split('/')[2])
     setLoading(true)
-    if(a){
-      const customer = customers.filter(customer=>customer.value == a)[0]
-      const customerName = (customer.label).toLowerCase().replace(/ /g,'-').replace(/\(/g,'').replace(/\)/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-      if(localStorage.getItem('customerName') != customerName){
-        localStorage.setItem('customerName',customerName)
-        localStorage.setItem('customerId',customer.value)
+    if (a) {
+      if (localStorage.getItem('customerName') != customerName) {
+        localStorage.setItem('customerName', customerName)
+        localStorage.setItem('customerId', customer.value)
       }
-      route.push("/"+routePath+"/customer/"+customerName).then(()=>{
+      route.push("/" + routePath + "/customer/" + customerName).then(() => {
         setLoading(false)
       })
-    }else{
+    } else {
       localStorage.removeItem('customerName')
       localStorage.removeItem('customerId')
-      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-      route.push("/"+routePath).then(()=>{
+      const routePath = (route.pathname.split('/')[1]) + "/" + (route.pathname.split('/')[2])
+      route.push("/" + routePath).then(() => {
         setLoading(false)
       })
     }
@@ -61,29 +61,29 @@ const Select = (props) => {
 
   return (
     <div style={{
-      display:'flex'
+      display: 'flex'
     }}>
-    <SelectPicker
-      placeholder={props.placeholder || "Selecione"}
-      data={items}
-      onOpen={updateData}
-      onSearch={updateData}
-      renderMenu={renderMenu}
-      size={props.size || "md"}
-      disabled={props.disabled || false}
-      onClean={onClear}
-      style={{
-        width: "94%",
-        verticalAlign: "top",
-      }}
-      onSelect={props.onSelect || onSelectItem}
-      {...props}
-    />
-    {loading && <Loader style={{
-      paddingLeft:'10px',
-      display:'flex',
-      alignItems:'center'
-    }}></Loader>}
+      <SelectPicker
+        placeholder={props.placeholder || "Selecione"}
+        data={items}
+        onOpen={updateData}
+        onSearch={updateData}
+        renderMenu={renderMenu}
+        size={props.size || "md"}
+        disabled={props.disabled || false}
+        onClean={onClear}
+        style={{
+          width: "94%",
+          verticalAlign: "top",
+        }}
+        onSelect={props.onSelect || onSelectItem}
+        {...props}
+      />
+      {loading && <Loader style={{
+        paddingLeft: '10px',
+        display: 'flex',
+        alignItems: 'center'
+      }}></Loader>}
     </div>
   );
 };
