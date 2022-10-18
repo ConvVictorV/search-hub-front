@@ -271,10 +271,6 @@ const TableCustomers = ({
           <HeaderCell>Squad</HeaderCell>
           <Cell dataKey="dsname" />
         </Column>
-        <Column sortable resizable width={200}>
-          <HeaderCell>Email</HeaderCell>
-          <EmailCell dataKey="dsclientemail" />
-        </Column>
         <Column sortable resizable width={200} flexGrow={1}>
           <HeaderCell>Dominio</HeaderCell>
           <Cell dataKey="dsdomain" />

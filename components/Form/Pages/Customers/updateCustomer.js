@@ -17,7 +17,6 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
   const toast = useToaster();
   const {
     blstatus,
-    dsclientemail,
     idcustomer,
     idsquad,
     nmcustomer,
@@ -27,7 +26,6 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
   } = data;
   const [customerId, setCustomerId] = useState(idcustomer || "");
   const [customerName, setCustomerName] = useState(nmcustomer || "");
-  const [customerEmail, setCustomerEmail] = useState(dsclientemail || "");
   const [customerIdSquad, setCustomerIdSquad] = useState(idsquad || "");
   const [customerActive, setCustomerActive] = useState(blstatus || false);
   const [customerDomain, setCustomerDomain] = useState(dsdomain || "");
@@ -54,7 +52,6 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
           dsdomain: customerDomain,
           blstatus: customerActive,
           idsquad: customerIdSquad,
-          dsclientemail: customerEmail,
           jirakey: customerJiraKey,
         },
         {
@@ -139,27 +136,17 @@ function FormComponent({ closeModal, data, footer, sendText, ...rest }) {
           defaultValue={jirakey}
         />
       </Form.Group>
+      <Form.ControlLabel>Squad</Form.ControlLabel>
       <Select
         fetch={"/api/get/select/squadsId"}
         placeholder={dsname}
         onSelect={setCustomerIdSquad}
         defaultValue={idsquad}
       />
-      <Form.Group
-        controlId="email-9"
-        style={{
-          marginTop: "20px",
-        }}
-      >
-        <Form.ControlLabel>Email</Form.ControlLabel>
-        <Form.Control
-          name="customer-email"
-          type="email"
-          onChange={setCustomerEmail}
-          defaultValue={dsclientemail}
-        />
-      </Form.Group>
-
+      <Form.ControlLabel style={{
+        marginTop: 40,
+        display: "block"
+      }}>Projeto está ativo?</Form.ControlLabel><br />
       <Toggle
         size="lg"
         checkedChildren="Ativo"

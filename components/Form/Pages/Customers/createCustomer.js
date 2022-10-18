@@ -13,7 +13,6 @@ import Select from "../../Components/Select";
 function FormComponent({ closeModal, footer, sendText, ...rest }) {
   const [customerName, setCustomerName] = useState("");
   const [customerDomain, setCustomerDomain] = useState("");
-  const [customerEmail, setCustomerEmail] = useState("");
   const [customerIdSquad, setCustomerIdSquad] = useState("");
   const [customerJiraKey, setCustomerJiraKey] = useState("");
   const [customerActive, setCustomerActive] = useState(true);
@@ -44,7 +43,6 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
         dsdomain: customerDomain,
         blstatus: customerActive,
         idsquad: customerIdSquad,
-        dsclientemail: customerEmail,
         jirakey: customerJiraKey,
       })
       .then((s) => {
@@ -105,25 +103,16 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
         <Form.ControlLabel>Projeto Jira</Form.ControlLabel>
         <Form.Control name="customer-jirakey" onChange={setCustomerJiraKey} />
       </Form.Group>
+      <Form.ControlLabel>Squad</Form.ControlLabel>
       <Select
         fetch={"/api/get/select/squadsId"}
         placeholder={"Selecione o squad"}
         onSelect={setCustomerIdSquad}
       />
-      <Form.Group
-        controlId="email-9"
-        style={{
-          marginTop: "20px",
-        }}
-      >
-        <Form.ControlLabel>Email</Form.ControlLabel>
-        <Form.Control
-          name="customer-email"
-          type="email"
-          onChange={setCustomerEmail}
-        />
-      </Form.Group>
-
+      <Form.ControlLabel style={{
+        marginTop: 40,
+        display:"block"
+      }}>Projeto está ativo?</Form.ControlLabel><br />
       <Toggle
         size="lg"
         checkedChildren="Ativo"
