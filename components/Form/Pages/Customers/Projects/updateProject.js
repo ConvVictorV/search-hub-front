@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import {
   Button,
@@ -8,13 +7,15 @@ import {
   Message,
   Radio,
   RadioGroup,
+  Steps,
   Toggle,
   useToaster,
+  Panel,
+  TagInput
 } from "rsuite";
+import Select from "../../../Components/Select";
 
 function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
-  const session = useSession();
-  const idToken = session.data.id_token;
   const {
     idproject,
     dsurlsite,
@@ -23,15 +24,33 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
     dssitenamegsc,
     nrviewIdga,
     dsreport,
-  } = rowData;
+    dsmensalreport,
+    dsemailopw,
+    dsemailph,
+    dsemailwr,
+    dsprojectemail,
+  } = rowData
+
   const [projectUrl, setProjectUrl] = useState(dsurlsite || "");
   const [projectSitename, setProjectSitename] = useState(dssitenamegsc || "");
   const [projectNrGa, setProjectNrGa] = useState(nrviewIdga || 0);
-  const [projectType, setProjectType] = useState(
-    dstype || "Institucional e Blog"
-  );
+  const [projectType, setProjectType] = useState(dstype || "institucional e blog");
   const [projectAccount, setProjectAccount] = useState(dsaccountgsc || "");
   const [projectReport, setProjectReport] = useState(dsreport || false);
+  const [projectMensalReport, setProjectMensalReport] = useState(dsmensalreport || false);
+
+  const [projetOnPageWatcher, setProjetOnPageWatcher] = useState(dsemailopw || false);
+  const [projectPingHome, setProjectPingHome] = useState(dsemailph || false);
+  const [projectWeeklyReport, setProjectWeeklyReport] = useState(dsemailwr || false);
+  const [projectEmails, setProjectEmails] = useState(dsprojectemail || '');
+
+  const [step, setStep] = useState(0);
+  const onChange = nextStep => {
+    setStep(nextStep < 0 ? 0 : nextStep > 1 ? 1 : nextStep);
+  };
+
+  const onNext = () => onChange(step + 1);
+  const onPrevious = () => onChange(step - 1);
 
   const toast = useToaster();
 
@@ -42,7 +61,12 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
   );
   const messageSucess = (
     <Message showIcon type={"success"} duration={5000}>
-      Projeto atualizado!
+      Projeto Atualizado!
+    </Message>
+  );
+  const messageError = (
+    <Message showIcon type={"error"} duration={5000}>
+      Ocorreu um erro!
     </Message>
   );
 
@@ -50,32 +74,27 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
     toast.push(messageLoading, { placement: "topCenter" });
 
     axios
-      .post(
-        "/api/put/project",
-        {
-          idproject,
+      .post("/api/put/project", {
+        idproject: idproject,
+        data: {
           dsurlsite: projectUrl,
           dstype: projectType,
           dsaccountgsc: projectAccount,
           dssitenamegsc: projectSitename,
-          nrviewIdga: projectNrGa,
+          nrviewIdga: parseInt(projectNrGa),
           dsreport: projectReport,
-        },
-        {
-          headers: {
-            authorization: idToken,
-          },
+          dsmensalreport: projectMensalReport,
+          dsemailopw: projetOnPageWatcher,
+          dsemailph: projectPingHome,
+          dsemailwr: projectWeeklyReport,
+          dsprojectemail: projectEmails.toString()
         }
-      )
+      })
       .then((s) => {
         sucessHandle();
       })
       .catch((e) => {
-        const message = "Ocorreu um erro";
-        const error = e.response?.data;
-        if (error == "Credenciais inválidas")
-          message = "Você não possui permissão";
-        errorHandle(message);
+        errorHandle();
       })
       .finally(() => {
         closeModal();
@@ -96,92 +115,177 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
     });
   };
 
-  const errorHandle = async (message) => {
+  const errorHandle = async () => {
     await clearToast().finally(() => {
-      toast.push(
-        <Message showIcon type={"error"} duration={5000}>
-          {message || "Ocorreu um erro!"}
-        </Message>,
-        { placement: "topCenter" }
-      );
+      toast.push(messageError, { placement: "topCenter" });
     });
   };
 
   return (
     <Form fluid>
-      <Form.Group controlId="name-9">
-        <Form.ControlLabel>Digite a url do projeto</Form.ControlLabel>
-        <Form.Control
-          name="project-url"
-          onChange={setProjectUrl}
-          defaultValue={projectUrl}
-        />
-      </Form.Group>
-      <Form.Group controlId="name-9">
-        <Form.ControlLabel>Digite o sitename do projeto</Form.ControlLabel>
-        <Form.Control
-          name="project-sitename"
-          onChange={setProjectSitename}
-          defaultValue={projectSitename}
-        />
-      </Form.Group>
-      <Form.Group controlId="name-9">
-        <Form.ControlLabel>
-          Digite o número de visualização no GA
-        </Form.ControlLabel>
-        <Form.Control
-          name="project-nr-ga"
-          onChange={setProjectNrGa}
-          defaultValue={projectNrGa}
-        />
-      </Form.Group>
-      <Form.Group controlId="name-9">
-        <Form.ControlLabel>Conta GSC</Form.ControlLabel>
-        <Form.Control
-          name="project-account"
-          onChange={setProjectAccount}
-          defaultValue={projectAccount}
-        />
-      </Form.Group>
-      <Form.ControlLabel
-        style={{
-          display: "block",
-          paddingBottom: "5px",
-        }}
-      >
-        Receber relátorio semanal:
-      </Form.ControlLabel>
-      <Toggle
-        size="lg"
-        checkedChildren="Sim"
-        unCheckedChildren="Não"
-        onChange={setProjectReport}
-        defaultChecked={projectReport}
-      />
-      <RadioGroup
-        name="radioList"
-        inline
-        appearance="picker"
-        onChange={setProjectType}
-        defaultValue={projectType}
-        style={{
-          width: "94%",
-          padding: "0px 10px",
-          border: "none",
-          marginTop: "20px",
-        }}
-      >
-        <span
+      <hr />
+      <Steps current={step} style={{
+        padding: "0px 50px"
+      }}>
+        <Steps.Item title="Projeto" description="Dados do projeto" />
+        <Steps.Item title="Relatórios" description="Ativação de relatórios" />
+      </Steps>
+      <hr />
+      <Panel style={{
+        display: step == 0 ? "block" : "none"
+      }}>
+
+        <Form.Group
+          controlId="name-9"
           style={{
-            lineHeight: "33px",
+            marginTop: "20px",
           }}
         >
-          Tipo:{" "}
-        </span>
-        <Radio value="institucional e blog">Institucional e Blog</Radio>
-        <Radio value="institucional">Institucional</Radio>
-        <Radio value="blog">Blog</Radio>
-      </RadioGroup>
+          <Form.ControlLabel>Digite a url do projeto</Form.ControlLabel>
+          <Form.Control name="project-url" defaultValue={projectUrl} onChange={setProjectUrl} />
+        </Form.Group>
+        <Form.Group controlId="name-9">
+          <Form.ControlLabel>Digite o sitename do projeto</Form.ControlLabel>
+          <Form.Control name="project-sitename" defaultValue={projectSitename} onChange={setProjectSitename} />
+        </Form.Group>
+        <Form.Group controlId="name-9">
+          <Form.ControlLabel>
+            Digite o número de visualização no GA
+          </Form.ControlLabel>
+          <Form.Control name="project-nr-ga" defaultValue={projectNrGa} onChange={setProjectNrGa} />
+        </Form.Group>
+
+        <Form.Group controlId="name-9">
+          <Form.ControlLabel>
+            Conta GSC
+          </Form.ControlLabel>
+          <Form.Control name="project-nr-ga" defaultValue={projectAccount} onChange={setProjectAccount} />
+        </Form.Group>
+
+        <RadioGroup
+          name="radioList"
+          inline
+          appearance="picker"
+          onChange={setProjectType}
+          defaultValue={projectType}
+          style={{
+            width: "94%",
+            padding: "0px 10px",
+            border: "none",
+            marginTop: "20px",
+          }}
+        >
+          <span
+            style={{
+              lineHeight: "33px",
+            }}
+          >
+            Tipo:{" "}
+          </span>
+          <Radio value="institucional e blog">Institucional e Blog</Radio>
+          <Radio value="institucional">Institucional</Radio>
+          <Radio value="blog">Blog</Radio>
+        </RadioGroup>
+      </Panel>
+      <Panel style={{
+        display: step == 1 ? "block" : "none"
+      }}>
+        <Form.ControlLabel
+          style={{
+            display: "block",
+            padding: "20px 0px 5px",
+          }}
+        >
+          Emails do projeto:
+        </Form.ControlLabel>
+        <TagInput
+          trigger={['Enter', 'Space', 'Comma']}
+          placeholder="Digite os emails"
+          style={{ width: "94%" }}
+          defaultValue={projectEmails.split(',')}
+          onChange={(values)=>setProjectEmails(values.toString())}
+        />
+        <Form.ControlLabel
+          style={{
+            display: "block",
+            padding: "20px 0px 5px",
+          }}
+        >
+          Receber relatório Mensal:
+        </Form.ControlLabel>
+        <Toggle
+          size="lg"
+          checkedChildren="Sim"
+          unCheckedChildren="Não"
+          onChange={setProjectMensalReport}
+          defaultChecked={projectMensalReport}
+        />
+        <Form.ControlLabel
+          style={{
+            display: "block",
+            padding: "20px 0px 5px",
+          }}
+        >
+          Receber relatório Semanal:
+        </Form.ControlLabel>
+        <Toggle
+          size="lg"
+          checkedChildren="Sim"
+          unCheckedChildren="Não"
+          onChange={setProjectReport}
+          defaultChecked={projectReport}
+        />
+        <Form.ControlLabel
+          style={{
+            display: "block",
+            padding: "20px 0px 5px",
+          }}
+        >
+          Receber relatório Weekly Report:
+        </Form.ControlLabel>
+
+        <Toggle
+          size="lg"
+          checkedChildren="Sim"
+          unCheckedChildren="Não"
+          onChange={setProjectWeeklyReport}
+          defaultChecked={projectWeeklyReport}
+        />
+
+        <Form.ControlLabel
+          style={{
+            display: "block",
+            padding: "20px 0px 5px",
+          }}
+        >
+          Receber relatório Onpage Watcher:
+        </Form.ControlLabel>
+        <Toggle
+          size="lg"
+          checkedChildren="Sim"
+          unCheckedChildren="Não"
+          onChange={setProjetOnPageWatcher}
+          defaultChecked={projetOnPageWatcher}
+        />
+
+        <Form.ControlLabel
+          style={{
+            display: "block",
+            padding: "20px 0px 5px",
+          }}
+        >
+          Receber relatório Ping Home:
+        </Form.ControlLabel>
+        <Toggle
+          size="lg"
+          checkedChildren="Sim"
+          unCheckedChildren="Não"
+          onChange={setProjectPingHome}
+          defaultChecked={projectPingHome}
+        />
+
+
+      </Panel>
       <hr />
       <Form.Group>
         <ButtonToolbar>
@@ -191,10 +295,28 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
               backgroundColor: "var(--color-conversion-1)",
               color: "var(--color-darkness-background)",
               float: "right",
+              marginLeft: 10,
+              display: step == 1 ? "block" : "none"
             }}
             type="submit"
           >
             {"Enviar"}
+          </Button>
+          <Button style={{
+            backgroundColor: "var(--color-conversion-1)",
+            color: "var(--color-darkness-background)",
+            float: "right",
+            display: step == 0 ? "block" : "none"
+          }} onClick={onNext} disabled={step === 3}>
+            Próximo
+          </Button>
+          <Button style={{
+            backgroundColor: "var(--color-conversion-1)",
+            color: "var(--color-darkness-background)",
+            float: "right",
+            display: step == 0 ? "none" : "block"
+          }} onClick={onPrevious} disabled={step === 0}>
+            Voltar
           </Button>
         </ButtonToolbar>
       </Form.Group>

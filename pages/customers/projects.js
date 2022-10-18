@@ -141,7 +141,7 @@ function Demo(args) {
         <Modal
           open={openEditForm}
           onClose={handleClose}
-          size="xs"
+          size="sm"
           keyboard={false}
           backdrop={"static"}
         >
@@ -156,7 +156,7 @@ function Demo(args) {
         <Modal
           open={openCreateForm}
           onClose={handleClose}
-          size="xs"
+          size="sm"
           keyboard={false}
           backdrop={"static"}
         >
