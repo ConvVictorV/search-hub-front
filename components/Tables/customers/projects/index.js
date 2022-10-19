@@ -244,7 +244,7 @@ const TableProjects = ({
           <Cell dataKey="dsurlsite" />
         </Column>
 
-        <Column sortable width={50} resizable>
+        <Column sortable width={150} resizable>
           <HeaderCell>Tipo do Site</HeaderCell>
           <Cell dataKey="dstype" />
         </Column>
@@ -256,11 +256,11 @@ const TableProjects = ({
           <HeaderCell>Id GA</HeaderCell>
           <Cell dataKey="nrviewIdga" />
         </Column>
-        <Column sortable resizable width={75}>
+        <Column sortable resizable width={125}>
           <HeaderCell>Report Semanal</HeaderCell>
           <StatusCell dataKey="dsreport" />
         </Column>
-        <Column sortable resizable width={75}>
+        <Column sortable resizable width={125}>
           <HeaderCell>Report Mensal</HeaderCell>
           <StatusCell dataKey="dsmensalreport" />
         </Column>
