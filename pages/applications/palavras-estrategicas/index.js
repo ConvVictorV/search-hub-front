@@ -39,7 +39,20 @@ function Demo(args) {
   };
   const getData = () => {
     const axios = require("axios");
-    axios.get("/api/get/words").then(({ data }) => setTableData(data));
+    setTableData([])
+    let page = 0
+    let tableD = []
+    let getWords = () => {
+      axios.get("/api/get/words?page=" + (++page))
+        .then(({ data }) => {
+          if (data.length > 0) {
+            tableD = tableD.concat(data)
+            setTableData(tableD);
+            getWords()
+          }
+        });
+    }
+    getWords()
   };
   const updateData = () => {
     setCheckedKeys([]);
