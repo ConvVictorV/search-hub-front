@@ -200,9 +200,9 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
         </Form.ControlLabel>
         <TagInput
           trigger={['Enter', 'Space', 'Comma']}
-          placeholder="Digite os emails"
+          placeholder=""
           style={{ width: "94%" }}
-          defaultValue={projectEmails.split(',')}
+          defaultValue={projectEmails.split(',')[0] == '' ? '': projectEmails.split(',')}
           onChange={(values)=>setProjectEmails(values.toString())}
         />
         <Form.ControlLabel
