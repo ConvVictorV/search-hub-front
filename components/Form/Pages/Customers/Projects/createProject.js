@@ -182,7 +182,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
             padding: "20px 0px 5px",
           }}
         >
-          Emails do projeto:
+          E-mail dos clientes do projeto:
         </Form.ControlLabel>
         <TagInput
           trigger={['Enter', 'Space', 'Comma']}
