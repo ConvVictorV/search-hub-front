@@ -49,6 +49,14 @@ function Demo(args) {
             tableD = tableD.concat(data)
             setTableData(tableD);
             getWords()
+          } else {
+            axios.get('/api/get/select/customersId').then(({ data }) => {
+              setTableData(tableD.map((row,index) => {
+                const { idcustomer } = row
+                row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
+                return row
+              }))
+            })
           }
         });
     }
@@ -65,10 +73,10 @@ function Demo(args) {
     getData();
   };
   useEffect(() => {
-    if(localStorage.getItem('customerName')){
-      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-      route.push("/"+routePath+"/customer/"+localStorage.getItem('customerName'))
-    }else{
+    if (localStorage.getItem('customerName')) {
+      const routePath = (route.pathname.split('/')[1]) + "/" + (route.pathname.split('/')[2])
+      route.push("/" + routePath + "/customer/" + localStorage.getItem('customerName'))
+    } else {
       getData();
     }
   }, []);
@@ -186,7 +194,7 @@ function Demo(args) {
               "dsparameter": "sem dados",
               "dspriority": "sem dados",
               "nmcustomer": "sem dados"
-          }]
+            }]
         });
       }
     }

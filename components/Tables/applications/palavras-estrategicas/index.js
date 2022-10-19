@@ -1,7 +1,7 @@
 import SearchIcon from "@rsuite/icons/Search";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Checkbox, InputGroup, Pagination, Panel, Stack, Table } from "rsuite";
+import { Checkbox, InputGroup, Loader, Pagination, Panel, Stack, Table } from "rsuite";
 import Select from "../../../Form/Components/Select";
 const { HeaderCell, Cell, Column } = Table;
 
@@ -28,7 +28,7 @@ const NmCustomer = ({ rowData, dataKey, ...props }) => {
   const { nmcustomer } = rowData;
   return (
     <Cell {...props} className="link-group">
-      {(nmcustomer && capitalizeFirstLetter(nmcustomer)) || "false"}
+      {(nmcustomer && capitalizeFirstLetter(nmcustomer)) || <Loader />}
     </Cell>
   );
 };
