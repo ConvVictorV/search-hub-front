@@ -227,7 +227,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
             padding: "20px 0px 5px",
           }}
         >
-          Receber relatório Weekly Report:
+          Cliente receber e-mail do relatório semanal
         </Form.ControlLabel>
 
         <Toggle
@@ -244,7 +244,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
             padding: "20px 0px 5px",
           }}
         >
-          Receber relatório Onpage Watcher:
+          Cliente receber e-mail de aviso do Onpage Watcher
         </Form.ControlLabel>
         <Toggle
           size="lg"
@@ -260,7 +260,7 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
             padding: "20px 0px 5px",
           }}
         >
-          Receber relatório Ping Home:
+          Cliente receber e-mail de aviso do Ping da Home
         </Form.ControlLabel>
         <Toggle
           size="lg"

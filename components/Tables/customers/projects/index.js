@@ -253,16 +253,16 @@ const TableProjects = ({
           <Cell dataKey="dsaccountgsc" />
         </Column>
         <Column sortable width={100} resizable>
-          <HeaderCell>Sitename GSC</HeaderCell>
-          <Cell dataKey="dssitenamegsc" />
-        </Column>
-        <Column sortable width={100} resizable>
           <HeaderCell>Id GA</HeaderCell>
           <Cell dataKey="nrviewIdga" />
         </Column>
         <Column sortable resizable width={75}>
-          <HeaderCell>Report</HeaderCell>
+          <HeaderCell>Report Semanal</HeaderCell>
           <StatusCell dataKey="dsreport" />
+        </Column>
+        <Column sortable resizable width={75}>
+          <HeaderCell>Report Mensal</HeaderCell>
+          <StatusCell dataKey="dsmensalreport" />
         </Column>
         <Column width={50} verticalAlign={"top"} align="center">
           <HeaderCell>...</HeaderCell>
