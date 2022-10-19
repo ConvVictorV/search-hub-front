@@ -20,7 +20,7 @@ import TableWords from "../../../../../components/Tables/applications/actions";
 import FullWidthLayout from "../../../../../Layouts/fullwidth";
 import { useRouter } from "next/router";
 
-function Demo({customer, ...args}) {
+function Demo({ customer, ...args }) {
   const [tableData, setTableData] = useState([]);
   const [checkedKeys, setCheckedKeys] = React.useState([]);
   const [search, setSearch] = useState("");
@@ -29,9 +29,9 @@ function Demo({customer, ...args}) {
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
-  
+
   const router = useRouter()
-  const namecustomer = router.query.namecustomer?.toLowerCase().replace(/ /g,'').replace(/-/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\(/g,'').replace(/\)/g,'');
+  const namecustomer = router.query.namecustomer?.toLowerCase().replace(/ /g, '').replace(/-/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\(/g, '').replace(/\)/g, '');
   const [rowData, setRowData] = useState();
   const toast = useToaster();
 
@@ -43,9 +43,20 @@ function Demo({customer, ...args}) {
   };
   const getData = () => {
     const axios = require("axios");
-    axios.get("/api/get/jiraIssues").then(({ data }) => {
-      setTableData(data);
-    }).then(()=>{
+    setTableData([])
+    let page = 0
+    let tableD = []
+    let getIssues = async () => {
+      axios.get("/api/get/jiraIssuesAllPages?page=" + (++page))
+        .then(({ data }) => {
+          if (data.length > 0) {
+            tableD = tableD.concat(data)
+            setTableData(tableD);
+            getIssues()
+          }
+        });
+    }
+    getIssues().then(()=>{
       axios.get('/api/get/select/customersJiraKeys').then(({data})=>{
         const jira = data.filter(({label})=>{
           return label.toLowerCase().replace(/ /g,'').replace(/-/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\(/g,'').replace(/\)/g,'') == namecustomer
@@ -112,13 +123,13 @@ function Demo({customer, ...args}) {
               style={
                 !filterActive
                   ? {
-                      backgroundColor: "transparent",
-                      color: "var(--color-conversion-1)",
-                    }
+                    backgroundColor: "transparent",
+                    color: "var(--color-conversion-1)",
+                  }
                   : {
-                      backgroundColor: "var(--color-conversion-1)",
-                      color: "white",
-                    }
+                    backgroundColor: "var(--color-conversion-1)",
+                    color: "white",
+                  }
               }
               icon={<FunnelIcon />}
               appearance={"subtle"}

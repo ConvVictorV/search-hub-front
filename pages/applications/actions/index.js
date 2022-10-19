@@ -41,9 +41,20 @@ function Demo(args) {
   };
   const getData = () => {
     const axios = require("axios");
-    axios.get("/api/get/jiraIssues").then(({ data }) => {
-      setTableData(data);
-    });
+    setTableData([])
+    let page = 0
+    let tableD = []
+    let getIssues = () => {
+      axios.get("/api/get/jiraIssuesAllPages?page=" + (++page))
+        .then(({ data }) => {
+          if (data.length > 0) {
+            tableD = tableD.concat(data)
+            setTableData(tableD);
+            getIssues()
+          }
+        });
+    }
+    getIssues()
   };
   const filterCustomerById = (id) => {
     const removeCustomerFilter = () => {
@@ -71,10 +82,10 @@ function Demo(args) {
     getData();
   };
   useEffect(() => {
-    if(localStorage.getItem('customerName')){
-      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-      route.push("/"+routePath+"/customer/"+localStorage.getItem('customerName'))
-    }else{
+    if (localStorage.getItem('customerName')) {
+      const routePath = (route.pathname.split('/')[1]) + "/" + (route.pathname.split('/')[2])
+      route.push("/" + routePath + "/customer/" + localStorage.getItem('customerName'))
+    } else {
       getData();
     }
   }, []);
@@ -100,13 +111,13 @@ function Demo(args) {
               style={
                 !filterActive
                   ? {
-                      backgroundColor: "transparent",
-                      color: "var(--color-conversion-1)",
-                    }
+                    backgroundColor: "transparent",
+                    color: "var(--color-conversion-1)",
+                  }
                   : {
-                      backgroundColor: "var(--color-conversion-1)",
-                      color: "white",
-                    }
+                    backgroundColor: "var(--color-conversion-1)",
+                    color: "white",
+                  }
               }
               icon={<FunnelIcon />}
               appearance={"subtle"}
