@@ -222,8 +222,8 @@ function Demo(args) {
     }
     if (search.length && typeof data === "object") {
       return data.filter((row) => {
-        const flatRow = JSON.stringify(row).toLowerCase();
-        return flatRow.includes(search.toLowerCase());
+                const flatRow = JSON.stringify(row).toLowerCase().normalize('NFD');
+        return flatRow.includes(search.toLowerCase().normalize('NFD'));
       });
     }
     return filteredData;
