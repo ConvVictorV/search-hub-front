@@ -244,8 +244,8 @@ function Demo({ customers, ...args }) {
     }
     if (search.length && typeof data === "object") {
       return data.filter((row) => {
-                const flatRow = JSON.stringify(row).toLowerCase().normalize('NFD');
-        return flatRow.includes(search.toLowerCase().normalize('NFD'));
+                const flatRow = JSON.stringify(row).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        return flatRow.includes(search.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ""));
       });
     }
     return filteredData;
