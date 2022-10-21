@@ -21,7 +21,7 @@ import Select from "../../../components/Form/Components/Select";
 import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/delete";
 import ExportForm from "../../../components/Form/Pages/Applications/quickwins/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
-import TableWords from "../../../components/Tables/applications/quickwins";
+import TableWords from "../../../components/Tables/applications/quickwins/old";
 import FullWidthLayout from "../../../Layouts/fullwidth";
 
 function Demo(args) {
