@@ -19,13 +19,10 @@ import {
   TagGroup,
   useToaster,
   Whisper,
-  Badge
 } from "rsuite";
 
 import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
-import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
-import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
 
 const { HeaderCell, Cell, Column } = Table;
 
@@ -42,49 +39,12 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
     </div>
   </Cell>
 );
-const StatusCell = ({ rowData, dataKey, ...props }) => {
-  const { blstatus } = rowData;
-  console.log(rowData)
-  return (
-    <Cell {...props} className="link-group">
-      <div style={{ marginTop: "-8px" }}>
-        {(blstatus !== undefined && (
-          <Button
-            appearance="ghost"
-            style={{
-              color: "var(--color-conversion-7)",
-              borderColor: "var(--color-conversion-7)",
-              width: "100%",
-            }}
-          >
-            <Badge style={{ background: "var(--color-conversion-7)" }} />{" "}
-            {"Implementado"}
-          </Button>
-        )) || (
-          <Button
-            appearance="ghost"
-            style={{
-              color: "var(--color-conversion-4)",
-              borderColor: "var(--color-conversion-4)",
-              width: "100%",
-            }}
-          >
-            <Badge style={{ background: "var(--color-conversion-4)" }} />{" "}
-            {"inativo"}
-          </Button>
-        )}
-      </div>
-    </Cell>
-  );
-};
 const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   <Cell {...props}>{rowData?.dtimplement?.split("T")[0]}</Cell>
 );
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-const rowKey = "idworkedpage";
 
 const WordTable = ({
   tableData,
@@ -101,26 +61,6 @@ const WordTable = ({
   const [page, setPage] = React.useState(1);
   const [sortColumn, setSortColumn] = React.useState();
   const [sortType, setSortType] = React.useState();
-  const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
-
-  
-  const handleExpanded = (rowData, dataKey) => {
-    let open = false;
-    const nextExpandedRowKeys = [];
-
-    expandedRowKeys.forEach((key) => {
-      if (key === rowData[rowKey]) {
-        open = true;
-      } else {
-        nextExpandedRowKeys.push(key);
-      }
-    });
-
-    if (!open) {
-      nextExpandedRowKeys.push(rowData[rowKey]);
-    }
-    setExpandedRowKeys(nextExpandedRowKeys);
-  };
 
   const toaster = useToaster();
   let checked = false;
@@ -222,13 +162,7 @@ const WordTable = ({
       </Notification>
     );
   };
-  const renderRowExpanded = (rowData) => {
-    return (
-      <div id="expandable">
-        
-      </div>
-    );
-  };
+
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
     const manualKeys = [
       { value: "dskeyword", label: "Palavra Chave" },
@@ -306,31 +240,6 @@ const WordTable = ({
       </TagGroup>
     );
   };
-  const ExpandCell = ({
-    rowData,
-    dataKey,
-    expandedRowKeys,
-    onChange,
-    ...props
-  }) => (
-    <Cell {...props} style={{ padding: 5 }}>
-      <IconButton
-        appearance="subtle"
-        onClick={() => {
-          onChange(rowData);
-        }}
-        icon={
-          expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
-            <CollaspedOutlineIcon
-              style={{ color: "var(--color-conversion-1)" }}
-            />
-          ) : (
-            <ExpandOutlineIcon />
-          )
-        }
-      />
-    </Cell>
-  );
   return (
     <Panel className="nopadding">
       <Stack alignItems={"center"} justifyContent={"space-between"}>
@@ -402,11 +311,6 @@ const WordTable = ({
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
-        renderRowExpanded={renderRowExpanded}
-        expandedRowKeys={expandedRowKeys}
-        shouldUpdateScroll={false}
-        rowKey={rowKey}
-        rowExpandedHeight={300}
         cellBordered
         bordered
       >
@@ -427,17 +331,14 @@ const WordTable = ({
             onChange={handleCheck}
           />
         </Column>
-        <Column width={70} align="center">
-          <HeaderCell>#</HeaderCell>
-          <ExpandCell
-            dataKey="id"
-            expandedRowKeys={expandedRowKeys}
-            onChange={handleExpanded}
-          />
-        </Column> 
         <Column sortable resizable width={200} fixed>
           <HeaderCell>Palavra</HeaderCell>
           <Cell dataKey="dskeyword" />
+        </Column>
+
+        <Column sortable resizable width={100} align="center">
+          <HeaderCell>Posição Inicial</HeaderCell>
+          <Cell dataKey="dsinitposition" />
         </Column>
 
         <Column sortable resizable width={200} align="center">
@@ -445,20 +346,20 @@ const WordTable = ({
           <Cell dataKey="dspageurl" />
         </Column>
         <Column sortable resizable width={200} flexGrow={1} align="center">
-          <HeaderCell>Mês</HeaderCell>
+          <HeaderCell>Data de Competência</HeaderCell>
           <Cell dataKey="dtcomp" />
         </Column>
         <Column sortable resizable width={200} flexGrow={1} align="center">
-          <HeaderCell>Tipo de Produção</HeaderCell>
+          <HeaderCell>Tipo</HeaderCell>
           <Cell dataKey="dstype" />
         </Column>
         <Column sortable resizable width={200} flexGrow={1} align="center">
-          <HeaderCell>Volume de Busca</HeaderCell>
-          <Cell dataKey="dsvolume" />
+          <HeaderCell>Tipo do site</HeaderCell>
+          <Cell dataKey="dscontenttype" />
         </Column>
         <Column sortable resizable width={150} align="center">
-          <HeaderCell>Status</HeaderCell>
-          <StatusCell dataKey="status" />
+          <HeaderCell>Implementado em</HeaderCell>
+          <Inserted dataKey="dtimplement" />
         </Column>
       </Table>
       <div style={{ padding: 20 }}>
