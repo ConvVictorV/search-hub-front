@@ -78,6 +78,40 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
     </Cell>
   );
 };
+const MensalStatusCell = ({ rowData, dataKey, ...props }) => {
+  const { dsmensalreport } = rowData;
+  return (
+    <Cell {...props} className="link-group">
+      <div style={{ marginTop: "-8px" }}>
+        {(dsmensalreport && (
+          <Button
+            appearance="ghost"
+            style={{
+              color: "var(--color-conversion-7)",
+              borderColor: "var(--color-conversion-7)",
+              width: "100%",
+            }}
+          >
+            <Badge style={{ background: "var(--color-conversion-7)" }} />{" "}
+            {"sim"}
+          </Button>
+        )) || (
+          <Button
+            appearance="ghost"
+            style={{
+              color: "var(--color-conversion-4)",
+              borderColor: "var(--color-conversion-4)",
+              width: "100%",
+            }}
+          >
+            <Badge style={{ background: "var(--color-conversion-4)" }} />{" "}
+            {"não"}
+          </Button>
+        )}
+      </div>
+    </Cell>
+  );
+};
 const NmCustomer = ({ rowData, dataKey, ...props }) => {
   const { nmcustomer } = rowData;
   return (
@@ -262,7 +296,7 @@ const TableProjects = ({
         </Column>
         <Column sortable resizable width={125}>
           <HeaderCell>Report Mensal</HeaderCell>
-          <StatusCell dataKey="dsmensalreport" />
+          <MensalStatusCell dataKey="dsmensalreport" />
         </Column>
         <Column width={50} verticalAlign={"top"} align="center">
           <HeaderCell>...</HeaderCell>
