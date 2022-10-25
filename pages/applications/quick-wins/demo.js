@@ -127,6 +127,30 @@ function Demo(args) {
       >
         <div></div>
         <ButtonToolbar>
+        <Whisper
+            trigger="hover"
+            placement="top"
+            speaker={<Tooltip>Novo Planejamento</Tooltip>}
+          >
+            <IconButton
+              style={
+                {
+                  backgroundColor: "transparent",
+                  color: "var(--color-conversion-1)",
+                  borderColor: "var(--color-conversion-1)"
+                }
+              }
+              icon={<FunnelIcon style={
+                {
+                  backgroundColor: "transparent",
+                  color: "var(--color-conversion-1)",
+                  borderColor: "var(--color-conversion-1)"
+                }
+              }/>}
+              appearance={"ghost"}
+              onClick={() => {setOpenImportForm(true)}}
+            >Novo Planejamento</IconButton>
+          </Whisper>
           <Whisper
             trigger="hover"
             placement="top"
@@ -149,6 +173,7 @@ function Demo(args) {
               onClick={() => setFilterActive(!filterActive)}
             ></IconButton>
           </Whisper>
+          
           <Whisper
             trigger="hover"
             placement="top"
@@ -260,6 +285,24 @@ function Demo(args) {
               data={tableData.filter(
                 (word) => checkedKeys.indexOf(word.idworkedpage) > -1
               )}
+            />
+          </Modal.Body>
+        </Modal>
+        <Modal
+          open={openExportForm}
+          onClose={handleClose}
+          size="xs"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>
+               Novo Planejamento
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <ExportForm
+              closeModal={handleClose}
             />
           </Modal.Body>
         </Modal>
