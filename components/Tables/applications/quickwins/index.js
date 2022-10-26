@@ -44,7 +44,6 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 );
 const StatusCell = ({ rowData, dataKey, ...props }) => {
   const { blstatus } = rowData;
-  console.log(rowData)
   return (
     <Cell {...props} className="link-group">
       <div style={{ marginTop: "-8px" }}>

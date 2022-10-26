@@ -21,6 +21,7 @@ import Select from "../../../components/Form/Components/Select";
 import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/delete";
 import ExportForm from "../../../components/Form/Pages/Applications/quickwins/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
+import CreateForm from "../../../components/Form/Pages/Applications/quickwins/create";
 import TableWords from "../../../components/Tables/applications/quickwins";
 import FullWidthLayout from "../../../Layouts/fullwidth";
 
@@ -31,6 +32,7 @@ function Demo(args) {
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
+  const [openCreateForm, setOpenCreateForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const route = useRouter()
@@ -41,6 +43,7 @@ function Demo(args) {
     setOpenExportForm(false);
     setOpenImportForm(false);
     setOpenDeleteForm(false);
+    setOpenCreateForm(false);
     updateData();
   };
   const getData = () => {
@@ -148,7 +151,7 @@ function Demo(args) {
                 }
               }/>}
               appearance={"ghost"}
-              onClick={() => {setOpenImportForm(true)}}
+              onClick={() => {setOpenCreateForm(true)}}
             >Novo Planejamento</IconButton>
           </Whisper>
           <Whisper
@@ -289,24 +292,6 @@ function Demo(args) {
           </Modal.Body>
         </Modal>
         <Modal
-          open={openExportForm}
-          onClose={handleClose}
-          size="xs"
-          keyboard={false}
-          backdrop={"static"}
-        >
-          <Modal.Header>
-            <Modal.Title>
-               Novo Planejamento
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <ExportForm
-              closeModal={handleClose}
-            />
-          </Modal.Body>
-        </Modal>
-        <Modal
           open={openImportForm}
           onClose={handleClose}
           size="xs"
@@ -318,6 +303,21 @@ function Demo(args) {
           </Modal.Header>
           <Modal.Body>
             <ImportForm closeModal={handleClose} />
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          open={openCreateForm}
+          onClose={handleClose}
+          size="full"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Criar Quickwin</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <CreateForm closeModal={handleClose} />
           </Modal.Body>
         </Modal>
         <Modal
