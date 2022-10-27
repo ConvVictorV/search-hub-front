@@ -31,7 +31,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const [rowData, setRowData] = useState([]);
 
 
-    const [dstermo, setDstermo] = useState('');
+    const [dskeyword, setDskeyword] = useState('');
     const [dsurl, setDsurl] = useState('');
     const [dsvolume, setDsvolume] = useState(0);
     const [dsposition, setDsposition] = useState(0);
@@ -39,12 +39,27 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const [dscontent, setDscontent] = useState('');
     const [dsobjective, setDsobjective] = useState('');
     const [dsstatus, setDsstatus] = useState('');
+    const [dsdensity, setDsdensity] = useState(0);
+    const [dsdate, setDsdate] = useState('')
+
+
+    function clearInputs () {
+        setDskeyword('');
+        setDsurl('');
+        setDsvolume('');
+        setDsposition('');
+        setDstype('');
+        setDscontent('');
+        setDsobjective('');
+        setDsstatus('');
+        setDsdensity('');
+        setDsdate('')
+    }
     const [tableData, setTableData] = useState([]);
 
     const [refresh, setRefresh] = useState(0);
 
     useEffect(() => {
-        console.log("rodou aqui")
     }, [tableData])
 
     const messageLoading = (
@@ -105,16 +120,28 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     }}
                 />
                 <Select
-                    fetch={"/api/get/select/customersId"}
+                    fetch={"/api/get/quickWinDate"}
                     placeholder={"Selecione o mês de referência"}
-                    onSelect={setCustomer}
+                    onSelect={setDsdate}
                     style={{
                         width: "100%",
                     }}
                 />
-                <Form.Control name="name" placeholder="Escopo" />
+                <Form.Control name="name" placeholder="Escopo" disabled />
             </Stack>
             <Overview
+                removeItem={(tableid)=>{
+                    const data = tableData
+                    const removeIndex = []
+                    data.forEach((item,index)=>{
+                        if(item.tableid == tableid){
+                            removeIndex.push(index)
+                        }
+                    })
+                    removeIndex.map(i=>data.splice(i,1))
+                    setTableData(data)
+                    setRefresh(refresh+1)
+                }}
                 tableData={tableData}
                 setRowData={setRowData}
             // setDrawerOpenEdit={}
@@ -132,25 +159,25 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                 >
                     <Form.Group controlId="dsterm">
                         <Form.ControlLabel>Termo Principal</Form.ControlLabel>
-                        <Form.Control name="dsterm" onChange={setDstermo} />
+                        <Form.Control name="dsterm" onChange={setDskeyword} value={dskeyword} />
                     </Form.Group>
                     <Form.Group controlId="dsname">
                         <Form.ControlLabel>Volume de busca</Form.ControlLabel>
-                        <Form.Control name="dsname" onChange={setDsurl} />
+                        <Form.Control name="dsname" onChange={setDsvolume} value={dsvolume} />
                     </Form.Group>
                     <Form.Group controlId="dsposition">
                         <Form.ControlLabel>Posição inicial</Form.ControlLabel>
-                        <Form.Control name="dsposition" onChange={setDsvolume} />
+                        <Form.Control name="dsposition" onChange={setDsposition} value={dsposition} />
                     </Form.Group>
                     <Form.Group controlId="dsdensity">
                         <Form.ControlLabel>Densidade de palavras</Form.ControlLabel>
-                        <Form.Control name="dsdensity" onChange={setDsposition} />
+                        <Form.Control name="dsdensity" onChange={setDsdensity} value={dsdensity} />
                     </Form.Group>
                     <Form.Group controlId="dsobjective" style={{
                         width:356
                     }}>
                         <Form.ControlLabel>Objetivo da otimização</Form.ControlLabel>
-                        <Textarea name="dsobjective" onChange={setDsobjective}></Textarea>
+                        <Textarea name="dsobjective" onChange={setDsobjective} value={dsobjective}></Textarea>
                     </Form.Group>
                 </Stack>
                 <Stack
@@ -163,15 +190,15 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                 >
                     <Form.Group controlId="dsurl">
                         <Form.ControlLabel>Url da página</Form.ControlLabel>
-                        <Form.Control name="dsurl" onChange={setDstype} />
+                        <Form.Control name="dsurl" onChange={setDsurl} value={dsurl} />
                     </Form.Group>
                     <Form.Group controlId="dstype">
                         <Form.ControlLabel>Tipo de otimização</Form.ControlLabel>
-                        <Form.Control name="dstype" onChange={setDscontent} />
+                        <Form.Control name="dstype" onChange={setDstype} value={dstype} />
                     </Form.Group>
                     <Form.Group controlId="dscontent">
                         <Form.ControlLabel>Tipo de conteúdo</Form.ControlLabel>
-                        <Form.Control name="dscontent" onChange={setDsobjective} />
+                        <Form.Control name="dscontent" onChange={setDscontent} value={dscontent} />
                     </Form.Group>
                 </Stack>
             </Stack>
@@ -199,16 +226,22 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         onClick={() => {
                             let data = tableData
                             data.push({
-                                dstermo,
+                                tableid: Math.floor(Math.random() * 9999999999),
+                                dskeyword,
                                 dsurl,
+                                idquickwin: customer + dsdate + "2022",
+                                dsstatus,
                                 dsvolume,
                                 dsposition,
+                                dsdensity,
                                 dstype,
                                 dscontent,
+                                idcustomer: customer,
                                 dsobjective,
-                                dsstatus,
+                                dsdate
                             })
                             setTableData(data)
+                            clearInputs()
                             setRefresh(refresh+1)
                         }}
                         style={{

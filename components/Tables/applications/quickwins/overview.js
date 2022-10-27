@@ -72,11 +72,11 @@ const ActionCell = ({
     rowData,
     dataKey,
     setRowData,
+    removeItem,
     ...props
 }) => {
     function handleAction() {
-        setRowData(rowData);
-        setDrawerOpenEdit(true);
+        removeItem(rowData.tableid)
     }
     return (
         <Cell {...props} className="link-group">
@@ -109,7 +109,8 @@ const ActionCell = ({
 const WordTable = ({
     tableData,
     setDrawerOpenEdit,
-    setRowData
+    setRowData,
+    removeItem
 }) => {
     let [defaultValues, setDefaultValues] = useState(0)
     // setInterval(() => {
@@ -131,9 +132,16 @@ const WordTable = ({
             </Column>
             <Column resizable width={150} fixed>
                 <HeaderCell>Termo Principal</HeaderCell>
-                <Cell dataKey="dstermo" />
+                <Cell dataKey="dskeyword" />
             </Column>
-
+            <Column resizable width={150}>
+                <HeaderCell>Mês de ref.</HeaderCell>
+                <Cell dataKey="dsdate" />
+            </Column>
+            <Column resizable width={150}>
+                <HeaderCell>Densidade de palavras</HeaderCell>
+                <Cell dataKey="dsdensity" />
+            </Column>
             <Column width={300} align="center">
                 <HeaderCell>Url da página</HeaderCell>
                 <Cell dataKey="dsurl" />
@@ -162,6 +170,7 @@ const WordTable = ({
             <Column width={150} verticalAlign={"top"} align="center">
                 <HeaderCell>...</HeaderCell>
                 <ActionCell
+                    removeItem={removeItem}
                     setDrawerOpenEdit={setDrawerOpenEdit}
                     setRowData={setRowData}
                     dataKey="idcustomer"
