@@ -150,3 +150,8 @@ color: white;
   border-left: solid 3px var(--color-conversion-1);
   background: var(--rs-btn-subtle-hover-bg)!important;
 }
+
+.rs-picker-search input {
+  width: auto;
+  max-width:none!important;
+}
