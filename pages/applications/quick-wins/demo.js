@@ -309,7 +309,7 @@ function Demo(args) {
         <Modal
           open={openCreateForm}
           onClose={handleClose}
-          size="full"
+          size="md"
           keyboard={false}
           backdrop={"static"}
         >

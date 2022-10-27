@@ -81,7 +81,7 @@ const ActionCell = ({
     return (
         <Cell {...props} className="link-group">
             <div style={{ marginTop: "-8px" }}>
-                <IconButton
+                {/* <IconButton
                     appearance="ghost"
                     size={'sm'}
                     // style={{
@@ -90,7 +90,7 @@ const ActionCell = ({
                     onClick={handleAction}
 
                     icon={<EditIcon />}
-                />
+                /> */}
                 <IconButton
                     appearance="ghost"
                     size={'sm'}
@@ -112,37 +112,41 @@ const WordTable = ({
     setRowData
 }) => {
     let [defaultValues, setDefaultValues] = useState(0)
-    setInterval(()=>{
-        //forçar reenderização
-        setDefaultValues(defaultValues+1)
-    },1000)
+    // setInterval(() => {
+    //     //forçar reenderização
+    //     setDefaultValues(defaultValues + 1)
+    // }, 1000)
     useEffect(() => {
-        
-    }, [])
+
+    }, [tableData])
+    
     return (
         <Table
             virtualized
-            autoHeight
             data={tableData}
         >
-            <Column resizable width={200} fixed>
+            <Column resizable width={150} fixed align="center">
+                <HeaderCell>Status</HeaderCell>
+                <Cell dataKey="dsstatus" />
+            </Column>
+            <Column resizable width={150} fixed>
                 <HeaderCell>Termo Principal</HeaderCell>
                 <Cell dataKey="dstermo" />
             </Column>
 
-            <Column resizable width={200} align="center">
+            <Column width={300} align="center">
                 <HeaderCell>Url da página</HeaderCell>
                 <Cell dataKey="dsurl" />
             </Column>
-            <Column resizable width={200} align="center">
+            <Column resizable width={130} align="center">
                 <HeaderCell>Volume de busca</HeaderCell>
                 <Cell dataKey="dsvolume" />
             </Column>
-            <Column resizable width={200} align="center">
+            <Column resizable width={100} align="center">
                 <HeaderCell>Posição inicial</HeaderCell>
                 <Cell dataKey="dsposition" />
             </Column>
-            <Column resizable width={200} align="center">
+            <Column resizable width={150} align="center">
                 <HeaderCell>Tipo de otimização</HeaderCell>
                 <Cell dataKey="dstype" />
             </Column>
@@ -154,10 +158,7 @@ const WordTable = ({
                 <HeaderCell>Objetivo da otimização</HeaderCell>
                 <Cell dataKey="dsobjective" />
             </Column>
-            <Column resizable width={150} align="center">
-                <HeaderCell>Status</HeaderCell>
-                <Cell dataKey="dsstatus" />
-            </Column>
+
             <Column width={150} verticalAlign={"top"} align="center">
                 <HeaderCell>...</HeaderCell>
                 <ActionCell

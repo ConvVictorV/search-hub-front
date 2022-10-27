@@ -10,7 +10,8 @@ import {
     useToaster,
     Stack,
     Input,
-    ButtonGroup
+    ButtonGroup,
+    Divider
 } from "rsuite";
 import Select from "../../../Components/Select";
 import Overview from "../../../../Tables/applications/quickwins/overview"
@@ -21,7 +22,7 @@ const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref=
 
 function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
 
-    
+
     const [customer, setCustomer] = useState();
     const [exportData, setExportData] = useState(data || []);
     const [files, setFiles] = useState([]);
@@ -40,7 +41,12 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const [dsstatus, setDsstatus] = useState('');
     const [tableData, setTableData] = useState([]);
 
-    
+    const [refresh, setRefresh] = useState(0);
+
+    useEffect(() => {
+        console.log("rodou aqui")
+    }, [tableData])
+
     const messageLoading = (
         <Message showIcon type={"info"} duration={0}>
             Processando dados!
@@ -83,9 +89,6 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         });
     };
 
-    useState(()=>{
-        console.log("rodou")
-    },tableData)
     return (
         <Form fluid layout="inline">
             <Stack
@@ -120,6 +123,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                 direction="row"
                 alignItems="flex-start"
                 spacing={'30px'}
+                justifyContent={'center'}
             >
                 <Stack
                     direction="column"
@@ -141,6 +145,12 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     <Form.Group controlId="dsdensity">
                         <Form.ControlLabel>Densidade de palavras</Form.ControlLabel>
                         <Form.Control name="dsdensity" onChange={setDsposition} />
+                    </Form.Group>
+                    <Form.Group controlId="dsobjective" style={{
+                        width:356
+                    }}>
+                        <Form.ControlLabel>Objetivo da otimização</Form.ControlLabel>
+                        <Textarea name="dsobjective" onChange={setDsobjective}></Textarea>
                     </Form.Group>
                 </Stack>
                 <Stack
@@ -165,44 +175,46 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     </Form.Group>
                 </Stack>
             </Stack>
-            <Form.ControlLabel>Objetivo da otimização</Form.ControlLabel>
-            <Textarea name="dsobjective" onChange={setDsobjective}></Textarea>
+
             <Stack
                 direction="row"
-                justifyContent="space-between"
+                justifyContent="end"
+                alignItems="flex-end"
+                style={{
+                    width:"100%",
+                    paddingRight: "24px"
+                }}
             >
-                <Select
-                    fetch={"/api/get/select/customersId"}
-                    placeholder={"Status do QuickWin"}
-                    onSelect={setDsstatus}
-                    style={{
-                        width: "100%",
-                    }}
-                />
-                <ButtonToolbar >
-                    <Button 
-                    onClick={()=>{
-                        let data = tableData
-                        data.push({
-                            dstermo,
-                            dsurl,
-                            dsvolume,
-                            dsposition,
-                            dstype,
-                            dscontent,
-                            dsobjective,
-                            dsstatus,
-                        })
-                        setTableData(data)
-                    }}
-                    style={{
-                        backgroundColor: "var(--color-conversion-1)",
-                        color: "var(--color-darkness-background)",
-                    }}>Salvar</Button>
-                    <Button style={{
-                        backgroundColor: "var(--color-conversion-1)",
-                        color: "var(--color-darkness-background)",
-                    }}>Cadastrar Pauta</Button>
+
+                <ButtonToolbar style={{
+                    display:"flex",
+                    width:"100%"
+                }}>
+                    <Select
+                        fetch={"/api/get/quickWinStatus"}
+                        placeholder={"Status do QuickWin"}
+                        onSelect={setDsstatus}
+                    />
+                    <Button
+                        onClick={() => {
+                            let data = tableData
+                            data.push({
+                                dstermo,
+                                dsurl,
+                                dsvolume,
+                                dsposition,
+                                dstype,
+                                dscontent,
+                                dsobjective,
+                                dsstatus,
+                            })
+                            setTableData(data)
+                            setRefresh(refresh+1)
+                        }}
+                        style={{
+                            backgroundColor: "var(--color-conversion-1)",
+                            color: "var(--color-darkness-background)",
+                        }}>Adicionar QuickWin</Button>
                 </ButtonToolbar>
             </Stack>
 
@@ -210,14 +222,18 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
             <ButtonToolbar style={{
                 float: "right"
             }}>
+
+                <Button
+                    disabled
+                    style={{
+                        backgroundColor: "var(--color-conversion-11)",
+                        color: "var(--color-darkness-background)",
+                    }}>Exportar para planilha</Button>
                 <Button style={{
                     backgroundColor: "var(--color-conversion-1)",
                     color: "var(--color-darkness-background)",
                 }}>Salvar planejamento</Button>
-                <Button style={{
-                    backgroundColor: "var(--color-conversion-1)",
-                    color: "var(--color-darkness-background)",
-                }}>Gerar planilha</Button>
+
             </ButtonToolbar>
         </Form>
     );
