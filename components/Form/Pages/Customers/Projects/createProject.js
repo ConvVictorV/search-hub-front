@@ -187,10 +187,14 @@ function FormComponent({ closeModal, footer, sendText, ...rest }) {
         <TagInput
           trigger={['Enter', 'Space', 'Comma']}
           placeholder="Digite os emails"
-          style={{ width: "94%" }}
+          style={{ width: "94%",marginBottom:5 }}
           defaultValue={[]}
           onChange={setProjectEmails}
         />
+        <Form.HelpText><i style={{
+          fontSize:12,
+          textDecoration:"underline"
+        }}>Para inserir o email pressione a tecla <b>ENTER</b>, <b>ESPAÇO</b> OU <b>VÍRGULA</b>.</i></Form.HelpText>
         <Form.ControlLabel
           style={{
             display: "block",
