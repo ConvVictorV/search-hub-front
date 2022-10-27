@@ -43,6 +43,10 @@ export default function handler(req, res) {
             value: 'OUTUBRO'
         },
         {
+            label: 'NOVEMBRO',
+            value: 'NOVEMBRO'
+        },
+        {
             label: 'DEZEMBRO',
             value: 'DEZEMBRO'
         }
