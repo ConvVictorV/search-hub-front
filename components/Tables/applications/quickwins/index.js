@@ -309,7 +309,7 @@ const WordTable = ({
             <p>Estrutura do texto: {rowData.textTopic?.dstextstructure}</p>
             <p>Termos secundários: {rowData.textTopic?.dssecundarykeywords}</p>
             <p>Perguntas frequentes: {rowData.textTopic?.dspeopleask}</p>
-            <p>Estrutura da página dspagestructure</p>
+            <p>Estrutura da página: {rowData.textTopic?.dspagestructure}</p>
             <p>Recomendações: {rowData.textTopic?.dsrecommendations}</p>
             <p>Cta: {rowData.textTopic?.dscta}</p>
             <p>Etapa do funil: {rowData.textTopic?.dsfunnel}</p>
