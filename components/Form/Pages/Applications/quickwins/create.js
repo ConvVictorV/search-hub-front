@@ -51,9 +51,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         setDstype('');
         setDscontent('');
         setDsobjective('');
-        setDsstatus('');
         setDsdensity('');
-        setDsdate('')
     }
     const [tableData, setTableData] = useState([]);
 
@@ -240,6 +238,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                                 dsobjective,
                                 dsdate
                             })
+                            console.log(data)
                             setTableData(data)
                             clearInputs()
                             setRefresh(refresh+1)
