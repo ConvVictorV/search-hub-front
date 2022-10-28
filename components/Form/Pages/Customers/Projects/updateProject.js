@@ -205,6 +205,10 @@ function FormComponent({ rowData, closeModal, footer, sendText, ...rest }) {
           defaultValue={projectEmails.split(',')[0] == '' ? '': projectEmails.split(',')}
           onChange={(values)=>setProjectEmails(values.toString())}
         />
+        <Form.HelpText><i style={{
+          fontSize:12,
+          textDecoration:"underline"
+        }}>Para inserir o email pressione a tecla <b>ENTER</b>, <b>ESPAÇO</b> OU <b>VÍRGULA</b>.</i></Form.HelpText>
         <Form.ControlLabel
           style={{
             display: "block",
