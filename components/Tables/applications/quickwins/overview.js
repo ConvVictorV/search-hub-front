@@ -135,10 +135,6 @@ const WordTable = ({
                 <Cell dataKey="dskeyword" />
             </Column>
             <Column resizable width={150}>
-                <HeaderCell>Mês de ref.</HeaderCell>
-                <Cell dataKey="dsdate" />
-            </Column>
-            <Column resizable width={150}>
                 <HeaderCell>Densidade de palavras</HeaderCell>
                 <Cell dataKey="dsdensity" />
             </Column>
