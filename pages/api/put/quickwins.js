@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default function handler(req, res) {
   axios
-    .post(`https://search-hub-backend-nukcfjbsza-rj.a.run.app/quickwins`, req.body)
+    .patch(`https://search-hub-backend-nukcfjbsza-rj.a.run.app/quickwins/${req.body.id}`, req.body)
     .then(({ data }) => res.status(200).send(data))
     .catch((err) => {
       res

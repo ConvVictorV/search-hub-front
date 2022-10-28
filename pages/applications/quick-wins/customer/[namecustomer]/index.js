@@ -17,10 +17,10 @@ import {
   Whisper,
 } from "rsuite";
 
-import DeleteForm from "../../../../../components/Form/Pages/Applications/quickwins/delete";
-import ExportForm from "../../../../../components/Form/Pages/Applications/quickwins/export";
+import DeleteForm from "../../../../../components/Form/Pages/Applications/quickwins/deleteOld";
+import ExportForm from "../../../../../components/Form/Pages/Applications/quickwins/exportOld";
 import ImportForm from "../../../../../components/Form/Pages/Applications/quickwins/import";
-import TableWords from "../../../../../components/Tables/applications/quickwins";
+import TableWords from "../../../../../components/Tables/applications/quickwins/old";
 import FullWidthLayout from "../../../../../Layouts/fullwidth";
 import { useRouter } from 'next/router'
 import axios from "axios";
@@ -70,7 +70,7 @@ function Demo({ customers, ...args }) {
     updateData();
   };
   const getData = () => {
-    axios.get(`/api/get/quickwins${localStorage.getItem('customerId') && localStorage.getItem('customerId') != 'undefined' && '?idcustomer='+localStorage.getItem('customerId')}`).then(({data})=>{
+    axios.get(`/api/get/quickwinsOld${localStorage.getItem('customerId') && localStorage.getItem('customerId') != 'undefined' && '?idcustomer='+localStorage.getItem('customerId')}`).then(({data})=>{
       setTableData(data)
     })
   };
@@ -236,7 +236,7 @@ function Demo({ customers, ...args }) {
               case "is not":
                 return rowColumn != value;
               case "contains":
-                return rowColumn.indexOf(value) > -1;
+                return rowColumn?.indexOf(value) > -1;
             }
           });
         });

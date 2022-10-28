@@ -22,6 +22,7 @@ import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/de
 import ExportForm from "../../../components/Form/Pages/Applications/quickwins/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
 import CreateForm from "../../../components/Form/Pages/Applications/quickwins/create";
+import EditForm from "../../../components/Form/Pages/Applications/quickwins/edit";
 import TableWords from "../../../components/Tables/applications/quickwins";
 import FullWidthLayout from "../../../Layouts/fullwidth";
 
@@ -33,6 +34,7 @@ function Demo(args) {
   const [openImportForm, setOpenImportForm] = useState(false);
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [openCreateForm, setOpenCreateForm] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const route = useRouter()
@@ -42,13 +44,27 @@ function Demo(args) {
   const handleClose = () => {
     setOpenExportForm(false);
     setOpenImportForm(false);
+    setOpenEditForm(false);
     setOpenDeleteForm(false);
     setOpenCreateForm(false);
     updateData();
   };
   const getData = () => {
     const axios = require("axios");
-    axios.get("/api/get/quickwins").then(({ data }) => setTableData(data));
+    setTableData([])
+    let page = 0
+    let tableD = []
+    let getQuickwins = () => {
+      axios.get("/api/get/quickwins?page=" + (++page))
+        .then(({ data }) => {
+          if (data.length > 0) {
+            tableD = tableD.concat(data)
+            setTableData(tableD);
+            getQuickwins()
+          }
+        });
+    }
+    getQuickwins()
   };
   const filterCustomerById = (id) => {
     const removeCustomerFilter = () => {
@@ -101,8 +117,8 @@ function Demo(args) {
     return (
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
-          <Dropdown.Item eventKey={1}>Importar</Dropdown.Item>
-          <Dropdown.Item eventKey={2}>{`Exportar ${
+          <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
+          <Dropdown.Item disabled eventKey={2}>{`Exportar ${
             checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
           }`}</Dropdown.Item>
           {checkedKeys.length != 0 ? (
@@ -241,7 +257,7 @@ function Demo(args) {
               case "is not":
                 return rowColumn != value;
               case "contains":
-                return rowColumn.indexOf(value) > -1;
+                return rowColumn?.indexOf(value) > -1;
             }
           });
         });
@@ -319,6 +335,22 @@ function Demo(args) {
             <CreateForm closeModal={handleClose} />
           </Modal.Body>
         </Modal>
+
+        <Modal
+          open={openEditForm}
+          onClose={handleClose}
+          size="md"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Editar Quickwin</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <EditForm rowData={rowData} closeModal={handleClose} />
+          </Modal.Body>
+        </Modal>
+
         <Modal
           open={openDeleteForm}
           onClose={handleClose}
@@ -340,7 +372,7 @@ function Demo(args) {
         </Modal>
         <TableWords
           checkedKeys={checkedKeys}
-          setCheckedKeys={setCheckedKeys}
+          setOpenEditForm={setOpenEditForm}
           tableData={filter(search, tableData)}
           setSearch={setSearch}
           headerMenu={getHeaderTable()}

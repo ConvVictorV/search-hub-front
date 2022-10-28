@@ -26,6 +26,7 @@ import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
 import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
 import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
+import EditIcon from "@rsuite/icons/Edit";
 
 const { HeaderCell, Cell, Column } = Table;
 
@@ -43,11 +44,11 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   </Cell>
 );
 const StatusCell = ({ rowData, dataKey, ...props }) => {
-  const { blstatus } = rowData;
+  const { dsstatus } = rowData;
   return (
     <Cell {...props} className="link-group">
       <div style={{ marginTop: "-8px" }}>
-        {(blstatus !== undefined && (
+        {(dsstatus !== undefined && (
           <Button
             appearance="ghost"
             style={{
@@ -57,7 +58,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             }}
           >
             <Badge style={{ background: "var(--color-conversion-7)" }} />{" "}
-            {"Implementado"}
+            {dsstatus}
           </Button>
         )) || (
           <Button
@@ -94,6 +95,8 @@ const WordTable = ({
   filterActive,
   setFilterData,
   filterData,
+  setOpenEditForm,
+  setRowData
 }) => {
   const [loading, setLoading] = React.useState(true);
   const [limit, setLimit] = React.useState(12);
@@ -135,6 +138,33 @@ const WordTable = ({
   const handleChangeLimit = (dataKey) => {
     setPage(1);
     setLimit(dataKey);
+  };
+
+  const ActionCell = ({
+    setOpenEditForm,
+    rowData,
+    dataKey,
+    setRowData,
+    ...props
+  }) => {
+    function handleAction() {
+      setRowData(rowData);
+      setOpenEditForm(true);
+    }
+    return (
+      <Cell {...props} className="link-group">
+        <div style={{ marginTop: "-8px" }}>
+          <IconButton
+            appearance="primary"
+            style={{
+              background: "var(--color-conversion-1)",
+            }}
+            onClick={handleAction}
+            icon={<EditIcon />}
+          />
+        </div>
+      </Cell>
+    );
   };
 
   const handleSortColumn = (sortColumn, sortType) => {
@@ -241,16 +271,16 @@ const WordTable = ({
     const keys = Object.keys(tableData[0] || {});
     const handleSelect = (eventKey) => {
       onClose();
-      const message = getMessage(manualKeys[eventKey].value);
+      const message = getMessage(keys[eventKey]);
       toaster.push(message, { placement: "topEnd" });
     };
     return (
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
-          {manualKeys.map((key, index) => {
+          {keys.map((key, index) => {
             return (
               <Dropdown.Item eventKey={index} key={index}>
-                {key.label}
+                {key}
               </Dropdown.Item>
             );
           })}
@@ -421,7 +451,7 @@ const WordTable = ({
             </div>
           </HeaderCell>
           <CheckCell
-            dataKey="idworkedpage"
+            dataKey="id"
             checkedKeys={checkedKeys}
             onChange={handleCheck}
           />
@@ -439,25 +469,25 @@ const WordTable = ({
           <Cell dataKey="dskeyword" />
         </Column>
 
-        <Column sortable resizable width={200} align="center">
+        <Column sortable resizable width={200} flexGrow={1} align="center">
           <HeaderCell>Url</HeaderCell>
-          <Cell dataKey="dspageurl" />
+          <Cell dataKey="dsurl" />
         </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
+        <Column sortable resizable width={200} align="center">
           <HeaderCell>Mês</HeaderCell>
-          <Cell dataKey="dtcomp" />
+          <Cell dataKey="dsmonth" />
         </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
-          <HeaderCell>Tipo de Produção</HeaderCell>
-          <Cell dataKey="dstype" />
-        </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
-          <HeaderCell>Volume de Busca</HeaderCell>
-          <Cell dataKey="dsvolume" />
-        </Column>
-        <Column sortable resizable width={150} align="center">
+        <Column sortable resizable width={250} align="center">
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="status" />
+        </Column>
+        <Column width={50} verticalAlign={"top"} align="center">
+          <HeaderCell>...</HeaderCell>
+          <ActionCell
+            setOpenEditForm={setOpenEditForm}
+            setRowData={setRowData}
+            dataKey="idcustomer"
+          />
         </Column>
       </Table>
       <div style={{ padding: 20 }}>

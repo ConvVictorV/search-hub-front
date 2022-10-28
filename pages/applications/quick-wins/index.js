@@ -18,8 +18,8 @@ import {
   Whisper,
 } from "rsuite";
 import Select from "../../../components/Form/Components/Select";
-import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/delete";
-import ExportForm from "../../../components/Form/Pages/Applications/quickwins/export";
+import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/deleteOld";
+import ExportForm from "../../../components/Form/Pages/Applications/quickwins/exportOld";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
 import TableWords from "../../../components/Tables/applications/quickwins/old";
 import FullWidthLayout from "../../../Layouts/fullwidth";
@@ -45,7 +45,7 @@ function Demo(args) {
   };
   const getData = () => {
     const axios = require("axios");
-    axios.get("/api/get/quickwins").then(({ data }) => setTableData(data));
+    axios.get("/api/get/quickwinsOld").then(({ data }) => setTableData(data));
   };
   const filterCustomerById = (id) => {
     const removeCustomerFilter = () => {
@@ -214,7 +214,7 @@ function Demo(args) {
               case "is not":
                 return rowColumn != value;
               case "contains":
-                return rowColumn.indexOf(value) > -1;
+                return rowColumn?.indexOf(value) > -1;
             }
           });
         });

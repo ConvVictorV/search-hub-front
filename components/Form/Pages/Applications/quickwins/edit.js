@@ -20,7 +20,7 @@ import Overview from "../../../../Tables/applications/quickwins/overview"
 const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
 
-function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
+function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest }) {
 
 
     const [customer, setCustomer] = useState();
@@ -28,22 +28,28 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const [files, setFiles] = useState([]);
     const session = useSession();
     const toast = useToaster();
-    const [rowData, setRowData] = useState([]);
+
+    const [dskeyword, setDskeyword] = useState(rowData.dskeyword);
+    const [dsurl, setDsurl] = useState(rowData.dsurl);
+    const [dsvolume, setDsvolume] = useState(rowData.dsvolume);
+    const [dsposition, setDsposition] = useState(rowData.dsposition);
+    const [dstype, setDstype] = useState(rowData.dstype);
+    const [dscontent, setDscontent] = useState(rowData.dscontent);
+    const [dsobjective, setDsobjective] = useState(rowData.dsobjective);
+    const [dsstatus, setDsstatus] = useState(rowData.dsstatus);
+    const [dsdensity, setDsdensity] = useState(rowData.dsdensity);
+    const [dsmonth, setDsmonth] = useState(rowData.dsmonth)
+    const [dsyear, setDsyear] = useState(rowData.dsyear)
+    
+    axios.get('/api/get/select/customersId').then(({ data }) => {
+        data.filter((row, index) => {
+            const idcustomer = row.value
+            rowData.idcustomer == idcustomer && setCustomer(data[index].label)
+        })
+    })
 
 
-    const [dskeyword, setDskeyword] = useState('');
-    const [dsurl, setDsurl] = useState('');
-    const [dsvolume, setDsvolume] = useState(0);
-    const [dsposition, setDsposition] = useState(0);
-    const [dstype, setDstype] = useState('');
-    const [dscontent, setDscontent] = useState('');
-    const [dsobjective, setDsobjective] = useState('');
-    const [dsstatus, setDsstatus] = useState('');
-    const [dsdensity, setDsdensity] = useState(0);
-    const [dsmonth, setDsmonth] = useState('')
-    const [dsyear, setDsyear] = useState(2022)
-
-    function clearInputs () {
+    function clearInputs() {
         setDskeyword('');
         setDsurl('');
         setDsvolume('');
@@ -109,49 +115,17 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                 alignItems="flex-start"
                 justifyContent="space-between"
             >
-                <Select
-                    fetch={"/api/get/select/customersId"}
-                    placeholder={"Selecione o cliente"}
-                    onSelect={setCustomer}
-                    style={{
-                        width: "100%",
-                    }}
-                />
-                <Select
-                    fetch={"/api/get/quickWinDate"}
-                    placeholder={"Selecione o mês de referência"}
-                    onSelect={setDsmonth}
-                    style={{
-                        width: "100%",
-                    }}
-                />
-                <span style={{
-                    display:'flex'
-                }}>
-                <Form.ControlLabel>Ano de Referência</Form.ControlLabel>
-                <Form.Control name="name" placeholder="" onChange={setDsyear} value={dsyear} style={{
-                    width:100
-                }}/>
-                </span>
+
+                <Stack direction="column" alignItems="flex-start">
+                    <p style={{
+                        fontSize: 14,
+                    }}>Cliente: <b>{customer}</b></p>
+                    <p style={{
+                        fontSize: 14,
+                    }}>Mês de Referência: <b>{dsmonth}</b></p>
+                </Stack>
                 {/* <Form.Control name="name" placeholder="Escopo" disabled /> */}
             </Stack>
-            <Overview
-                removeItem={(tableid)=>{
-                    const data = tableData
-                    const removeIndex = []
-                    data.forEach((item,index)=>{
-                        if(item.tableid == tableid){
-                            removeIndex.push(index)
-                        }
-                    })
-                    removeIndex.map(i=>data.splice(i,1))
-                    setTableData(data)
-                    setRefresh(refresh+1)
-                }}
-                tableData={tableData}
-                setRowData={setRowData}
-            // setDrawerOpenEdit={}
-            />
             <Stack
                 direction="row"
                 alignItems="flex-start"
@@ -179,13 +153,9 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         <Form.ControlLabel>Densidade de palavras</Form.ControlLabel>
                         <Form.Control name="dsdensity" onChange={setDsdensity} value={dsdensity} />
                     </Form.Group>
-                    <Form.Group controlId="dsobjective" style={{
-                        width:356
-                    }}>
-                        <Form.ControlLabel>Objetivo da otimização</Form.ControlLabel>
-                        <Textarea name="dsobjective" onChange={setDsobjective} value={dsobjective}></Textarea>
-                    </Form.Group>
+
                 </Stack>
+
                 <Stack
                     direction="column"
                     spacing="10px"
@@ -208,47 +178,67 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     </Form.Group>
                 </Stack>
             </Stack>
+            <Form.Group controlId="dsobjective" style={{
+                width: '96%'
+            }}>
+                <Form.ControlLabel>Objetivo da otimização</Form.ControlLabel>
+                <Textarea name="dsobjective" onChange={setDsobjective} value={dsobjective}></Textarea>
+            </Form.Group>
 
+            <Form.Group controlId="dsobjective" style={{
+                width: '96%'
+            }}>
+                <Form.ControlLabel>Status:</Form.ControlLabel>
+                <Select
+                    fetch={"/api/get/quickWinStatus"}
+                    placeholder={dsstatus}
+                    onSelect={setDsstatus}
+                    style={{
+                        width: 250
+                    }}
+                />
+            </Form.Group>
             <Stack
                 direction="row"
                 justifyContent="end"
                 alignItems="flex-end"
                 style={{
-                    width:"100%",
+                    width: "100%",
                     paddingRight: "24px"
                 }}
             >
 
                 <ButtonToolbar style={{
-                    display:"flex",
-                    width:"100%"
+                    display: "flex",
+                    width: "100%"
                 }}>
-                    <Select
-                        fetch={"/api/get/quickWinStatus"}
-                        placeholder={"Status do QuickWin"}
-                        onSelect={setDsstatus}
-                    />
+
                     <Button
                         onClick={() => {
-                            let data = tableData
-                            data.push({
-                                tableid: Math.floor(Math.random() * 9999999999),
-                                dskeyword,
-                                dsurl,
-                                dsstatus,
-                                dsvolume,
-                                dsposition,
-                                dsdensity,
-                                dstype,
-                                dscontent,
-                                idcustomer: customer,
-                                dsobjective,
-                                dsmonth,
-                                dsyear
-                            })
-                            setTableData(data)
-                            clearInputs()
-                            setRefresh(refresh+1)
+                            axios.post('/api/put/quickwins',
+                                {
+                                    id: rowData.id,
+                                    dskeyword,
+                                    dsurl,
+                                    dsstatus,
+                                    dsvolume,
+                                    dsposition,
+                                    dsdensity,
+                                    dstype,
+                                    dscontent,
+                                    idcustomer: rowData.idcustomer,
+                                    dsobjective,
+                                    dsmonth,
+                                    dsyear
+                                }).then((e) => {
+                                    sucessHandle();
+                                    closeModal(true);
+                                })
+                                .catch((e) => {
+                                    typeof e.response.data != "object"
+                                        ? errorHandle(e.response.data)
+                                        : errorHandle(e.response.data?.message);
+                                });
                         }}
                         style={{
                             backgroundColor: "var(--color-conversion-1)",
@@ -256,36 +246,6 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         }}>Adicionar QuickWin</Button>
                 </ButtonToolbar>
             </Stack>
-
-            <hr />
-            <ButtonToolbar style={{
-                float: "right"
-            }}>
-
-                <Button
-                    disabled
-                    style={{
-                        backgroundColor: "var(--color-conversion-11)",
-                        color: "var(--color-darkness-background)",
-                    }}>Exportar para planilha</Button>
-                <Button style={{
-                    backgroundColor: "var(--color-conversion-1)",
-                    color: "var(--color-darkness-background)",
-                }}
-                onClick={()=>{
-                    axios.post('/api/post/quickwins',tableData).then((e) => {
-                        sucessHandle();
-                        closeModal(true);
-                      })
-                      .catch((e) => {
-                        typeof e.response.data != "object"
-                          ? errorHandle(e.response.data)
-                          : errorHandle(e.response.data?.message);
-                      });
-                }}
-                >Salvar planejamento</Button>
-
-            </ButtonToolbar>
         </Form>
     );
 }
