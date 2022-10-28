@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   ButtonToolbar,
@@ -27,6 +27,9 @@ import SearchIcon from "@rsuite/icons/Search";
 import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
 import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
 import EditIcon from "@rsuite/icons/Edit";
+import DocPassIcon from '@rsuite/icons/DocPass';
+import axios from "axios";
+import { Loader } from 'rsuite';
 
 const { HeaderCell, Cell, Column } = Table;
 
@@ -61,18 +64,18 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             {dsstatus}
           </Button>
         )) || (
-          <Button
-            appearance="ghost"
-            style={{
-              color: "var(--color-conversion-4)",
-              borderColor: "var(--color-conversion-4)",
-              width: "100%",
-            }}
-          >
-            <Badge style={{ background: "var(--color-conversion-4)" }} />{" "}
-            {"inativo"}
-          </Button>
-        )}
+            <Button
+              appearance="ghost"
+              style={{
+                color: "var(--color-conversion-4)",
+                borderColor: "var(--color-conversion-4)",
+                width: "100%",
+              }}
+            >
+              <Badge style={{ background: "var(--color-conversion-4)" }} />{" "}
+              {"inativo"}
+            </Button>
+          )}
       </div>
     </Cell>
   );
@@ -84,7 +87,7 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const rowKey = "idworkedpage";
+const rowKey = "id";
 
 const WordTable = ({
   tableData,
@@ -96,7 +99,8 @@ const WordTable = ({
   setFilterData,
   filterData,
   setOpenEditForm,
-  setRowData
+  setRowData,
+  setOpenCreateTextTopicForm
 }) => {
   const [loading, setLoading] = React.useState(true);
   const [limit, setLimit] = React.useState(12);
@@ -104,8 +108,10 @@ const WordTable = ({
   const [sortColumn, setSortColumn] = React.useState();
   const [sortType, setSortType] = React.useState();
   const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
+  const [previousExpandedKeys, setPreviousExpandedKeys] = React.useState([]);
+  const [refresh, setRefresh] = React.useState(0)
 
-  
+
   const handleExpanded = (rowData, dataKey) => {
     let open = false;
     const nextExpandedRowKeys = [];
@@ -130,9 +136,9 @@ const WordTable = ({
 
   useEffect(() => {
     if (tableData?.length > 0) setLoading(false);
-    setTimeout(()=>{
+    setTimeout(() => {
       setLoading(false);
-    },5000)
+    }, 5000)
   }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {
@@ -142,25 +148,38 @@ const WordTable = ({
 
   const ActionCell = ({
     setOpenEditForm,
+    setOpenCreateTextTopicForm,
     rowData,
     dataKey,
     setRowData,
     ...props
   }) => {
-    function handleAction() {
+    function openEdit() {
       setRowData(rowData);
       setOpenEditForm(true);
     }
+    function openCreateTextTopic() {
+      setRowData(rowData);
+      setOpenCreateTextTopicForm(true);
+    }
     return (
       <Cell {...props} className="link-group">
-        <div style={{ marginTop: "-8px" }}>
+        <div style={{ marginTop: "-8px", display: "flex", justifyContent: "space-between" }}>
           <IconButton
             appearance="primary"
             style={{
               background: "var(--color-conversion-1)",
             }}
-            onClick={handleAction}
+            onClick={openEdit}
             icon={<EditIcon />}
+          />
+          <IconButton
+            appearance="primary"
+            style={{
+              background: "var(--color-conversion-1)",
+            }}
+            onClick={openCreateTextTopic}
+            icon={<DocPassIcon />}
           />
         </div>
       </Cell>
@@ -179,20 +198,21 @@ const WordTable = ({
   const setPageData = (arrayData) => {
     return typeof tableData == "object"
       ? arrayData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
   };
   const data =
     typeof tableData == "object"
       ? tableData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
+
   const handleCheckAll = (value, checked) => {
     const keys = checked ? data.map((item) => item.idworkedpage) : [];
     setCheckedKeys(keys);
@@ -251,11 +271,71 @@ const WordTable = ({
       </Notification>
     );
   };
+
+  
   const renderRowExpanded = (rowData) => {
+    if (!previousExpandedKeys.includes(rowData.id)) {
+      setInterval(() => {
+        setRefresh(refresh+1)
+      }, 2000)
+      axios.get('/api/get/select/customersId').then(({ data }) => {
+        data.filter((row, index) => {
+          const idcustomer = row.value
+          rowData.idcustomer == idcustomer && (rowData.customer = data[index].label)
+        })
+      })
+      let data = previousExpandedKeys
+      data.push(rowData.id)
+      setPreviousExpandedKeys(data)
+      axios.get('/api/get/textTopic/textTopic?idquickwin=' + rowData.id).then(({ data }) => {
+        rowData.textTopic = data[0] || 'Sem pautas'
+      }).catch(e => {
+        console.log(e)
+      })
+    }
     return (
-      <div id="expandable">
-        
-      </div>
+      <Stack id="expandable" direction="row" alignItems="baseline" justifyContent="space-between">
+        {rowData.textTopic ? rowData.textTopic == "Sem pautas" ? "Sem pautas cadastradas" : <Panel bordered shaded header={"Informações da pauta"} style={{
+          background: "var(--rs-btn-subtle-hover-bg)",
+          width: '40vw',
+        }}>
+          <div style={{
+            padding: 20
+          }}>
+            <p>Titulo: {rowData.textTopic?.dstitle}</p>
+            <p>Descrição: {rowData.textTopic?.dsdescription}</p>
+            <p>H1: {rowData.textTopic?.dsh1}</p>
+            <p>Link do texto: {rowData.textTopic?.dstextlink}</p>
+            <p>Estrutura do texto: {rowData.textTopic?.dstextstructure}</p>
+            <p>Termos secundários: {rowData.textTopic?.dssecundarykeywords}</p>
+            <p>Perguntas frequentes: {rowData.textTopic?.dspeopleask}</p>
+            <p>Estrutura da página dspagestructure</p>
+            <p>Recomendações: {rowData.textTopic?.dsrecommendations}</p>
+            <p>Cta: {rowData.textTopic?.dscta}</p>
+            <p>Etapa do funil: {rowData.textTopic?.dsfunnel}</p>
+          </div>
+        </Panel> : <Loader backdrop content="Buscando pautas..." />}
+
+        <Panel bordered shaded header={"Informações do QuickWin"} style={{
+          background: "var(--rs-btn-subtle-hover-bg)",
+          width: '40vw',
+        }}>
+          <div style={{
+            padding: 20
+          }}>
+            <p>Cliente: {rowData.customer}</p>
+            <p>Mês de referência: {rowData.dsmonth},{rowData.dsyear}</p>
+            <p>Termo principal: {rowData.dskeyword}</p>
+            <p>Url da página: {rowData.dsurl}</p>
+            <p>Volume de busca: {rowData.dsvolume}</p>
+            <p>Posição inicial: {rowData.dsposition}</p>
+            <p>Tipo de otimização: {rowData.dstype}</p>
+            <p>Tipo de conteúdo: {rowData.dscontent}</p>
+            <p>Densidade de palavras: {rowData.dsdensity}</p>
+            <p>Objetivo da otimização: {rowData.dsobjective}</p>
+          </div>
+        </Panel>
+      </Stack>
     );
   };
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
@@ -435,7 +515,7 @@ const WordTable = ({
         expandedRowKeys={expandedRowKeys}
         shouldUpdateScroll={false}
         rowKey={rowKey}
-        rowExpandedHeight={300}
+        rowExpandedHeight={500}
         cellBordered
         bordered
       >
@@ -463,7 +543,7 @@ const WordTable = ({
             expandedRowKeys={expandedRowKeys}
             onChange={handleExpanded}
           />
-        </Column> 
+        </Column>
         <Column sortable resizable width={200} fixed>
           <HeaderCell>Palavra</HeaderCell>
           <Cell dataKey="dskeyword" />
@@ -481,9 +561,10 @@ const WordTable = ({
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="status" />
         </Column>
-        <Column width={50} verticalAlign={"top"} align="center">
+        <Column width={100} verticalAlign={"top"} align="center">
           <HeaderCell>...</HeaderCell>
           <ActionCell
+            setOpenCreateTextTopicForm={setOpenCreateTextTopicForm}
             setOpenEditForm={setOpenEditForm}
             setRowData={setRowData}
             dataKey="idcustomer"

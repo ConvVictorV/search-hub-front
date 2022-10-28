@@ -22,6 +22,7 @@ import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/de
 import ExportForm from "../../../components/Form/Pages/Applications/quickwins/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
 import CreateForm from "../../../components/Form/Pages/Applications/quickwins/create";
+import CreateTextTopic from "../../../components/Form/Pages/Applications/quickwins/createTextTopic";
 import EditForm from "../../../components/Form/Pages/Applications/quickwins/edit";
 import TableWords from "../../../components/Tables/applications/quickwins";
 import FullWidthLayout from "../../../Layouts/fullwidth";
@@ -35,6 +36,7 @@ function Demo(args) {
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
+  const [openCreateTextTopicForm, setOpenCreateTextTopicForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const route = useRouter()
@@ -47,6 +49,7 @@ function Demo(args) {
     setOpenEditForm(false);
     setOpenDeleteForm(false);
     setOpenCreateForm(false);
+    setOpenCreateTextTopicForm(false);
     updateData();
   };
   const getData = () => {
@@ -350,7 +353,35 @@ function Demo(args) {
             <EditForm rowData={rowData} closeModal={handleClose} />
           </Modal.Body>
         </Modal>
-
+        <Modal
+          open={openCreateTextTopicForm}
+          onClose={handleClose}
+          size="md"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Criar Pauta</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <CreateTextTopic rowData={rowData} closeModal={handleClose} />
+          </Modal.Body>
+        </Modal>
+{/*         
+        <Modal
+          open={openCreateTextTopicForm}
+          onClose={handleClose}
+          size="md"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Criar Pauta</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <EditForm rowData={rowData} closeModal={handleClose} />
+          </Modal.Body>
+        </Modal> */}
         <Modal
           open={openDeleteForm}
           onClose={handleClose}
@@ -371,8 +402,10 @@ function Demo(args) {
           </Modal.Body>
         </Modal>
         <TableWords
+          setCheckedKeys={setCheckedKeys}
           checkedKeys={checkedKeys}
           setOpenEditForm={setOpenEditForm}
+          setOpenCreateTextTopicForm={setOpenCreateTextTopicForm}
           tableData={filter(search, tableData)}
           setSearch={setSearch}
           headerMenu={getHeaderTable()}
