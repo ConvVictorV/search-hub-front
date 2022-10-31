@@ -43,7 +43,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const [dsmonth, setDsmonth] = useState('')
     const [dsyear, setDsyear] = useState(2022)
 
-    function clearInputs () {
+    function clearInputs() {
         setDskeyword('');
         setDsurl('');
         setDsvolume('');
@@ -126,27 +126,27 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     }}
                 />
                 <span style={{
-                    display:'flex'
+                    display: 'flex'
                 }}>
-                <Form.ControlLabel>Ano de Referência</Form.ControlLabel>
-                <Form.Control name="name" placeholder="" onChange={setDsyear} value={dsyear} style={{
-                    width:100
-                }}/>
+                    <Form.ControlLabel>Ano de Referência</Form.ControlLabel>
+                    <Form.Control name="name" placeholder="" onChange={setDsyear} value={dsyear} style={{
+                        width: 100
+                    }} />
                 </span>
                 {/* <Form.Control name="name" placeholder="Escopo" disabled /> */}
             </Stack>
             <Overview
-                removeItem={(tableid)=>{
+                removeItem={(tableid) => {
                     const data = tableData
                     const removeIndex = []
-                    data.forEach((item,index)=>{
-                        if(item.tableid == tableid){
+                    data.forEach((item, index) => {
+                        if (item.tableid == tableid) {
                             removeIndex.push(index)
                         }
                     })
-                    removeIndex.map(i=>data.splice(i,1))
+                    removeIndex.map(i => data.splice(i, 1))
                     setTableData(data)
-                    setRefresh(refresh+1)
+                    setRefresh(refresh + 1)
                 }}
                 tableData={tableData}
                 setRowData={setRowData}
@@ -161,7 +161,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                 <Stack
                     direction="column"
                     spacing="10px"
-                    alignItems="flex-end"
+                    alignItems={"initial"}
                 >
                     <Form.Group controlId="dsterm">
                         <Form.ControlLabel>Termo Principal</Form.ControlLabel>
@@ -180,7 +180,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         <Form.Control name="dsdensity" onChange={setDsdensity} value={dsdensity} />
                     </Form.Group>
                     <Form.Group controlId="dsobjective" style={{
-                        width:356
+                        width: 356
                     }}>
                         <Form.ControlLabel>Objetivo da otimização</Form.ControlLabel>
                         <Textarea name="dsobjective" onChange={setDsobjective} value={dsobjective}></Textarea>
@@ -192,36 +192,47 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     style={{
                         height: "100%"
                     }}
-                    alignItems="flex-end"
+                    alignItems={"initial"}
                 >
                     <Form.Group controlId="dsurl">
                         <Form.ControlLabel>Url da página</Form.ControlLabel>
                         <Form.Control name="dsurl" onChange={setDsurl} value={dsurl} />
                     </Form.Group>
-                    <Form.Group controlId="dstype">
-                        <Form.ControlLabel>Tipo de otimização</Form.ControlLabel>
-                        <Form.Control name="dstype" onChange={setDstype} value={dstype} />
-                    </Form.Group>
-                    <Form.Group controlId="dscontent">
-                        <Form.ControlLabel>Tipo de conteúdo</Form.ControlLabel>
-                        <Form.Control name="dscontent" onChange={setDscontent} value={dscontent} />
-                    </Form.Group>
+                    <Select
+                        fetch={"/api/get/quickwinsType"}
+                        placeholder={"Tipo de otimização"}
+                        onSelect={setDstype}
+                        style={{width: "94%",
+                        margin: "24px 0px"
+                    }}
+                        />
+
+                    <Select
+                        fetch={"/api/get/quickwinsTypeContent"}
+                        placeholder={"Tipo de conteúdo"}
+                        onSelect={setDscontent}
+                        style={{
+                            width: "94%",
+                            margin: "10px 0px"
+
+                        }}
+                    />
                 </Stack>
             </Stack>
 
             <Stack
                 direction="row"
                 justifyContent="end"
-                alignItems="flex-end"
+                alignItems="initial"
                 style={{
-                    width:"100%",
+                    width: "100%",
                     paddingRight: "24px"
                 }}
             >
 
                 <ButtonToolbar style={{
-                    display:"flex",
-                    width:"100%"
+                    display: "flex",
+                    width: "100%"
                 }}>
                     <Select
                         fetch={"/api/get/quickWinStatus"}
@@ -236,9 +247,9 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                                 dskeyword,
                                 dsurl,
                                 dsstatus,
-                                dsvolume: parseFloat(dsvolume.replace(',','.')),
+                                dsvolume: parseFloat(dsvolume.replace(',', '.')),
                                 dsposition: parseInt(dsposition),
-                                dsdensity: parseFloat(dsdensity.replace(',','.')),
+                                dsdensity: parseFloat(dsdensity.replace(',', '.')),
                                 dstype,
                                 dscontent,
                                 idcustomer: customer,
@@ -248,7 +259,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             })
                             setTableData(data)
                             clearInputs()
-                            setRefresh(refresh+1)
+                            setRefresh(refresh + 1)
                         }}
                         style={{
                             backgroundColor: "var(--color-conversion-1)",
@@ -272,17 +283,17 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     backgroundColor: "var(--color-conversion-1)",
                     color: "var(--color-darkness-background)",
                 }}
-                onClick={()=>{
-                    axios.post('/api/post/quickwins',tableData).then((e) => {
-                        sucessHandle();
-                        closeModal(true);
-                      })
-                      .catch((e) => {
-                        typeof e.response.data != "object"
-                          ? errorHandle(e.response.data)
-                          : errorHandle(e.response.data?.message);
-                      });
-                }}
+                    onClick={() => {
+                        axios.post('/api/post/quickwins', tableData).then((e) => {
+                            sucessHandle();
+                            closeModal(true);
+                        })
+                            .catch((e) => {
+                                typeof e.response.data != "object"
+                                    ? errorHandle(e.response.data)
+                                    : errorHandle(e.response.data?.message);
+                            });
+                    }}
                 >Salvar planejamento</Button>
 
             </ButtonToolbar>
