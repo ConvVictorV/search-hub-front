@@ -46,8 +46,67 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
     </div>
   </Cell>
 );
+
+const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+  <Cell {...props}>
+    <a
+      style={{
+        color: "var(--rs-text-link-hover)",
+        textDecoration: "underline",
+      }}
+      href={rowData?.dsurl || ""}
+      target={"_blank"}
+      rel="noopener noreferrer"
+    >
+      {rowData?.dsurl || ""}
+    </a>
+  </Cell>
+);
+
 const StatusCell = ({ rowData, dataKey, ...props }) => {
   const { dsstatus } = rowData;
+  let color = "var(--color-conversion-1)"
+  switch(dsstatus){
+    case 'Planejamento de Termo':
+      color = "var(--color-conversion-8)"
+    break;
+    case 'Planejamento de Pauta':
+      color = "var(--color-conversion-8)"
+    break;
+    case 'Enviado para Conteúdo':
+      color = "var(--color-conversion-10)"
+    break;
+    case 'Conteúdo em produção':
+      color = "var(--color-conversion-9)" 
+    break;
+    case 'Conteúdo em revisão':
+      color = "var(--color-conversion-2)"
+    break;
+    case 'Validação SEO':
+      color = "var(--color-conversion-2)"
+    break;
+    case 'Envio ao cliente':
+      color = "var(--color-conversion-5)"
+    break;
+    case 'Pedido de Ajustes':
+      color = "var(--color-conversion-3)"
+    break;
+    case 'Aprovado pelo cliente':
+      color = "var(--color-conversion-7)"
+    break;
+    case 'Implementado':
+      color = "var(--color-conversion-7)"
+    break;
+    case 'Finalizado':
+      color = "var(--color-conversion-7)"
+    break;
+    case 'Pausado':
+      color = "var(--color-conversion-5)"
+    break;
+    case 'Cancelado':
+      color = "var(--color-conversion-4)"
+    break;
+  }
   return (
     <Cell {...props} className="link-group">
       <div style={{ marginTop: "-8px" }}>
@@ -55,24 +114,24 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
           <Button
             appearance="ghost"
             style={{
-              color: "var(--color-conversion-7)",
-              borderColor: "var(--color-conversion-7)",
+              color: color,
+              borderColor: color,
               width: "100%",
             }}
           >
-            <Badge style={{ background: "var(--color-conversion-7)" }} />{" "}
+            <Badge style={{ background: color }} />{" "}
             {dsstatus}
           </Button>
         )) || (
             <Button
               appearance="ghost"
               style={{
-                color: "var(--color-conversion-4)",
-                borderColor: "var(--color-conversion-4)",
+                color: color,
+                borderColor: color,
                 width: "100%",
               }}
             >
-              <Badge style={{ background: "var(--color-conversion-4)" }} />{" "}
+              <Badge style={{ background: color }} />{" "}
               {"inativo"}
             </Button>
           )}
@@ -125,6 +184,25 @@ const WordTable = ({
     });
 
     if (!open) {
+      // if (!previousExpandedKeys.includes(rowData.id)) {
+      setTimeout(() => {
+        setRefresh(refresh + 1)
+      }, 2000)
+      axios.get('/api/get/select/customersId').then(({ data }) => {
+        data.filter((row, index) => {
+          const idcustomer = row.value
+          rowData.idcustomer == idcustomer && (rowData.customer = data[index].label)
+        })
+      })
+      let data = previousExpandedKeys
+      data.push(rowData.id)
+      setPreviousExpandedKeys(data)
+      axios.get('/api/get/textTopic/textTopic?idquickwin=' + rowData.id).then(({ data }) => {
+        rowData.textTopic = data[0] || 'Sem pautas'
+      }).catch(e => {
+        console.log(e)
+      })
+      // }
       nextExpandedRowKeys.push(rowData[rowKey]);
     }
     setExpandedRowKeys(nextExpandedRowKeys);
@@ -272,27 +350,9 @@ const WordTable = ({
     );
   };
 
-  
+
   const renderRowExpanded = (rowData) => {
-    if (!previousExpandedKeys.includes(rowData.id)) {
-      setInterval(() => {
-        setRefresh(refresh+1)
-      }, 2000)
-      axios.get('/api/get/select/customersId').then(({ data }) => {
-        data.filter((row, index) => {
-          const idcustomer = row.value
-          rowData.idcustomer == idcustomer && (rowData.customer = data[index].label)
-        })
-      })
-      let data = previousExpandedKeys
-      data.push(rowData.id)
-      setPreviousExpandedKeys(data)
-      axios.get('/api/get/textTopic/textTopic?idquickwin=' + rowData.id).then(({ data }) => {
-        rowData.textTopic = data[0] || 'Sem pautas'
-      }).catch(e => {
-        console.log(e)
-      })
-    }
+
     return (
       <Stack id="expandable" direction="row" alignItems="baseline" justifyContent="space-between">
         {rowData.textTopic ? rowData.textTopic == "Sem pautas" ? "Sem pautas cadastradas" : <Panel bordered shaded header={"Informações da pauta"} style={{
@@ -551,7 +611,7 @@ const WordTable = ({
 
         <Column sortable resizable width={200} flexGrow={1} align="center">
           <HeaderCell>Url</HeaderCell>
-          <Cell dataKey="dsurl" />
+          <LinkCell dataKey="dsurl" />
         </Column>
         <Column sortable resizable width={200} align="center">
           <HeaderCell>Mês</HeaderCell>

@@ -73,7 +73,7 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
     );
     const messageSucess = (
         <Message showIcon type={"success"} duration={5000}>
-            Quickwins criados!
+            Quickwin editado!
         </Message>
     );
     const messageError = (
@@ -221,9 +221,9 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                                     dskeyword,
                                     dsurl,
                                     dsstatus,
-                                    dsvolume,
-                                    dsposition,
-                                    dsdensity,
+                                    dsvolume: parseFloat(dsvolume.toString().replace(',','.')),
+                                    dsposition: parseInt(dsposition),
+                                    dsdensity: parseFloat(dsdensity.toString().replace(',','.')),
                                     dstype,
                                     dscontent,
                                     idcustomer: rowData.idcustomer,
@@ -243,7 +243,7 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                         style={{
                             backgroundColor: "var(--color-conversion-1)",
                             color: "var(--color-darkness-background)",
-                        }}>Adicionar QuickWin</Button>
+                        }}>Enviar</Button>
                 </ButtonToolbar>
             </Stack>
         </Form>
