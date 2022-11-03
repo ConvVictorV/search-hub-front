@@ -29,18 +29,19 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
     const toast = useToaster();
 
     const [idquickwin, setIdquickwin] = useState(rowData.id)
-    const [dstitle, setDstitle] = useState('')
-    const [dsdescription, setDsdescription] = useState('')
-    const [dsh1, setDsh1] = useState('')
-    const [dstextlink, setDstextlink] = useState('')
-    const [dstextstructure, setDstextstructure] = useState('')
-    const [dssecundarykeywords, setDsecundarykeywords] = useState('')
-    const [dspeopleask, setDspeopleask] = useState('')
-    const [dspagestructure, setDspagestructure] = useState('')
-    const [dsrecommendations, setDsrecommendations] = useState('')
-    const [dscta, setDscta] = useState('')
-    const [dsfunnel, setDsfunnel] = useState('')
-    
+    const [idtexttopic, setIdTextTopic] = useState(rowData.textTopic?.idtexttopic || 0)
+    const [dstitle, setDstitle] = useState(rowData.textTopic?.dstitle || '')
+    const [dsdescription, setDsdescription] = useState(rowData.textTopic?.dsdescription || '')
+    const [dsh1, setDsh1] = useState(rowData.textTopic?.dsh1 || '')
+    const [dstextlink, setDstextlink] = useState(rowData.textTopic?.dstextlink || '')
+    const [dstextstructure, setDstextstructure] = useState(rowData.textTopic?.dstextstructure || '')
+    const [dssecundarykeywords, setDsecundarykeywords] = useState(rowData.textTopic?.dssecundarykeywords || '')
+    const [dspeopleask, setDspeopleask] = useState(rowData.textTopic?.dspeopleask || '')
+    const [dspagestructure, setDspagestructure] = useState(rowData.textTopic?.dspagestructure || '')
+    const [dsrecommendations, setDsrecommendations] = useState(rowData.textTopic?.dsrecommendations || '')
+    const [dscta, setDscta] = useState(rowData.textTopic?.dscta ||  '')
+    const [dsfunnel, setDsfunnel] = useState(rowData.textTopic?.dsfunnel || '')
+
     function clearInputs() {
         setDskeyword('');
         setDsurl('');
@@ -73,7 +74,12 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
     );
     const messageSucess = (
         <Message showIcon type={"success"} duration={5000}>
-            Pauta Criada!
+            Pauta criada!
+        </Message>
+    );
+    const messageUpdateSucess = (
+        <Message showIcon type={"success"} duration={5000}>
+            Pauta editada!
         </Message>
     );
     const messageError = (
@@ -91,12 +97,16 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             }, 1000);
         });
 
-    const sucessHandle = async () => {
+    const createSuccessHandle = async () => {
         await clearToast().then(() => {
             toast.push(messageSucess, { placement: "topCenter" });
         });
     };
-
+    const updateSuccessHandle = async () => {
+        await clearToast().then(() => {
+            toast.push(messageUpdateSucess, { placement: "topCenter" });
+        });
+    };
     const errorHandle = async (message) => {
         await clearToast().finally(() => {
             toast.push(
@@ -211,7 +221,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             }}>
                 <Select
                     fetch={"/api/get/textTopic/pageStructure"}
-                    placeholder={"Estrutura da página"}
+                    placeholder={dspagestructure || "Estrutura da página"}
                     onSelect={setDspagestructure}
                     style={{
                         width: "94%",
@@ -235,7 +245,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             }}>
                 <Select
                     fetch={"/api/get/textTopic/cta"}
-                    placeholder={"CTA"}
+                    placeholder={dscta || "CTA"}
                     onSelect={setDscta}
                     style={{
                         width: "94%",
@@ -244,7 +254,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 />
                 <Select
                     fetch={"/api/get/textTopic/funnel"}
-                    placeholder={"Etapa do Funil"}
+                    placeholder={dsfunnel || "Etapa do Funil"}
                     onSelect={setDsfunnel}
                     style={{
                         width: "94%",
@@ -254,42 +264,66 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
 
             <hr />
             <Panel>
-            <ButtonToolbar style={{
-                float: "right"
-            }}>
+                <ButtonToolbar style={{
+                    float: "right"
+                }}>
 
-                
-                <Button style={{
-                    backgroundColor: "var(--color-conversion-1)",
-                    color: "var(--color-darkness-background)",
-                }}
-                    onClick={() => {
-                        axios.post('/api/post/textTopic', {
-                            idquickwin,
-                            dstitle,
-                            dsdescription,
-                            dsh1,
-                            dstextlink,
-                            dstextstructure,
-                            dssecundarykeywords,
-                            dspeopleask,
-                            dspagestructure,
-                            dsrecommendations,
-                            dscta,
-                            dsfunnel
-                        }).then((e) => {
-                            sucessHandle();
-                            closeModal(true);
-                        })
-                            .catch((e) => {
-                                typeof e.response.data != "object"
-                                    ? errorHandle(e.response.data)
-                                    : errorHandle(e.response.data?.message);
-                            });
+
+                    <Button style={{
+                        backgroundColor: "var(--color-conversion-1)",
+                        color: "var(--color-darkness-background)",
                     }}
-                >Salvar Pauta</Button>
+                        onClick={() => {
+                            idtexttopic == 0 ?
+                            axios.post('/api/post/textTopic', {
+                                idquickwin,
+                                dstitle,
+                                dsdescription,
+                                dsh1,
+                                dstextlink,
+                                dstextstructure,
+                                dssecundarykeywords,
+                                dspeopleask,
+                                dspagestructure,
+                                dsrecommendations,
+                                dscta,
+                                dsfunnel
+                            }).then((e) => {
+                                createSuccessHandle();
+                                closeModal(true);
+                            })
+                                .catch((e) => {
+                                    typeof e.response.data != "object"
+                                        ? errorHandle(e.response.data)
+                                        : errorHandle(e.response.data?.message);
+                                })
+                            :
+                            axios.patch('/api/put/textTopic', {
+                                idtexttopic,
+                                dstitle,
+                                dsdescription,
+                                dsh1,
+                                dstextlink,
+                                dstextstructure,
+                                dssecundarykeywords,
+                                dspeopleask,
+                                dspagestructure,
+                                dsrecommendations,
+                                dscta,
+                                dsfunnel
+                            }).then((e) => {
+                                updateSuccessHandle();
+                                closeModal(true);
+                            })
+                                .catch((e) => {
+                                    typeof e.response.data != "object"
+                                        ? errorHandle(e.response.data)
+                                        : errorHandle(e.response.data?.message);
+                                })
+                        }}
+                    >Salvar</Button>
 
-            </ButtonToolbar>
+                </ButtonToolbar>
             </Panel>
         </Form>
     );

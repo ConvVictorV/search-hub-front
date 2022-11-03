@@ -66,46 +66,46 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 const StatusCell = ({ rowData, dataKey, ...props }) => {
   const { dsstatus } = rowData;
   let color = "var(--color-conversion-1)"
-  switch(dsstatus){
+  switch (dsstatus) {
     case 'Planejamento de Termo':
       color = "var(--color-conversion-8)"
-    break;
+      break;
     case 'Planejamento de Pauta':
       color = "var(--color-conversion-8)"
-    break;
+      break;
     case 'Enviado para Conteúdo':
       color = "var(--color-conversion-10)"
-    break;
+      break;
     case 'Conteúdo em produção':
-      color = "var(--color-conversion-9)" 
-    break;
+      color = "var(--color-conversion-9)"
+      break;
     case 'Conteúdo em revisão':
       color = "var(--color-conversion-2)"
-    break;
+      break;
     case 'Validação SEO':
       color = "var(--color-conversion-2)"
-    break;
+      break;
     case 'Envio ao cliente':
       color = "var(--color-conversion-5)"
-    break;
+      break;
     case 'Pedido de Ajustes':
       color = "var(--color-conversion-3)"
-    break;
+      break;
     case 'Aprovado pelo cliente':
       color = "var(--color-conversion-7)"
-    break;
+      break;
     case 'Implementado':
       color = "var(--color-conversion-7)"
-    break;
+      break;
     case 'Finalizado':
       color = "var(--color-conversion-7)"
-    break;
+      break;
     case 'Pausado':
       color = "var(--color-conversion-5)"
-    break;
+      break;
     case 'Cancelado':
       color = "var(--color-conversion-4)"
-    break;
+      break;
   }
   return (
     <Cell {...props} className="link-group">
@@ -236,7 +236,13 @@ const WordTable = ({
       setRowData(rowData);
       setOpenEditForm(true);
     }
-    function openCreateTextTopic() {
+    async function openCreateTextTopic() {
+      await axios.get('/api/get/textTopic/textTopic?idquickwin=' + rowData.id).then(({ data }) => {
+        console.log(data)
+        rowData.textTopic = data[0] || undefined
+      }).catch(e => {
+        console.log(e)
+      })
       setRowData(rowData);
       setOpenCreateTextTopicForm(true);
     }
