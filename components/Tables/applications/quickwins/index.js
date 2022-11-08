@@ -361,26 +361,6 @@ const WordTable = ({
 
     return (
       <Stack id="expandable" direction="row" alignItems="baseline" justifyContent="space-between">
-        {rowData.textTopic ? rowData.textTopic == "Sem pautas" ? "Sem pautas cadastradas" : <Panel bordered shaded header={"Informações da pauta"} style={{
-          background: "var(--rs-btn-subtle-hover-bg)",
-          width: '40vw',
-        }}>
-          <div style={{
-            padding: 20
-          }}>
-            <p>Titulo: {rowData.textTopic?.dstitle}</p>
-            <p>Descrição: {rowData.textTopic?.dsdescription}</p>
-            <p>H1: {rowData.textTopic?.dsh1}</p>
-            <p>Link do texto: {rowData.textTopic?.dstextlink}</p>
-            <p>Estrutura do texto: {rowData.textTopic?.dstextstructure}</p>
-            <p>Termos secundários: {rowData.textTopic?.dssecundarykeywords}</p>
-            <p>Perguntas frequentes: {rowData.textTopic?.dspeopleask}</p>
-            <p>Estrutura da página: {rowData.textTopic?.dspagestructure}</p>
-            <p>Recomendações: {rowData.textTopic?.dsrecommendations}</p>
-            <p>Cta: {rowData.textTopic?.dscta}</p>
-            <p>Etapa do funil: {rowData.textTopic?.dsfunnel}</p>
-          </div>
-        </Panel> : <Loader backdrop content="Buscando pautas..." />}
 
         <Panel bordered shaded header={"Informações do QuickWin"} style={{
           background: "var(--rs-btn-subtle-hover-bg)",
@@ -389,18 +369,39 @@ const WordTable = ({
           <div style={{
             padding: 20
           }}>
-            <p>Cliente: {rowData.customer}</p>
-            <p>Mês de referência: {rowData.dsmonth},{rowData.dsyear}</p>
-            <p>Termo principal: {rowData.dskeyword}</p>
-            <p>Url da página: {rowData.dsurl}</p>
-            <p>Volume de busca: {rowData.dsvolume}</p>
-            <p>Posição inicial: {rowData.dsposition}</p>
-            <p>Tipo de otimização: {rowData.dstype}</p>
-            <p>Tipo de conteúdo: {rowData.dscontent}</p>
-            <p>Densidade de palavras: {rowData.dsdensity}</p>
-            <p>Objetivo da otimização: {rowData.dsobjective}</p>
+            <p><strong>Cliente</strong>: {rowData.customer}</p>
+            <p><strong>Mês de referência</strong>: {rowData.dsmonth},{rowData.dsyear}</p>
+            <p><strong>Termo principal</strong>: {rowData.dskeyword}</p>
+            <p><strong>Url da página</strong>: {rowData.dsurl}</p>
+            <p><strong>Volume de busca</strong>: {rowData.dsvolume}</p>
+            <p><strong>Posição inicial</strong>: {rowData.dsposition}</p>
+            <p><strong>Tipo de otimização</strong>: {rowData.dstype}</p>
+            <p><strong>Tipo de conteúdo</strong>: {rowData.dscontent}</p>
+            <p><strong>Densidade de palavras</strong>: {rowData.dsdensity}</p>
+            <p><strong>Objetivo da otimização</strong>: {rowData.dsobjective}</p>
           </div>
         </Panel>
+
+        {rowData.textTopic ? rowData.textTopic == "Sem pautas" ? "Sem pautas cadastradas" : <Panel bordered shaded header={"Informações da pauta"} style={{
+          background: "var(--rs-btn-subtle-hover-bg)",
+          width: '40vw',
+        }}>
+          <div style={{
+            padding: 20
+          }}>
+            <p><strong>Title Otimizado</strong>: {rowData.textTopic?.dstitle}</p>
+            <p><strong>Description otimizado</strong>: {rowData.textTopic?.dsdescription}</p>
+            <p><strong>H1</strong>: {rowData.textTopic?.dsh1}</p>
+            <p><strong>Link do texto</strong>:{rowData.textTopic?.dstextlink}</p>
+            <p  style={{whiteSpace: 'pre-wrap'}}><strong>Estrutura do texto</strong>:<br/>{rowData.textTopic?.dstextstructure}</p>
+            <p><strong>Termos secundários</strong>: {rowData.textTopic?.dssecundarykeywords}</p>
+            <p  style={{whiteSpace: 'pre-wrap'}}><strong>Perguntas frequentes</strong>:<br/>{rowData.textTopic?.dspeopleask}</p>
+            <p  style={{whiteSpace: 'pre-wrap'}}><strong>Estrutura da página</strong>:<br/>{rowData.textTopic?.dspagestructure}</p>
+            <p style={{whiteSpace: 'pre-wrap'}}><strong>Recomendações</strong>:<br/>{rowData.textTopic?.dsrecommendations}</p>
+            <p><strong>Cta</strong>: {rowData.textTopic?.dscta}</p>
+            <p><strong>Etapa do funil</strong>: {rowData.textTopic?.dsfunnel}</p>
+          </div>
+        </Panel> : <Loader backdrop content="Buscando pautas..." />}
       </Stack>
     );
   };
