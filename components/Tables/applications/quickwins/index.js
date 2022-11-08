@@ -398,7 +398,7 @@ const WordTable = ({
             <p>Tipo de otimização: {rowData.dstype}</p>
             <p>Tipo de conteúdo: {rowData.dscontent}</p>
             <p>Densidade de palavras: {rowData.dsdensity}</p>
-            <p>Objetivo da otimização: {rowData.dsobjective}</p>
+            <p>Description otimizada: {rowData.dsobjective}</p>
           </div>
         </Panel>
       </Stack>

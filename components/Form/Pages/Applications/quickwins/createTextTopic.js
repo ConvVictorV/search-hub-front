@@ -135,7 +135,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 <p>Tipo de otimização: {rowData.dstype}</p>
                 <p>Tipo de conteúdo: {rowData.dscontent}</p>
                 <p>Densidade de palavras: {rowData.dsdensity}</p>
-                <p>Objetivo da otimização: {rowData.dsobjective}</p>
+                <p>Description otimizada: {rowData.dsobjective}</p>
             </Panel>
 
             <Panel bordered shaded header={"Snippet Otimizado"} style={{
@@ -143,14 +143,28 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 marginTop: "20px"
             }}>
                 <Form.Group controlId="dstitle">
-                    <Form.ControlLabel>Title otimizado</Form.ControlLabel>
+                    <Form.ControlLabel>Title otimizado ( Recomendamos até 60 caracteres )</Form.ControlLabel>
                     <Form.Control name="dstitle" onChange={setDstitle} value={dstitle} />
+                    <Form.ControlLabel>title com {dstitle.length > 60 ? <b style={{
+                        lineHeight: "40px",
+                        color: "var(--color-conversion-4)"
+                    }}>{dstitle.length} caracteres</b> : <b style={{
+                        lineHeight: "40px",
+                        color: "var(--color-conversion-7)"
+                    }}>{dstitle.length} caracteres</b>}</Form.ControlLabel>
                 </Form.Group>
                 <Form.Group controlId="dsdescription">
-                    <Form.ControlLabel>Objetivo da otimização</Form.ControlLabel>
+                    <Form.ControlLabel>Description otimizada ( Recomendamos até 155 caracteres )</Form.ControlLabel>
                     <Textarea name="dsdescription" onChange={setDsdescription} value={dsdescription} style={{
                         width: "94%"
                     }}></Textarea>
+                    <Form.ControlLabel>description com {dsdescription.length > 155 ? <b style={{
+                        lineHeight: "40px",
+                        color: "var(--color-conversion-4)"
+                    }}>{dsdescription.length} caracteres</b> : <b style={{
+                        lineHeight: "40px",
+                        color: "var(--color-conversion-7)"
+                    }}>{dsdescription.length} caracteres</b>}</Form.ControlLabel>
                 </Form.Group>
             </Panel>
 

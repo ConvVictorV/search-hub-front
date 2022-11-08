@@ -156,7 +156,7 @@ const WordTable = ({
                 <Cell dataKey="dscontent" />
             </Column>
             <Column resizable width={150} align="center">
-                <HeaderCell>Objetivo da otimização</HeaderCell>
+                <HeaderCell>Description otimizada</HeaderCell>
                 <Cell dataKey="dsobjective" />
             </Column>
             <Column resizable width={150} align="center">
