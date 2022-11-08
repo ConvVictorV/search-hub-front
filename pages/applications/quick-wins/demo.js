@@ -332,7 +332,7 @@ function Demo(args) {
           backdrop={"static"}
         >
           <Modal.Header>
-            <Modal.Title>Criar Quickwin</Modal.Title>
+            <Modal.Title>Planejamento de QuickWins</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <CreateForm closeModal={handleClose} />

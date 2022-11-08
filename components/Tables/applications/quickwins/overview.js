@@ -126,10 +126,7 @@ const WordTable = ({
             virtualized
             data={tableData}
         >
-            <Column resizable width={150} fixed align="center">
-                <HeaderCell>Status</HeaderCell>
-                <Cell dataKey="dsstatus" />
-            </Column>
+
             <Column resizable width={150} fixed>
                 <HeaderCell>Termo Principal</HeaderCell>
                 <Cell dataKey="dskeyword" />
@@ -162,7 +159,10 @@ const WordTable = ({
                 <HeaderCell>Objetivo da otimização</HeaderCell>
                 <Cell dataKey="dsobjective" />
             </Column>
-
+            <Column resizable width={150} align="center">
+                <HeaderCell>Status</HeaderCell>
+                <Cell dataKey="dsstatus" />
+            </Column>
             <Column width={150} verticalAlign={"top"} align="center">
                 <HeaderCell>...</HeaderCell>
                 <ActionCell

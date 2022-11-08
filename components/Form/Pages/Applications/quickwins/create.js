@@ -56,7 +56,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const [dstype, setDstype] = useState('');
     const [dscontent, setDscontent] = useState('');
     const [dsobjective, setDsobjective] = useState('');
-    const [dsstatus, setDsstatus] = useState('');
+    const [dsstatus, setDsstatus] = useState('Planejamento de Termo');
     const [dsdensity, setDsdensity] = useState('');
     const [dsmonth, setDsmonth] = useState('')
     const [dsyear, setDsyear] = useState(2022)
@@ -140,33 +140,52 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                 alignItems="flex-start"
                 justifyContent="space-between"
             >
-                <Select
-                    fetch={"/api/get/select/customersId"}
-                    placeholder={"Selecione o cliente"}
-                    onSelect={setCustomer}
-                    style={{
-                        width: "100%",
-                    }}
-                />
-                <Select
-                    fetch={"/api/get/quickWinDate"}
-                    placeholder={"Selecione o mês de referência"}
-                    onSelect={setDsmonth}
-                    style={{
-                        width: "100%",
-                    }}
-                />
+                <Form.Group>
+                    <Form.ControlLabel style={{
+                        lineHeight: "40px"
+                    }}>Cliente</Form.ControlLabel>
+                    <Select
+                        fetch={"/api/get/select/customersId"}
+                        placeholder={"Selecione o cliente"}
+                        onSelect={setCustomer}
+                        style={{
+                            width: "100%",
+                        }}
+                    />
+                </Form.Group>
+                
+                <Form.Group>
+                    <Form.ControlLabel style={{
+                        lineHeight: "40px"
+                    }}>Mês de referência</Form.ControlLabel>
+                    <Select
+                        fetch={"/api/get/quickWinDate"}
+                        placeholder={"Selecione o mês de referência"}
+                        onSelect={setDsmonth}
+                        style={{
+                            width: "100%",
+                        }}
+                    />
+                </Form.Group>
+                
                 <Form.Group controlId="dsyear" ref={forwardRef}
                     style={{
-                        display: 'flex'
+                        display: 'flex',
+                        flexDirection: 'column'
                     }}>
-                    <Form.ControlLabel>Ano de Referência</Form.ControlLabel>
+                    <Form.ControlLabel style={{
+                        lineHeight: "40px"
+                    }}>Ano de Referência</Form.ControlLabel>
                     <Form.Control name="dsyear" placeholder="" onChange={setDsyear} value={dsyear} style={{
                         width: 100
                     }} />
                 </Form.Group>
                 {/* <Form.Control name="name" placeholder="Escopo" disabled /> */}
             </Stack>
+            
+            <Form.ControlLabel style={{
+                        lineHeight: "40px"
+                    }}>Resumo do planejamento</Form.ControlLabel>
             <Overview
                 removeItem={(tableid) => {
                     const data = tableData
@@ -252,7 +271,17 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     />
                 </Stack>
             </Stack>
-
+            <Form.ControlLabel style={{
+                        lineHeight: "40px"
+                    }}>Status do QW</Form.ControlLabel>
+            <Select
+                        fetch={"/api/get/quickWinStatus"}
+                        placeholder={dsstatus}
+                        onSelect={setDsstatus}
+                        style={{
+                            width:200
+                        }}
+                    />
             <Stack
                 direction="row"
                 justifyContent="end"
@@ -267,11 +296,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     display: "flex",
                     width: "100%"
                 }}>
-                    <Select
-                        fetch={"/api/get/quickWinStatus"}
-                        placeholder={"Status do QuickWin"}
-                        onSelect={setDsstatus}
-                    />
+                    
                     <Button
                         onClick={() => {
                             setFormValue({
