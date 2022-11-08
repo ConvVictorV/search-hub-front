@@ -29,7 +29,7 @@ const model = Schema.Model({
     dsurl: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida'),
     dsposition: NumberType('Please enter a valid number.').isRequired('O campo não pode estar vazio.').min(1).max(150),
     dsdensity: NumberType('Please enter a valid number.').isRequired('O campo não pode estar vazio.').min(1),
-    dsyear: NumberType().min(1),
+    dsyear: NumberType().min(2017),
 });
 
 function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
@@ -367,10 +367,12 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         backgroundColor: "var(--color-conversion-11)",
                         color: "var(--color-darkness-background)",
                     }}>Exportar para planilha</Button>
-                <Button style={{
-                    backgroundColor: "var(--color-conversion-1)",
-                    color: "var(--color-darkness-background)",
-                }}
+                <Button 
+                    disabled={tableData?.length == 0}
+                    style={{
+                        backgroundColor: "var(--color-conversion-1)",
+                        color: "var(--color-darkness-background)",
+                    }}
                     onClick={() => {
                         axios.post('/api/post/quickwins', tableData).then((e) => {
                             sucessHandle();
