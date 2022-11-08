@@ -122,7 +122,7 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                     }}>Cliente: <b>{customer}</b></p>
                     <p style={{
                         fontSize: 14,
-                    }}>Mês de Referência: <b>{dsmonth}</b></p>
+                    }}>Mês de referência: <b>{dsmonth}</b> de <b>{dsyear}</b></p>
                 </Stack>
                 {/* <Form.Control name="name" placeholder="Escopo" disabled /> */}
             </Stack>
@@ -162,20 +162,39 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                     style={{
                         height: "100%"
                     }}
-                    alignItems="flex-end"
+                    alignItems={"initial"}
                 >
                     <Form.Group controlId="dsurl">
                         <Form.ControlLabel>Url da página</Form.ControlLabel>
                         <Form.Control name="dsurl" onChange={setDsurl} value={dsurl} />
                     </Form.Group>
-                    <Form.Group controlId="dstype">
-                        <Form.ControlLabel>Tipo de otimização</Form.ControlLabel>
-                        <Form.Control name="dstype" onChange={setDstype} value={dstype} />
+                    <Form.Group style={{
+                        width: "90%"
+                    }}>
+                    <Form.ControlLabel>Tipo de otimização:</Form.ControlLabel>
+                    <Select
+                        fetch={"/api/get/quickwinsType"}
+                        placeholder={dstype}
+                        onSelect={setDstype}
+                        style={{
+                            width: "100%",
+                        }}
+                    />
                     </Form.Group>
-                    <Form.Group controlId="dscontent">
-                        <Form.ControlLabel>Tipo de conteúdo</Form.ControlLabel>
-                        <Form.Control name="dscontent" onChange={setDscontent} value={dscontent} />
+                    <Form.Group style={{
+                        width: "90%"
+                    }}>
+                    <Form.ControlLabel>Tipo de conteúdo</Form.ControlLabel>
+                    <Select
+                        fetch={"/api/get/quickwinsTypeContent"}
+                        placeholder={dscontent}
+                        onSelect={setDscontent}
+                        style={{
+                            width: "100%",
+                        }}
+                    />
                     </Form.Group>
+                    
                 </Stack>
             </Stack>
             <Form.Group controlId="dsobjective" style={{
@@ -243,7 +262,7 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                         style={{
                             backgroundColor: "var(--color-conversion-1)",
                             color: "var(--color-darkness-background)",
-                        }}>Enviar</Button>
+                        }}>Salvar</Button>
                 </ButtonToolbar>
             </Stack>
         </Form>
