@@ -19,7 +19,8 @@ import {
   TagGroup,
   useToaster,
   Whisper,
-  Badge
+  Badge,
+  Tooltip
 } from "rsuite";
 
 import PlusIcon from "@rsuite/icons/Plus";
@@ -249,7 +250,12 @@ const WordTable = ({
     return (
       <Cell {...props} className="link-group">
         <div style={{ marginTop: "-8px", display: "flex", justifyContent: "space-between" }}>
-          <IconButton
+          <Whisper
+            trigger="hover"
+            placement="top"
+            speaker={<Tooltip>Editar QuickWin</Tooltip>}       
+          >
+            <IconButton
             appearance="primary"
             style={{
               background: "var(--color-conversion-1)",
@@ -257,6 +263,12 @@ const WordTable = ({
             onClick={openEdit}
             icon={<EditIcon />}
           />
+          </Whisper>
+          <Whisper
+          trigger="hover"
+          placement="top"
+          speaker={<Tooltip>Criar Pauta</Tooltip>}
+          >
           <IconButton
             appearance="primary"
             style={{
@@ -265,6 +277,7 @@ const WordTable = ({
             onClick={openCreateTextTopic}
             icon={<DocPassIcon />}
           />
+          </Whisper>
         </div>
       </Cell>
     );
