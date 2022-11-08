@@ -387,7 +387,10 @@ const WordTable = ({
           width: '40vw',
         }}>
           <div style={{
-            padding: 20
+            padding: 20,
+            overflowY:'auto',
+            overflowX:'hidden',
+            maxHeight:400
           }}>
             <p><strong>Title Otimizado</strong>: {rowData.textTopic?.dstitle}</p>
             <p><strong>Description otimizado</strong>: {rowData.textTopic?.dsdescription}</p>
