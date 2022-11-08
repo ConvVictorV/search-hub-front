@@ -25,11 +25,11 @@ const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref=
 
 const model = Schema.Model({
     dskeyword: StringType().isRequired('O campo não pode estar vazio.'),
-    dsvolume: NumberType('Please enter a valid number.').isRequired('O campo não pode estar vazio.').min(1),
+    dsvolume: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido."),
     dsurl: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida'),
-    dsposition: NumberType('Please enter a valid number.').isRequired('O campo não pode estar vazio.').min(1).max(150),
-    dsdensity: NumberType('Please enter a valid number.').isRequired('O campo não pode estar vazio.').min(1),
-    dsyear: NumberType().min(2017),
+    dsposition: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido.").max(150,"Digite um valor até 150."),
+    dsdensity: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido."),
+    dsyear: NumberType('Digite um número válido.').min(2017,"Digite um valor acima de 2017."),
 });
 
 function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
