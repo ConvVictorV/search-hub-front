@@ -154,7 +154,9 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                     }}>{dstitle.length} caracteres</b>}</Form.ControlLabel>
                 </Form.Group>
                 <Form.Group controlId="dsdescription">
+
                     <Form.ControlLabel>Description otimizada ( Recomendamos até 155 caracteres )</Form.ControlLabel>
+
                     <Textarea name="dsdescription" onChange={setDsdescription} value={dsdescription} style={{
                         width: "94%"
                     }}></Textarea>
@@ -177,7 +179,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                     <Form.Control name="dsh1" onChange={setDsh1} value={dsh1} />
                 </Form.Group>
                 <Form.Group controlId="dstextlink">
-                    <Form.ControlLabel>Link do Texto</Form.ControlLabel>
+                    <Form.ControlLabel>Link do Texto (Google Docs)</Form.ControlLabel>
                     <Form.Control name="dstextlink" onChange={setDstextlink} value={dstextlink} />
                 </Form.Group>
             </Panel>
@@ -335,7 +337,66 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         : errorHandle(e.response.data?.message);
                                 })
                         }}
-                    >Salvar</Button>
+                    >Salvar e sair</Button>
+
+                </ButtonToolbar>
+                <ButtonToolbar style={{
+                    float: "right",
+                    marginRight: 10
+                }}>
+
+
+                    <Button style={{
+                        backgroundColor: "var(--color-conversion-1)",
+                        color: "var(--color-darkness-background)",
+                    }}
+                        onClick={() => {
+                            idtexttopic == 0 ?
+                            axios.post('/api/post/textTopic', {
+                                idquickwin,
+                                dstitle,
+                                dsdescription,
+                                dsh1,
+                                dstextlink,
+                                dstextstructure,
+                                dssecundarykeywords,
+                                dspeopleask,
+                                dspagestructure,
+                                dsrecommendations,
+                                dscta,
+                                dsfunnel
+                            }).then((e) => {
+                                createSuccessHandle();
+                            })
+                                .catch((e) => {
+                                    typeof e.response.data != "object"
+                                        ? errorHandle(e.response.data)
+                                        : errorHandle(e.response.data?.message);
+                                })
+                            :
+                            axios.patch('/api/put/textTopic', {
+                                idtexttopic,
+                                dstitle,
+                                dsdescription,
+                                dsh1,
+                                dstextlink,
+                                dstextstructure,
+                                dssecundarykeywords,
+                                dspeopleask,
+                                dspagestructure,
+                                dsrecommendations,
+                                dscta,
+                                dsfunnel
+                            }).then((e) => {
+                                updateSuccessHandle();
+                            })
+                                .catch((e) => {
+                                    typeof e.response.data != "object"
+                                        ? errorHandle(e.response.data)
+                                        : errorHandle(e.response.data?.message);
+                                })
+                        }}
+                    >Salvar Pauta</Button>
 
                 </ButtonToolbar>
             </Panel>
