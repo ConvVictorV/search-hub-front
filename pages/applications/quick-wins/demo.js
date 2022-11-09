@@ -361,7 +361,7 @@ function Demo(args) {
           backdrop={"static"}
         >
           <Modal.Header>
-            <Modal.Title>Criar Pauta</Modal.Title>
+            <Modal.Title>Planejamento de Pauta</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <CreateTextTopic rowData={rowData} closeModal={handleClose} />
