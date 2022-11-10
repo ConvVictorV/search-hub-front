@@ -12,11 +12,12 @@ import {
     Input,
     ButtonGroup,
     Panel,
-    Divider
+    Divider,
+    Schema
 } from "rsuite";
 import Select from "../../../Components/Select";
 import Overview from "../../../../Tables/applications/quickwins/overview"
-
+const { StringType, NumberType } = Schema.Types;
 // eslint-disable-next-line react/display-name
 const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
@@ -27,7 +28,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
     const [files, setFiles] = useState([]);
     const session = useSession();
     const toast = useToaster();
-
+    const formRef = React.useRef();
     const [idquickwin, setIdquickwin] = useState(rowData.id)
     const [idtexttopic, setIdTextTopic] = useState(rowData.textTopic?.idtexttopic || 0)
     const [dstitle, setDstitle] = useState(rowData.textTopic?.dstitle || '')
@@ -39,20 +40,32 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
     const [dspeopleask, setDspeopleask] = useState(rowData.textTopic?.dspeopleask || '')
     const [dspagestructure, setDspagestructure] = useState(rowData.textTopic?.dspagestructure || '')
     const [dsrecommendations, setDsrecommendations] = useState(rowData.textTopic?.dsrecommendations || '')
-    const [dscta, setDscta] = useState(rowData.textTopic?.dscta ||  '')
+    const [dscta, setDscta] = useState(rowData.textTopic?.dscta || '')
     const [dsfunnel, setDsfunnel] = useState(rowData.textTopic?.dsfunnel || '')
-
-    function clearInputs() {
-        setDskeyword('');
-        setDsurl('');
-        setDsvolume('');
-        setDsposition('');
-        setDstype('');
-        setDscontent('');
-        setDsobjective('');
-        setDsdensity('');
-    }
-
+    const [formError, setFormError] = useState({});
+    const model = Schema.Model({
+        dstitle: StringType().isRequired('O campo não pode estar vazio.'),
+        dsdescription: StringType().isRequired('O campo não pode estar vazio.'),
+        dsh1: StringType().isRequired('O campo não pode estar vazio.'),
+        dstextlink: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida'),
+        dstextstructure: StringType(),
+        dssecundarykeywords: StringType(),
+        dspeopleask: StringType().isRequired('O campo não pode estar vazio.'),
+        dsrecommendations: StringType().isRequired('O campo não pode estar vazio.'),
+    });
+    const [formValue, setFormValue] = useState({
+        dstitle,
+        dsdescription,
+        dsh1,
+        dstextlink,
+        dstextstructure,
+        dssecundarykeywords,
+        dspeopleask,
+        dspagestructure,
+        dsrecommendations,
+        dscta,
+        dsfunnel,
+    });
 
     const [tableData, setTableData] = useState([]);
 
@@ -118,12 +131,54 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
         });
     };
 
+    function validate() {
+        const requiredFields = [
+            dspagestructure,
+            dscta,
+            dsfunnel,
+        ]
 
+        const requiredMessages = [
+            'Selecione um tipo de estrutura para a página',
+            'Selecione um tipo de cta',
+            'Selecione uma etapa do funil',
+        ]
+
+        const erroredFields = requiredFields.map((field, index) => {
+            if (field == undefined || field?.length == 0) {
+                return index
+            } else {
+                return false
+            }
+        }).filter(row => row !== false)
+
+        if (erroredFields?.length) {
+            toast.push(<Message showIcon type={"error"}>
+                {requiredMessages[erroredFields[0]]}
+            </Message>, { placement: "bottomCenter" });
+
+            return false
+        }
+        else if (!formRef.current.check()) {
+            return false
+        } else {
+            return true
+        }
+    }
 
     return (
-        <Form fluid>
+        <Form
+            fluid
+            ref={formRef}
+            onChange={setFormValue}
+            formValue={formValue}
+            onCheck={setFormError}
+            onFocus={() => { formRef.current.check(); }}
+            onBlur={() => { formRef.current.check(); }}
+            model={model}>
             <Panel bordered shaded header={"Quickwin"} style={{
                 width: "97%",
+                padding: "20px 0px",
                 background: "var(--rs-btn-subtle-hover-bg)"
             }}>
                 <p>Cliente: {customer}</p>
@@ -140,6 +195,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
 
             <Panel bordered shaded header={"Snippet Otimizado"} style={{
                 width: "97%",
+                padding: "20px 0px",
                 marginTop: "20px"
             }}>
                 <Form.Group controlId="dstitle">
@@ -156,10 +212,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 <Form.Group controlId="dsdescription">
 
                     <Form.ControlLabel>Description otimizada ( Recomendamos até 155 caracteres )</Form.ControlLabel>
-
-                    <Textarea name="dsdescription" onChange={setDsdescription} value={dsdescription} style={{
-                        width: "94%"
-                    }}></Textarea>
+                    <Form.Control rows={3} name="dsdescription" onChange={setDsdescription} value={dsdescription} accepter={Textarea} />
                     <Form.ControlLabel>description com {dsdescription.length > 155 ? <b style={{
                         lineHeight: "40px",
                         color: "var(--color-conversion-4)"
@@ -172,6 +225,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
 
             <Panel bordered shaded header={"Informações do texto"} style={{
                 width: "97%",
+                padding: "20px 0px",
                 marginTop: "20px"
             }}>
                 <Form.Group controlId="dsh1">
@@ -186,53 +240,48 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
 
             <Panel bordered shaded header={"Qual é a estrutura de heading tags esperada para esse conteúdo?"} style={{
                 width: "97%",
+                padding: "20px 0px",
                 marginTop: "20px"
             }}>
                 <p style={{
                     paddingBottom: 20
                 }}>Recomendamos que você crie o esboço do texto aqui</p>
                 <Form.Group controlId="dstextstructure">
-
-                    <Textarea name="dstextstructure" onChange={setDstextstructure} value={dstextstructure} style={{
-                        width: "94%"
-                    }} placeholder={"Estrutura do Conteúdo (H2, H3, H4)"}></Textarea>
+                    <Form.Control placeholder={"Estrutura do Conteúdo (H2, H3, H4)"} rows={3} name="dstextstructure" onChange={setDstextstructure} value={dstextstructure} accepter={Textarea} />
                 </Form.Group>
             </Panel>
 
             <Panel bordered shaded header={"Quais as palavras-chave secundárias sugeridas?"} style={{
                 width: "97%",
+                padding: "20px 0px",
                 marginTop: "20px"
             }}>
                 <p style={{
                     paddingBottom: 20
                 }}>Recomendamos que você crie o esboço do texto aqui</p>
                 <Form.Group controlId="dssecundarykeywords">
-
-                    <Textarea name="dssecundarykeywords" onChange={setDsecundarykeywords} value={dssecundarykeywords} style={{
-                        width: "94%"
-                    }} placeholder={"Palavras-chave secundárias"}></Textarea>
+                    <Form.Control rows={3} name="dssecundarykeywords" onChange={setDsecundarykeywords} value={dssecundarykeywords} accepter={Textarea} placeholder={"Palavras-chave secundárias"} />
                 </Form.Group>
             </Panel>
 
 
             <Panel bordered shaded header={"Quais perguntas o texto deve responder?"} style={{
                 width: "97%",
+                padding: "20px 0px",
                 marginTop: "20px"
             }}>
                 <p style={{
                     paddingBottom: 20
                 }}>Caso você não tenha uma sugestão de heading tags insira as principais dúvidas para ajudar o redator a entender as dúvidas da persona</p>
                 <Form.Group controlId="dspeopleask">
-
-                    <Textarea name="dspeopleask" onChange={setDspeopleask} value={dspeopleask} style={{
-                        width: "94%"
-                    }} placeholder={"As pessoas perguntam"}></Textarea>
+                    <Form.Control rows={3} name="dspeopleask" onChange={setDspeopleask} value={dspeopleask} accepter={Textarea} placeholder={"As pessoas perguntam"} />
                 </Form.Group>
             </Panel>
 
 
             <Panel bordered shaded header={"Qual é o formato do conteúdo para essa página?"} style={{
                 width: "97%",
+                padding: "20px 0px",
                 marginTop: "20px"
             }}>
                 <Select
@@ -246,17 +295,17 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             </Panel>
             <Panel bordered shaded header={"Recomendações e referências para ajudar o redator"} style={{
                 width: "97%",
+                padding: "20px 0px",
                 marginTop: "20px"
             }}>
                 <Form.Group controlId="dsrecommendations">
+                    <Form.Control rows={3} name="dsrecommendations" onChange={setDsrecommendations} value={dsrecommendations} accepter={Textarea} placeholder={"Recomendações"} />
 
-                    <Textarea name="dsrecommendations" onChange={setDsrecommendations} value={dsrecommendations} style={{
-                        width: "94%"
-                    }} placeholder={"Recomendações"}></Textarea>
                 </Form.Group>
             </Panel>
             <Panel bordered shaded header={"Qual é o formato do conteúdo para essa página?"} style={{
                 width: "97%",
+                padding: "20px 0px",
                 marginTop: "20px"
             }}>
                 <Select
@@ -285,57 +334,63 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 }}>
 
 
-                    <Button style={{
-                        backgroundColor: "var(--color-conversion-1)",
-                        color: "var(--color-darkness-background)",
-                    }}
+                    <Button
+                        style={{
+                            backgroundColor: "var(--color-conversion-1)",
+                            color: "var(--color-darkness-background)",
+                        }}
                         onClick={() => {
-                            idtexttopic == 0 ?
-                            axios.post('/api/post/textTopic', {
-                                idquickwin,
-                                dstitle,
-                                dsdescription,
-                                dsh1,
-                                dstextlink,
-                                dstextstructure,
-                                dssecundarykeywords,
-                                dspeopleask,
-                                dspagestructure,
-                                dsrecommendations,
-                                dscta,
-                                dsfunnel
-                            }).then((e) => {
-                                createSuccessHandle();
-                                closeModal(true);
-                            })
-                                .catch((e) => {
-                                    typeof e.response.data != "object"
-                                        ? errorHandle(e.response.data)
-                                        : errorHandle(e.response.data?.message);
+                            if(validate() == false){
+                                return
+                            }else{
+                                idtexttopic == 0 ?
+                                axios.post('/api/post/textTopic', {
+                                    idquickwin,
+                                    dstitle,
+                                    dsdescription,
+                                    dsh1,
+                                    dstextlink,
+                                    dstextstructure,
+                                    dssecundarykeywords,
+                                    dspeopleask,
+                                    dspagestructure,
+                                    dsrecommendations,
+                                    dscta,
+                                    dsfunnel
+                                }).then((e) => {
+                                    createSuccessHandle();
+                                    closeModal(true);
                                 })
-                            :
-                            axios.patch('/api/put/textTopic', {
-                                idtexttopic,
-                                dstitle,
-                                dsdescription,
-                                dsh1,
-                                dstextlink,
-                                dstextstructure,
-                                dssecundarykeywords,
-                                dspeopleask,
-                                dspagestructure,
-                                dsrecommendations,
-                                dscta,
-                                dsfunnel
-                            }).then((e) => {
-                                updateSuccessHandle();
-                                closeModal(true);
-                            })
-                                .catch((e) => {
-                                    typeof e.response.data != "object"
-                                        ? errorHandle(e.response.data)
-                                        : errorHandle(e.response.data?.message);
+                                    .catch((e) => {
+                                        typeof e.response.data != "object"
+                                            ? errorHandle(e.response.data)
+                                            : errorHandle(e.response.data?.message);
+                                    })
+                                :
+                                axios.patch('/api/put/textTopic', {
+                                    idtexttopic,
+                                    dstitle,
+                                    dsdescription,
+                                    dsh1,
+                                    dstextlink,
+                                    dstextstructure,
+                                    dssecundarykeywords,
+                                    dspeopleask,
+                                    dspagestructure,
+                                    dsrecommendations,
+                                    dscta,
+                                    dsfunnel
+                                }).then((e) => {
+                                    updateSuccessHandle();
+                                    closeModal(true);
                                 })
+                                    .catch((e) => {
+                                        typeof e.response.data != "object"
+                                            ? errorHandle(e.response.data)
+                                            : errorHandle(e.response.data?.message);
+                                    })
+                            }
+                            
                         }}
                     >Salvar e sair</Button>
 
@@ -346,55 +401,61 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 }}>
 
 
-                    <Button style={{
-                        backgroundColor: "var(--color-conversion-1)",
+                    <Button 
+                    style={{
+                        backgroundColor: "var(--color-conversion-12)",
                         color: "var(--color-darkness-background)",
                     }}
                         onClick={() => {
-                            idtexttopic == 0 ?
-                            axios.post('/api/post/textTopic', {
-                                idquickwin,
-                                dstitle,
-                                dsdescription,
-                                dsh1,
-                                dstextlink,
-                                dstextstructure,
-                                dssecundarykeywords,
-                                dspeopleask,
-                                dspagestructure,
-                                dsrecommendations,
-                                dscta,
-                                dsfunnel
-                            }).then((e) => {
-                                createSuccessHandle();
-                            })
-                                .catch((e) => {
-                                    typeof e.response.data != "object"
-                                        ? errorHandle(e.response.data)
-                                        : errorHandle(e.response.data?.message);
+                            if(validate() == false){
+                                return
+                            }
+                            else{
+                                idtexttopic == 0 ?
+                                axios.post('/api/post/textTopic', {
+                                    idquickwin,
+                                    dstitle,
+                                    dsdescription,
+                                    dsh1,
+                                    dstextlink,
+                                    dstextstructure,
+                                    dssecundarykeywords,
+                                    dspeopleask,
+                                    dspagestructure,
+                                    dsrecommendations,
+                                    dscta,
+                                    dsfunnel
+                                }).then((e) => {
+                                    createSuccessHandle();
                                 })
-                            :
-                            axios.patch('/api/put/textTopic', {
-                                idtexttopic,
-                                dstitle,
-                                dsdescription,
-                                dsh1,
-                                dstextlink,
-                                dstextstructure,
-                                dssecundarykeywords,
-                                dspeopleask,
-                                dspagestructure,
-                                dsrecommendations,
-                                dscta,
-                                dsfunnel
-                            }).then((e) => {
-                                updateSuccessHandle();
-                            })
-                                .catch((e) => {
-                                    typeof e.response.data != "object"
-                                        ? errorHandle(e.response.data)
-                                        : errorHandle(e.response.data?.message);
+                                    .catch((e) => {
+                                        typeof e.response.data != "object"
+                                            ? errorHandle(e.response.data)
+                                            : errorHandle(e.response.data?.message);
+                                    })
+                                :
+                                axios.patch('/api/put/textTopic', {
+                                    idtexttopic,
+                                    dstitle,
+                                    dsdescription,
+                                    dsh1,
+                                    dstextlink,
+                                    dstextstructure,
+                                    dssecundarykeywords,
+                                    dspeopleask,
+                                    dspagestructure,
+                                    dsrecommendations,
+                                    dscta,
+                                    dsfunnel
+                                }).then((e) => {
+                                    updateSuccessHandle();
                                 })
+                                    .catch((e) => {
+                                        typeof e.response.data != "object"
+                                            ? errorHandle(e.response.data)
+                                            : errorHandle(e.response.data?.message);
+                                    })
+                            }
                         }}
                     >Salvar Pauta</Button>
 
