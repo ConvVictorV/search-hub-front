@@ -24,6 +24,7 @@ import {
 
 import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
+import LinkIcon from "@rsuite/icons/legacy/ExternalLink";
 
 const { HeaderCell, Cell, Column } = Table;
 
@@ -117,9 +118,27 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
     </Cell>
   );
 };
-
-const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
-  <Cell {...props}>{rowData?.dtimplement?.split("T")[0]}</Cell>
+const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+  <Cell {...props}>
+    <a
+      style={{
+        color: "var(--rs-text-link-hover)",
+        textDecoration: "underline",
+      }}
+      href={'/applications/fluxo-quickwin/package/'+rowData?.idqwpackage}
+      target={"_blank"}
+      rel="noopener noreferrer"
+    >
+      <LinkIcon
+        style={{
+          marginLeft: "5px",
+        }}
+      />
+    </a>
+  </Cell>
+);
+const Month = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+  <Cell {...props}>{rowData?.dsmounthyear?.split("-")[0]}, {rowData?.dsmounthyear?.split("-")[1]}</Cell>
 );
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -411,27 +430,31 @@ const WordTable = ({
             onChange={handleCheck}
           />
         </Column>
-        <Column sortable resizable width={200} fixed>
+        <Column width={75} align="center">
+          <HeaderCell>Visualizar</HeaderCell>
+          <LinkCell dataKey="idqwpackage"/>
+        </Column>
+        <Column sortable width={150} flexGrow={1} fixed>
           <HeaderCell>Cliente</HeaderCell>
           <Cell dataKey="nmcustomer" />
         </Column>
-        <Column sortable resizable width={100} align="center">
-          <HeaderCell>Mês/Ano de referência</HeaderCell>
-          <Cell dataKey="dsmounthyear" />
+        <Column sortable width={150} flexGrow={1} align="center">
+          <HeaderCell>Mês de referência</HeaderCell>
+          <Month dataKey="dsmounthyear" />
         </Column>
-        <Column sortable resizable width={200} align="center">
+        <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Tipo de conteúdo</HeaderCell>
           <Cell dataKey="dstype" />
         </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
+        <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Total de QuickWins</HeaderCell>
           <Cell dataKey="nbtotalqws" />
         </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
+        <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Total de Palavras</HeaderCell>
           <Cell dataKey="nbtotalkeywords" />
         </Column>
-        <Column sortable resizable width={250} align="center">
+        <Column sortable width={250} flexGrow={1} align="center">
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="status" />
         </Column>

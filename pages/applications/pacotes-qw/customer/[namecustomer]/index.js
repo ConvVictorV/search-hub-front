@@ -17,42 +17,80 @@ import {
   useToaster,
   Whisper,
 } from "rsuite";
-import Select from "../../../components/Form/Components/Select";
-import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/deleteOld";
-import ExportForm from "../../../components/Form/Pages/Applications/quickwins/exportOld";
-import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
-import TableWords from "../../../components/Tables/applications/quickwins/old";
-import FullWidthLayout from "../../../Layouts/fullwidth";
+import ExportForm from "../../../../../components/Form/Pages/Applications/quickwins/exportOld";
+import ImportForm from "../../../../../components/Form/Pages/Applications/quickwins/import";
+import TableWords from "../../../../../components/Tables/applications/pacotes-qw";
+import FullWidthLayout from "../../../../../Layouts/fullwidth";
+
+
+export async function getStaticProps() {
+  const res_customers = await fetch(`${process.env.BACKENDHOST}/customers`)
+  const customers = await res_customers.json()
+  return {
+    props: {
+      customers
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 60, // In seconds
+  }
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { namecustomer: 'customer-customer' } }, { params: { namecustomer: 'customer' } }, { params: { namecustomer: '123-customer' } }, { params: { namecustomer: 'customer-123' } }],
+    fallback: true, // can also be true or 'blocking'
+  }
+}
 
 function Demo(args) {
+  const route = useRouter()
+  const namecustomer = route.query.namecustomer?.toLowerCase().replace(/ /g, '').replace(/-/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\(/g, '').replace(/\)/g, '');
   const [tableData, setTableData] = useState([]);
   const [checkedKeys, setCheckedKeys] = React.useState([]);
   const [search, setSearch] = useState("");
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
-  const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
-  const route = useRouter()
   const [rowData, setRowData] = useState();
   const toast = useToaster();
 
   const handleClose = () => {
     setOpenExportForm(false);
     setOpenImportForm(false);
-    setOpenDeleteForm(false);
     updateData();
   };
   const getData = () => {
     const axios = require("axios");
-    axios.get("/api/get/quickwinsOld").then(({ data }) => setTableData(data));
+    
+    setTableData([])
+    let page = 0
+    let tableD = []
+    let getPackages = () => {
+      axios.get(`/api/get/qwPackages${(localStorage.getItem('customerId') && localStorage.getItem('customerId') != 'undefined') ? 
+        `?idcustomer=${localStorage.getItem('customerId')}&page=${++page}` : `?page=${++page}`}`)
+        .then(({ data }) => {
+          if (data.length > 0) {
+            tableD = tableD.concat(data)
+            setTableData(tableD);
+            getPackages()
+          }
+        });
+    }
+    getPackages()
   };
+  useEffect(() => {
+    namecustomer && getData();
+  }, [namecustomer]);
   const filterCustomerById = (id) => {
     const removeCustomerFilter = () => {
       const filters = filterData.filter(
         (item) => item.indexOf("idcustomer") == -1
       );
       setFilterData(filters);
+      console.log(filterData);
     };
     const addCustomerFilter = () => {
       removeCustomerFilter();
@@ -73,13 +111,8 @@ function Demo(args) {
     getData();
   };
   useEffect(() => {
-    if(localStorage.getItem('customerName')){
-      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-      route.push("/"+routePath+"/customer/"+localStorage.getItem('customerName'))
-    }else{
-      getData();
-    }
-  }, []);
+    namecustomer && getData();
+  }, [namecustomer]);
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
     const handleSelect = (eventKey) => {
       onClose();
@@ -89,9 +122,6 @@ function Demo(args) {
           break;
         case 2:
           setOpenExportForm(true);
-          break;
-        case 3:
-          setOpenDeleteForm(true);
           break;
       }
     };
@@ -231,10 +261,10 @@ function Demo(args) {
   return (
     <FullWidthLayout
       toggleTheme={args.toggleTheme}
-      title="QuickWins | SearchHub"
+      title="Pacotes QuickWins | SearchHub"
       description="SearchHub Conversion"
       background={2}
-      pageName="QuickWins"
+      pageName="Pacotes QuickWins"
     >
       <Container
         style={{
@@ -274,25 +304,6 @@ function Demo(args) {
           </Modal.Header>
           <Modal.Body>
             <ImportForm closeModal={handleClose} />
-          </Modal.Body>
-        </Modal>
-        <Modal
-          open={openDeleteForm}
-          onClose={handleClose}
-          size="xs"
-          keyboard={false}
-          backdrop={"static"}
-        >
-          <Modal.Header>
-            <Modal.Title>Deletar palavras</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <DeleteForm
-              closeModal={handleClose}
-              data={tableData.filter(
-                (word) => checkedKeys.indexOf(word.idworkedpage) > -1
-              )}
-            />
           </Modal.Body>
         </Modal>
         <TableWords
