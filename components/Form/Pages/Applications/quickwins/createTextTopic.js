@@ -47,7 +47,9 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
         dstitle: StringType().isRequired('O campo não pode estar vazio.'),
         dsdescription: StringType().isRequired('O campo não pode estar vazio.'),
         dsh1: StringType().isRequired('O campo não pode estar vazio.'),
-        dstextlink: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida'),
+        dstextlink: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida').addRule((value,data)=>{
+            return value.indexOf('docs') > - 1
+        },"A url precisa ser um docs."),
         dstextstructure: StringType(),
         dssecundarykeywords: StringType(),
         dspeopleask: StringType().isRequired('O campo não pode estar vazio.'),
