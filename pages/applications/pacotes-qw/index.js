@@ -17,11 +17,9 @@ import {
   useToaster,
   Whisper,
 } from "rsuite";
-import Select from "../../../components/Form/Components/Select";
-import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/deleteOld";
 import ExportForm from "../../../components/Form/Pages/Applications/quickwins/exportOld";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
-import TableWords from "../../../components/Tables/applications/quickwins/old";
+import TableWords from "../../../components/Tables/applications/pacotes-qw";
 import FullWidthLayout from "../../../Layouts/fullwidth";
 
 function Demo(args) {
@@ -30,7 +28,6 @@ function Demo(args) {
   const [search, setSearch] = useState("");
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
-  const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const route = useRouter()
@@ -40,19 +37,48 @@ function Demo(args) {
   const handleClose = () => {
     setOpenExportForm(false);
     setOpenImportForm(false);
-    setOpenDeleteForm(false);
     updateData();
   };
   const getData = () => {
     const axios = require("axios");
-    axios.get("/api/get/quickwinsOld").then(({ data }) => setTableData(data));
+    setTableData([])
+    let page = 0
+    let tableD = []
+      let getWords = () => {
+      axios.get("/api/get/qwPackages?page=" + (++page))
+        .then(({ data }) => {
+          if (data.length > 0) {
+            tableD = tableD.concat(data)
+            setTableData(tableD);
+            getWords()
+          } else {
+            axios.get('/api/get/select/customersId').then(({ data }) => {
+              setTableData(tableD.map((row,index) => {
+                const { idcustomer } = row
+                row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
+                return row
+              }))
+            })
+          }
+        });
+    }
+    getWords()
   };
+  useEffect(() => {
+    if (localStorage.getItem('customerName')) {
+      const routePath = (route.pathname.split('/')[1]) + "/" + (route.pathname.split('/')[2])
+      route.push("/" + routePath + "/customer/" + localStorage.getItem('customerName'))
+    } else {
+      getData();
+    }
+  }, []);
   const filterCustomerById = (id) => {
     const removeCustomerFilter = () => {
       const filters = filterData.filter(
         (item) => item.indexOf("idcustomer") == -1
       );
       setFilterData(filters);
+      console.log(filterData);
     };
     const addCustomerFilter = () => {
       removeCustomerFilter();
@@ -89,9 +115,6 @@ function Demo(args) {
           break;
         case 2:
           setOpenExportForm(true);
-          break;
-        case 3:
-          setOpenDeleteForm(true);
           break;
       }
     };
@@ -231,10 +254,10 @@ function Demo(args) {
   return (
     <FullWidthLayout
       toggleTheme={args.toggleTheme}
-      title="QuickWins | SearchHub"
+      title="Pacotes QuickWins | SearchHub"
       description="SearchHub Conversion"
       background={2}
-      pageName="QuickWins"
+      pageName="Pacotes QuickWins"
     >
       <Container
         style={{
@@ -274,25 +297,6 @@ function Demo(args) {
           </Modal.Header>
           <Modal.Body>
             <ImportForm closeModal={handleClose} />
-          </Modal.Body>
-        </Modal>
-        <Modal
-          open={openDeleteForm}
-          onClose={handleClose}
-          size="xs"
-          keyboard={false}
-          backdrop={"static"}
-        >
-          <Modal.Header>
-            <Modal.Title>Deletar palavras</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <DeleteForm
-              closeModal={handleClose}
-              data={tableData.filter(
-                (word) => checkedKeys.indexOf(word.idworkedpage) > -1
-              )}
-            />
           </Modal.Body>
         </Modal>
         <TableWords
