@@ -62,7 +62,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const [dsyear, setDsyear] = useState(2022)
 
     function clearInputs() {
-        [...document.querySelectorAll('.rs-stack:nth-child(3) span.rs-picker-toggle-clean.rs-btn-close, .rs-btn-toolbar span.rs-picker-toggle-clean.rs-btn-close')].map(clean=>clean.click())
+        [...document.querySelectorAll('.rs-stack:not(:last-child):not(:first-child) span.rs-picker-toggle-clean.rs-btn-close, .rs-btn-toolbar span.rs-picker-toggle-clean.rs-btn-close')].map(clean=>clean.click())
         setDskeyword('');
         setDsurl('');
         setDsvolume('');
