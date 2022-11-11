@@ -233,7 +233,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     <Form.Group controlId="dsobjective" ref={forwardRef} style={{
                         width: 356
                     }}>
-                        <Form.ControlLabel>Description otimizada</Form.ControlLabel>
+                        <Form.ControlLabel>Objetivo da otimização</Form.ControlLabel>
                         <Textarea name="dsobjective" onChange={setDsobjective} value={dsobjective}></Textarea>
                     </Form.Group>
                 </Stack>
