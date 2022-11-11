@@ -125,7 +125,7 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
         color: "var(--rs-text-link-hover)",
         textDecoration: "underline",
       }}
-      href={'/applications/fluxo-quickwin/package/'+rowData?.idqwpackage}
+      href={'/applications/fluxo-quickwin/package/'+rowData?.dskey}
       target={"_blank"}
       rel="noopener noreferrer"
     >

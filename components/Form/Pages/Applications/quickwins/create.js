@@ -360,7 +360,8 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                                 idcustomer: customer,
                                 dsobjective,
                                 dsmonth,
-                                dsyear
+                                dsyear,
+                                fkIdqwpackage: customer + dsmonth + dsyear
                             })
                             setTableData(data)
                             clearInputs()
@@ -399,6 +400,12 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         color: "var(--color-darkness-background)",
                     }}
                     onClick={() => {
+                        axios.post('/api/post/qwpackages', tableData)
+                            .catch((e) => {
+                                typeof e.response.data != "object"
+                                    ? errorHandle(e.response.data)
+                                    : errorHandle(e.response.data?.message);
+                            });
                         axios.post('/api/post/quickwins', tableData).then((e) => {
                             sucessHandle();
                             closeModal(true);
