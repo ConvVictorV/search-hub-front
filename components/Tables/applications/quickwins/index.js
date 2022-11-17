@@ -63,7 +63,14 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
     </a>
   </Cell>
 );
-
+const NmCustomer = ({ rowData, dataKey, ...props }) => {
+  const { nmcustomer } = rowData;
+  return (
+    <Cell {...props} className="link-group">
+      {(nmcustomer && capitalizeFirstLetter(nmcustomer)) || <Loader />}
+    </Cell>
+  );
+};
 const StatusCell = ({ rowData, dataKey, ...props }) => {
   const { dsstatus } = rowData;
   let color = "var(--color-conversion-1)"
@@ -626,20 +633,29 @@ const WordTable = ({
             onChange={handleExpanded}
           />
         </Column>
-        <Column sortable resizable width={200} fixed>
+
+        <Column sortable resizable width={150} fixed>
           <HeaderCell>Palavra</HeaderCell>
           <Cell dataKey="dskeyword" />
         </Column>
-
+        <Column sortable resizable width={150} align="center">
+          <HeaderCell>Cliente</HeaderCell>
+          <NmCustomer dataKey="nmcustomer" />
+        </Column>
+        
         <Column sortable resizable width={200} flexGrow={1} align="center">
           <HeaderCell>Url</HeaderCell>
           <LinkCell dataKey="dsurl" />
         </Column>
-        <Column sortable resizable width={200} align="center">
+        <Column sortable resizable width={100} align="center">
           <HeaderCell>Mês</HeaderCell>
           <Cell dataKey="dsmonth" />
         </Column>
-        <Column sortable resizable width={250} align="center">
+        <Column sortable resizable width={150} align="center">
+          <HeaderCell>Tipo</HeaderCell>
+          <Cell dataKey="dscontent" />
+        </Column>
+        <Column sortable resizable width={225} align="center">
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="status" />
         </Column>
