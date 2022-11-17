@@ -239,7 +239,6 @@ const WordTable = ({
     }
     async function openCreateTextTopic() {
       await axios.get('/api/get/textTopic/textTopic?idquickwin=' + rowData.id).then(({ data }) => {
-        console.log(data)
         rowData.textTopic = data[0] || undefined
       }).catch(e => {
         console.log(e)
