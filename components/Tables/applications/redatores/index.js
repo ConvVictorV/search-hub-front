@@ -546,7 +546,7 @@ const WordTable = ({
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Clientes</HeaderCell>
-          <DateEntrance dataKey="dsclientes" />
+          <Cell dataKey="nmcustomers" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Valor por 50 palavras</HeaderCell>

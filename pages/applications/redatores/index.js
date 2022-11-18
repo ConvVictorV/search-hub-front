@@ -54,8 +54,10 @@ function Demo(args) {
           } else {
             axios.get('/api/get/select/customersId').then(({ data }) => {
               setTableData(tableD.map((row,index) => {
-                const { idcustomer } = row
-                row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
+                const { dsclientes } = row
+                row.nmcustomers = dsclientes.map((item) =>{
+                    return data.filter(customer => customer.value == item)[0]?.label || ''
+                })
                 return row
               }))
             })
