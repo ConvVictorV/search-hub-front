@@ -76,111 +76,21 @@ const ExpandCell = ({
       <div id="expandable">
         <div id="expandable-header">
           <div className="expandable-header-text">
-            <p>{rowData.assigneeName || "Sem responsável"}</p>
-            <h4>{rowData.summary}</h4>
+            <h4>Detalhes do Redator</h4>
           </div>
         </div>
         <div id="expandable-body">
           <div className="expandable-col">
-            <h4>Urls Trabalhadas</h4>
-            <ol>
-              {rowData.urls == null
+            <strong>Categorias</strong>
+            <ul>
+              {rowData.dscontentcategory == null
                 ? <li key={1}>Campo vazio</li>
-                : (rowData.urls || "").split(",").length == 1
-                ? (rowData.urls || "").split("\n").map((row, index) =>
-                    row == "\n" || row == "" ? (
-                      ""
-                    ) : (
-                      <li key={index}>
-                        <a
-                          key={index}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={row?.trim() || "#"}
-                        >
-                          {row?.trim() || ""}
-                        </a>
-                      </li>
-                    )
-                  )
-                : (rowData.urls || "").split(",").map((row, index) =>
-                    row == "\n" || row == "" ? (
-                      ""
-                    ) : (
-                      <li key={index}>
-                        <a
-                          key={index}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={row?.trim() || "#"}
-                        >
-                          {row?.trim() || ""}
-                        </a>
-                      </li>
-                    )
-                  )}
-            </ol>
-          </div>
-          <div className="expandable-col">
-            <h4>Palavras-chave</h4>
-            <ol>
-              {rowData.palavras == null
-                ? <li key={1}>Campo vazio</li>
-                : (rowData.palavras || "")
-                    .split(",")
+                : (rowData.dscontentcategory || "")
                     .map(
                       (row, index) =>
                         row && <li key={index}>{row?.trim() || ""}</li>
                     )}
-            </ol>
-          </div>
-          <div className="expandable-col">
-            <h4>Arquivos envolvidos</h4>
-            <ol>
-              {rowData.arquivos == null
-                ? <li key={1}>Campo vazio</li>
-                : (rowData.arquivos || "").split(",").length == 1
-                ? (rowData.arquivos || "").split("\n").map((row, index) =>
-                    row == "\n" || row == "" ? (
-                      ""
-                    ) : (
-                      <li key={index}>
-                        <a
-                          key={index}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={row
-                            .split(" ")
-                            .map((word) => {
-                              return word.indexOf("http") > -1 ? word : "";
-                            })
-                            .toString()
-                            .replace(/,/g, "")}
-                        >
-                          {row.split(" ").length == 1
-                            ? row
-                            : row.split(" ").map((word) => {
-                                return word.indexOf("http") == -1
-                                  ? (word + " ").replace(":", "")
-                                  : "";
-                              })}
-                        </a>
-                      </li>
-                    )
-                  )
-                : (rowData.arquivos || "").split(",").map((row, index) => (
-                    <li key={index}>
-                      <a
-                        key={index}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href={row?.trim() || "#"}
-                      >
-                        {row?.trim() || ""}
-                      </a>
-                    </li>
-                  ))}
-            </ol>
+            </ul>
           </div>
         </div>
       </div>
@@ -288,6 +198,10 @@ const Month = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+const DateEntrance = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+    <Cell {...props}>{rowData?.dtcreate?.split("T")[0]}</Cell>
+  );
 
 const WordTable = ({
   tableData,
@@ -627,12 +541,16 @@ const WordTable = ({
           <Cell dataKey="dsemail" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Área de Formação</HeaderCell>
-          <Cell dataKey="dseducation" />
+          <HeaderCell>Data de entrada</HeaderCell>
+          <DateEntrance dataKey="dtcreate" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Portfólio</HeaderCell>
-          <Cell dataKey="dsportfolio" />
+          <HeaderCell>Clientes</HeaderCell>
+          <DateEntrance dataKey="dsclientes" />
+        </Column>
+        <Column sortable width={150} flexGrow={1} align="center">
+          <HeaderCell>Valor por 50 palavras</HeaderCell>
+          <Cell dataKey="dsvalue" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Total de Palavras</HeaderCell>
