@@ -22,11 +22,14 @@ import {
   Badge
 } from "rsuite";
 
+import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
+import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
 import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
 import LinkIcon from "@rsuite/icons/legacy/ExternalLink";
 
 const { HeaderCell, Cell, Column } = Table;
+const rowKey = "id";
 
 // custom cells
 const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
@@ -41,6 +44,148 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
     </div>
   </Cell>
 );
+
+const ExpandCell = ({
+    rowData,
+    dataKey,
+    expandedRowKeys,
+    onChange,
+    ...props
+  }) => (
+    <Cell {...props} style={{ padding: 5 }}>
+      <IconButton
+        appearance="subtle"
+        onClick={() => {
+          onChange(rowData);
+        }}
+        icon={
+          expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
+            <CollaspedOutlineIcon
+              style={{ color: "var(--color-conversion-1)" }}
+            />
+          ) : (
+            <ExpandOutlineIcon />
+          )
+        }
+      />
+    </Cell>
+  );
+
+  const renderRowExpanded = (rowData) => {  
+    return (
+      <div id="expandable">
+        <div id="expandable-header">
+          <div className="expandable-header-text">
+            <p>{rowData.assigneeName || "Sem responsável"}</p>
+            <h4>{rowData.summary}</h4>
+          </div>
+        </div>
+        <div id="expandable-body">
+          <div className="expandable-col">
+            <h4>Urls Trabalhadas</h4>
+            <ol>
+              {rowData.urls == null
+                ? <li key={1}>Campo vazio</li>
+                : (rowData.urls || "").split(",").length == 1
+                ? (rowData.urls || "").split("\n").map((row, index) =>
+                    row == "\n" || row == "" ? (
+                      ""
+                    ) : (
+                      <li key={index}>
+                        <a
+                          key={index}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={row?.trim() || "#"}
+                        >
+                          {row?.trim() || ""}
+                        </a>
+                      </li>
+                    )
+                  )
+                : (rowData.urls || "").split(",").map((row, index) =>
+                    row == "\n" || row == "" ? (
+                      ""
+                    ) : (
+                      <li key={index}>
+                        <a
+                          key={index}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={row?.trim() || "#"}
+                        >
+                          {row?.trim() || ""}
+                        </a>
+                      </li>
+                    )
+                  )}
+            </ol>
+          </div>
+          <div className="expandable-col">
+            <h4>Palavras-chave</h4>
+            <ol>
+              {rowData.palavras == null
+                ? <li key={1}>Campo vazio</li>
+                : (rowData.palavras || "")
+                    .split(",")
+                    .map(
+                      (row, index) =>
+                        row && <li key={index}>{row?.trim() || ""}</li>
+                    )}
+            </ol>
+          </div>
+          <div className="expandable-col">
+            <h4>Arquivos envolvidos</h4>
+            <ol>
+              {rowData.arquivos == null
+                ? <li key={1}>Campo vazio</li>
+                : (rowData.arquivos || "").split(",").length == 1
+                ? (rowData.arquivos || "").split("\n").map((row, index) =>
+                    row == "\n" || row == "" ? (
+                      ""
+                    ) : (
+                      <li key={index}>
+                        <a
+                          key={index}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={row
+                            .split(" ")
+                            .map((word) => {
+                              return word.indexOf("http") > -1 ? word : "";
+                            })
+                            .toString()
+                            .replace(/,/g, "")}
+                        >
+                          {row.split(" ").length == 1
+                            ? row
+                            : row.split(" ").map((word) => {
+                                return word.indexOf("http") == -1
+                                  ? (word + " ").replace(":", "")
+                                  : "";
+                              })}
+                        </a>
+                      </li>
+                    )
+                  )
+                : (rowData.arquivos || "").split(",").map((row, index) => (
+                    <li key={index}>
+                      <a
+                        key={index}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={row?.trim() || "#"}
+                      >
+                        {row?.trim() || ""}
+                      </a>
+                    </li>
+                  ))}
+            </ol>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
 const StatusCell = ({ rowData, dataKey, ...props }) => {
   const { dsstatus } = rowData;
@@ -159,6 +304,25 @@ const WordTable = ({
   const [page, setPage] = React.useState(1);
   const [sortColumn, setSortColumn] = React.useState();
   const [sortType, setSortType] = React.useState();
+  const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
+
+  const handleExpanded = (rowData, dataKey) => {
+    let open = false;
+    const nextExpandedRowKeys = [];
+
+    expandedRowKeys.forEach((key) => {
+      if (key === rowData[rowKey]) {
+        open = true;
+      } else {
+        nextExpandedRowKeys.push(key);
+      }
+    });
+
+    if (!open) {
+      nextExpandedRowKeys.push(rowData[rowKey]);
+    }
+    setExpandedRowKeys(nextExpandedRowKeys);
+  };
 
   const toaster = useToaster();
   let checked = false;
@@ -413,12 +577,18 @@ const WordTable = ({
       <Table
         virtualized
         autoHeight
+        expandedRowKeys={expandedRowKeys}
+        onRowClick={(data) => {}}
+        shouldUpdateScroll={false}
+        renderRowExpanded={renderRowExpanded}
+        rowKey={rowKey}        
         data={getData().length == 0 ? [] : getData()}
         loading={loading}
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
         cellBordered
+        rowExpandedHeight={300}
         bordered
       >
         <Column width={50} align="center">
@@ -438,6 +608,15 @@ const WordTable = ({
             onChange={handleCheck}
           />
         </Column>
+        <Column width={70} align="center">
+          <HeaderCell>#</HeaderCell>
+          <ExpandCell
+            dataKey="id"
+            expandedRowKeys={expandedRowKeys}
+            onChange={handleExpanded}
+          />
+        </Column>
+        
         <Column sortable width={150} flexGrow={1} fixed>
           <HeaderCell>Nome</HeaderCell>
           <Cell dataKey="dsname" />
