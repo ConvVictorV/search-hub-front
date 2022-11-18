@@ -80,8 +80,18 @@ const ExpandCell = ({
           </div>
         </div>
         <div id="expandable-body">
-          <div className="expandable-col">
-            <strong>Categorias</strong>
+          <div className="expandable-col"  style={{
+            maxHeight:400
+          }}>
+            <h5>Dados Pessoais</h5>
+            <strong>Área de Formação:</strong>{rowData.dseducation}<br></br>
+            <strong>Portfólio</strong> {rowData.dsportfolio}
+          </div>
+          <div className="expandable-col" style={{
+            maxHeight:400
+          }}>
+            <h5>Tipos de textos</h5>
+            <strong>Categorias:</strong>
             <ul>
               {rowData.dscontentcategory == null
                 ? <li key={1}>Campo vazio</li>
@@ -91,6 +101,33 @@ const ExpandCell = ({
                         row && <li key={index}>{row?.trim() || ""}</li>
                     )}
             </ul>
+            <strong>Tipos de Texto:</strong>
+            <ul>
+              {rowData.dscontenttype == null
+                ? <li key={1}>Tipos de Conteúdo</li>
+                : (rowData.dscontenttype || "")
+                    .map(
+                      (row, index) =>
+                        row && <li key={index}>{row?.trim() || ""}</li>
+                    )}
+            </ul>
+            <strong>Tipos de Página:</strong>
+            <ul>
+              {rowData.dspagetypes == null
+                ? <li key={1}>Tipos de Páginas</li>
+                : (rowData.dspagetypes || "")
+                    .map(
+                      (row, index) =>
+                        row && <li key={index}>{row?.trim() || ""}</li>
+                    )}
+            </ul>
+          </div>
+          <div className="expandable-col"  style={{
+            maxHeight:400
+          }}>
+            <h5>Dados Pagamento</h5>
+            <strong>Disponibilidade de Trabalho:</strong>{rowData.dsworkavaiable}<br></br>
+            <strong>Tipo de Pagamento</strong> {rowData.dspaymenttype}
           </div>
         </div>
       </div>
@@ -446,7 +483,7 @@ const WordTable = ({
               onChange={(event) => setSearch(event.target.value)}
               placeholder={`Buscar (${tableData.length + " Quickwins"})`}
               style={{
-                width: "300px",
+                width: "500px",
                 border: "none!important",
                 outlineStyle: "none",
                 boxShadow: "none",
@@ -502,7 +539,7 @@ const WordTable = ({
         sortType={sortType}
         onSortColumn={handleSortColumn}
         cellBordered
-        rowExpandedHeight={300}
+        rowExpandedHeight={400}
         bordered
       >
         <Column width={50} align="center">
@@ -549,11 +586,11 @@ const WordTable = ({
           <Cell dataKey="nmcustomers" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Valor por 50 palavras</HeaderCell>
+          <HeaderCell>Valor 50 palavras</HeaderCell>
           <Cell dataKey="dsvalue" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Total de Palavras</HeaderCell>
+          <HeaderCell>Disponibilidade Palavras</HeaderCell>
           <Cell dataKey="nbwordsavaiable" />
         </Column>
         <Column sortable width={250} flexGrow={1} align="center">
