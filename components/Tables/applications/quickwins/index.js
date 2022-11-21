@@ -31,6 +31,7 @@ import EditIcon from "@rsuite/icons/Edit";
 import DocPassIcon from '@rsuite/icons/DocPass';
 import axios from "axios";
 import { Loader } from 'rsuite';
+import Select from "../../../../components/Form/Components/Select";
 
 const { HeaderCell, Cell, Column } = Table;
 
@@ -75,44 +76,76 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
   const { dsstatus } = rowData;
   let color = "var(--color-conversion-1)"
   switch (dsstatus) {
-    case 'Planejamento de Termo':
+    case 'Planejamento de termos':
+      color = ""
+      break;
+    case 'Planejamento de pautas':
       color = "var(--color-conversion-8)"
       break;
-    case 'Planejamento de Pauta':
+    case 'Validação planejamento':
       color = "var(--color-conversion-8)"
       break;
-    case 'Enviado para Conteúdo':
-      color = "var(--color-conversion-10)"
+    case 'Ajuste planejamento':
+      color = "var(--color-conversion-8)"
+      break;
+
+
+    case 'Alocação redatores':
+      color = "var(--color-conversion-5)"
+      break;
+    case 'Aguardando aceite redator':
+      color = "var(--color-conversion-5)"
       break;
     case 'Conteúdo em produção':
-      color = "var(--color-conversion-9)"
+      color = "var(--color-conversion-5)"
       break;
-    case 'Conteúdo em revisão':
-      color = "var(--color-conversion-2)"
+    case 'Validação requisitos básicos':
+      color = "var(--color-conversion-5)"
       break;
+    case 'Revisão ortográfica e gramatical':
+      color = "var(--color-conversion-5)"
+      break;
+    case 'Validação de qualidade':
+      color = "var(--color-conversion-5)"
+      break;
+    case 'Ajuste conteúdo produzido':
+      color = "var(--color-conversion-5)"
+      break;
+
+
     case 'Validação SEO':
       color = "var(--color-conversion-2)"
       break;
-    case 'Envio ao cliente':
-      color = "var(--color-conversion-5)"
+    case 'Pedido de ajuste em validação SEO':
+      color = "var(--color-conversion-2)"
       break;
-    case 'Pedido de Ajustes':
-      color = "var(--color-conversion-3)"
+    case 'Ajuste conteúdo em validação SEO':
+      color = "var(--color-conversion-2)"
+      break;
+
+
+    case 'Aguardando aprovação cliente':
+      // color = "var(--color-conversion-1)";
+      break;
+    case 'Pedido de ajustes cliente':
+      // color = "var(--color-conversion-1)";
+      break;
+    case 'Conteúdo em ajuste cliente':
+      // color = "var(--color-conversion-1)";
       break;
     case 'Aprovado pelo cliente':
+      // color = "var(--color-conversion-1)";
+      break;
+
+
+    case 'Aguardando implementação':
       color = "var(--color-conversion-7)"
       break;
-    case 'Implementado':
+    case 'Validação implementação':
       color = "var(--color-conversion-7)"
       break;
     case 'Finalizado':
       color = "var(--color-conversion-7)"
-      break;
-    case 'Pausado':
-      color = "var(--color-conversion-5)"
-      break;
-    case 'Cancelado':
-      color = "var(--color-conversion-4)"
       break;
   }
   return (
@@ -219,7 +252,33 @@ const WordTable = ({
   const toaster = useToaster();
   let checked = false;
   let indeterminate = false;
-
+  const filterStatus = (status) => {
+    if (status) {
+      let data = filterData.filter(filter => filter.indexOf('dsstatus') == -1)
+      setFilterData(data.concat(["dsstatus|is|" + status])) && setPage(1)
+    } else {
+      let data = filterData.filter(filter => filter.indexOf('dsstatus') == -1)
+      setFilterData(data) && setPage(1)
+    }
+  };
+  const filterContent = (dscontent) => {
+    if (dscontent) {
+      let data = filterData.filter(filter => filter.indexOf('dscontent') == -1)
+      setFilterData(data.concat(["dscontent|is|" + dscontent])) && setPage(1)
+    } else {
+      let data = filterData.filter(filter => filter.indexOf('dscontent') == -1)
+      setFilterData(data) && setPage(1)
+    }
+  };
+  const filterMonth = (month) => {
+    if (month) {
+      let data = filterData.filter(filter => filter.indexOf('dsmonth') == -1)
+      setFilterData(data.concat(["dsmonth|is|" + month])) && setPage(1)
+    } else {
+      let data = filterData.filter(filter => filter.indexOf('dsmonth') == -1)
+      setFilterData(data) && setPage(1)
+    }
+  };
   useEffect(() => {
     if (tableData?.length > 0) setLoading(false);
     setTimeout(() => {
@@ -259,30 +318,30 @@ const WordTable = ({
           <Whisper
             trigger="hover"
             placement="top"
-            speaker={<Tooltip>Editar QuickWin</Tooltip>}       
+            speaker={<Tooltip>Editar QuickWin</Tooltip>}
           >
             <IconButton
-            appearance="primary"
-            style={{
-              background: "var(--color-conversion-1)",
-            }}
-            onClick={openEdit}
-            icon={<EditIcon />}
-          />
+              appearance="primary"
+              style={{
+                background: "var(--color-conversion-1)",
+              }}
+              onClick={openEdit}
+              icon={<EditIcon />}
+            />
           </Whisper>
           <Whisper
-          trigger="hover"
-          placement="top"
-          speaker={<Tooltip>Criar Pauta</Tooltip>}
+            trigger="hover"
+            placement="top"
+            speaker={<Tooltip>Criar Pauta</Tooltip>}
           >
-          <IconButton
-            appearance="primary"
-            style={{
-              background: "var(--color-conversion-1)",
-            }}
-            onClick={openCreateTextTopic}
-            icon={<DocPassIcon />}
-          />
+            <IconButton
+              appearance="primary"
+              style={{
+                background: "var(--color-conversion-1)",
+              }}
+              onClick={openCreateTextTopic}
+              icon={<DocPassIcon />}
+            />
           </Whisper>
         </div>
       </Cell>
@@ -407,19 +466,19 @@ const WordTable = ({
         }}>
           <div style={{
             padding: 20,
-            overflowY:'auto',
-            overflowX:'hidden',
-            maxHeight:400
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            maxHeight: 400
           }}>
             <p><strong>Title Otimizado</strong>: {rowData.textTopic?.dstitle}</p>
             <p><strong>Description otimizado</strong>: {rowData.textTopic?.dsdescription}</p>
             <p><strong>H1</strong>: {rowData.textTopic?.dsh1}</p>
             <p><strong>Link do texto</strong>:{rowData.textTopic?.dstextlink}</p>
-            <p  style={{whiteSpace: 'pre-wrap'}}><strong>Estrutura do texto</strong>:<br/>{rowData.textTopic?.dstextstructure}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura do texto</strong>:<br />{rowData.textTopic?.dstextstructure}</p>
             <p><strong>Termos secundários</strong>: {rowData.textTopic?.dssecundarykeywords}</p>
-            <p  style={{whiteSpace: 'pre-wrap'}}><strong>Perguntas frequentes</strong>:<br/>{rowData.textTopic?.dspeopleask}</p>
-            <p  style={{whiteSpace: 'pre-wrap'}}><strong>Estrutura da página</strong>:<br/>{rowData.textTopic?.dspagestructure}</p>
-            <p style={{whiteSpace: 'pre-wrap'}}><strong>Recomendações</strong>:<br/>{rowData.textTopic?.dsrecommendations}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Perguntas frequentes</strong>:<br />{rowData.textTopic?.dspeopleask}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura da página</strong>:<br />{rowData.textTopic?.dspagestructure}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Recomendações</strong>:<br />{rowData.textTopic?.dsrecommendations}</p>
             <p><strong>Cta</strong>: {rowData.textTopic?.dscta}</p>
             <p><strong>Etapa do funil</strong>: {rowData.textTopic?.dsfunnel}</p>
           </div>
@@ -493,7 +552,7 @@ const WordTable = ({
   const renderFilters = () => {
     return (
       <TagGroup>
-        {filterData.map((tag, index) => (
+        {filterData?.map((tag, index) => (
           <Tag key={index} closable onClose={() => removeTag(tag)}>
             <span style={{ textTransform: "capitalize" }}>
               {tag.split("|")[0]}
@@ -560,6 +619,33 @@ const WordTable = ({
               }}
             />
           </InputGroup>
+          {/* 
+          
+           */}
+          <Select
+            fetch={"/api/get/quickWinDate"}
+            placeholder={"Filtre por mês de referência"}
+            onSelect={filterMonth}
+            style={{
+              width: 220,
+            }}
+          />
+          <Select
+            fetch={"/api/get/quickWinStatus"}
+            placeholder={'Filtre por Status'}
+            onSelect={filterStatus}
+            style={{
+              width: 150
+            }}
+          />
+          <Select
+            fetch={"/api/get/quickwinsTypeContent"}
+            placeholder={"Filtre por Tipo de Conteúdo"}
+            onSelect={filterContent}
+            style={{
+              width: 220,
+            }}
+          />
         </Stack>
         {headerMenu}
       </Stack>
@@ -642,7 +728,7 @@ const WordTable = ({
           <HeaderCell>Cliente</HeaderCell>
           <NmCustomer dataKey="nmcustomer" />
         </Column>
-        
+
         <Column sortable resizable width={200} flexGrow={1} align="center">
           <HeaderCell>Url</HeaderCell>
           <LinkCell dataKey="dsurl" />
