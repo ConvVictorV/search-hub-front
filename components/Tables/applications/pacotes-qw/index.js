@@ -438,6 +438,10 @@ const WordTable = ({
           <HeaderCell>Cliente</HeaderCell>
           <Cell dataKey="nmcustomer" />
         </Column>
+        <Column sortable width={150} flexGrow={1} fixed>
+          <HeaderCell>Analista SEO</HeaderCell>
+          <Cell dataKey="dsresponsible" />
+        </Column>
         <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Mês de referência</HeaderCell>
           <Month dataKey="dsmounthyear" />

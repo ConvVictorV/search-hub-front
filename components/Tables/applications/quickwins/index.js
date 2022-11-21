@@ -447,8 +447,9 @@ const WordTable = ({
           <div style={{
             padding: 20
           }}>
+            <p><strong>Responsável</strong>: {rowData.dsresponsible}</p>
             <p><strong>Cliente</strong>: {rowData.customer}</p>
-            <p><strong>Mês de referência</strong>: {rowData.dsmonth},{rowData.dsyear}</p>
+            <p><strong>Mês de referência</strong>: {rowData.dsmonth}, {rowData.dsyear}</p>
             <p><strong>Termo principal</strong>: {rowData.dskeyword}</p>
             <p><strong>Url da página</strong>: {rowData.dsurl}</p>
             <p><strong>Volume de busca</strong>: {rowData.dsvolume}</p>
