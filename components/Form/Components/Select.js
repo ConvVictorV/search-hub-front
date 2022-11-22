@@ -18,7 +18,7 @@ const Select = (props) => {
 
   const onSelectItem = (a) => {
     const customer = customers.filter(customer => customer.value == a)[0]
-    const customerName = (customer?.label).toLowerCase().replace(/ /g, '-').replace(/\(/g, '').replace(/\)/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    const customerName = (customer?.label)?.toLowerCase().replace(/ /g, '-').replace(/\(/g, '').replace(/\)/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "");
     const routePath = route.pathname == '/' ? "/applications/palavras-estrategicas" : (route.pathname.split('/')[1]) + "/" + (route.pathname.split('/')[2])
     setLoading(true)
     if (a) {

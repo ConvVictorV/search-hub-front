@@ -96,6 +96,14 @@ function Demo(args) {
             tableD = tableD.concat(data)
             setTableData(tableD);
             getQuickwins()
+          }else {
+            axios.get('/api/get/select/customersId').then(({ data }) => {
+              setTableData(tableD.map((row,index) => {
+                const { idcustomer } = row
+                row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
+                return row
+              }))
+            })
           }
         });
     }
