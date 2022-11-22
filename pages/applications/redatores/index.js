@@ -21,6 +21,8 @@ import ExportForm from "../../../components/Form/Pages/Applications/quickwins/ex
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
 import TableWords from "../../../components/Tables/applications/redatores";
 import FullWidthLayout from "../../../Layouts/fullwidth";
+import CreateForm from "../../../components/Form/Pages/Applications/redatores/";
+
 
 function Demo(args) {
   const [tableData, setTableData] = useState([]);
@@ -28,6 +30,7 @@ function Demo(args) {
   const [search, setSearch] = useState("");
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
+  const [openCreateForm, setOpenCreateForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const route = useRouter()
@@ -37,6 +40,7 @@ function Demo(args) {
   const handleClose = () => {
     setOpenExportForm(false);
     setOpenImportForm(false);
+    setOpenCreateForm(false);
     updateData();
   };
   const getData = () => {
@@ -151,6 +155,30 @@ function Demo(args) {
       >
         <div></div>
         <ButtonToolbar>
+        <Whisper
+            trigger="hover"
+            placement="top"
+            speaker={<Tooltip>Novo Redator</Tooltip>}
+          >
+            <IconButton
+              style={
+                {
+                  backgroundColor: "transparent",
+                  color: "var(--color-conversion-1)",
+                  borderColor: "var(--color-conversion-1)"
+                }
+              }
+              icon={<FunnelIcon style={
+                {
+                  backgroundColor: "transparent",
+                  color: "var(--color-conversion-1)",
+                  borderColor: "var(--color-conversion-1)"
+                }
+              }/>}
+              appearance={"ghost"}
+              onClick={() => {setOpenCreateForm(true)}}
+            >Novo Redator</IconButton>
+          </Whisper>
           <Whisper
             trigger="hover"
             placement="top"
@@ -301,6 +329,22 @@ function Demo(args) {
             <ImportForm closeModal={handleClose} />
           </Modal.Body>
         </Modal>
+
+        <Modal
+          open={openCreateForm}
+          onClose={handleClose}
+          size="md"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Adicionar Redator</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <CreateForm closeModal={handleClose} />
+          </Modal.Body>
+        </Modal>
+
         <TableWords
           checkedKeys={checkedKeys}
           setCheckedKeys={setCheckedKeys}

@@ -396,6 +396,7 @@ const WordTable = ({
         { value: "dtcreate", label: "Data de entrada"},
     ];
     const keys = Object.keys(tableData[0] || {});
+    
     const handleSelect = (eventKey) => {
       onClose();
       const message = getMessage(manualKeys[eventKey].value);
@@ -562,7 +563,7 @@ const WordTable = ({
         <Column width={70} align="center">
           <HeaderCell>#</HeaderCell>
           <ExpandCell
-            dataKey="id"
+            dataKey="idwriter"
             expandedRowKeys={expandedRowKeys}
             onChange={handleExpanded}
           />
