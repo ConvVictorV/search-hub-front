@@ -96,7 +96,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     
     const [dsname, setDsname] = useState('');
     const [nbwordsavaiable, setNbwordsavaiable] = useState('');
-    const [dsworkavaiable, setDsworkavaiable] = useState('');
+    const [dsworkavaiable, setDsworkavaiable] = useState('Select');
     const [dsphone, setDsphone] = useState('');
     const [dsemail, setDsemail] = useState('');
     const [dseducation, setDseducation] = useState('');
@@ -209,10 +209,18 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         <Form.ControlLabel>Disponibilidade de palavras</Form.ControlLabel>
                         <Form.Control name="nbwordsavaiable" onChange={setNbwordsavaiable} value={nbwordsavaiable} />
                     </Form.Group>
-                    <Form.Group controlId="dsworkavaiable" ref={forwardRef}>
-                        <Form.ControlLabel>Dedicação</Form.ControlLabel><br></br>
-                        <Form.Control name="dsworkavaiable" onChange={setDsworkavaiable} value={dsworkavaiable} />
-                    </Form.Group>
+                    <Form.ControlLabel style={{
+                        lineHeight: "12px"
+                    }}>Status</Form.ControlLabel>
+            <       Select
+                        fetch={"/api/get/writer/workavaiable"}
+                        placeholder={dsworkavaiable}
+                        onSelect={setDsworkavaiable}
+                        style={{
+                            width:300,
+                            marginTop:-4
+                        }}
+                    />
                 </Stack>
                 <Stack
                     direction="column"
@@ -341,13 +349,28 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
             }}>
 
                 <Button 
-                    disabled={tableData?.length == 0}
                     style={{
                         backgroundColor: "var(--color-conversion-1)",
                         color: "var(--color-darkness-background)",
                     }}
                     onClick={() => {
-                        axios.post('/api/post/writers', tableData)
+                        axios.post('/api/post/writers', {
+                            dsname,
+                            nbwordsavaiable,
+                            dsworkavaiable,
+                            dsphone,
+                            dsemail,
+                            dseducation,
+                            dsportfolio,
+                            dtcreate,
+                            dsvalue,
+                            dsstatus,
+                            dspaymenttype,
+                            dscontenttype,
+                            dscontentcategory,
+                            dspagetypes,
+                            dsclientes
+                        })
                             .catch((e) => {
                                 typeof e.response.data != "object"
                                     ? errorHandle(e.response.data)
