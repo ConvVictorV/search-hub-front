@@ -16,7 +16,7 @@ import {
     Schema
 } from "rsuite";
 import Select from "../../../Components/Select";
-import Tag from "../../../Components/Tag";
+import Tag from "../../../Components/tag";
 import Overview from "../../../../Tables/applications/quickwins/overview"
 
 
