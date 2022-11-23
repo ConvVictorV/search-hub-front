@@ -154,19 +154,21 @@ function Demo(args) {
     };
     return (
       <Popover ref={ref} className={className} style={{ left, top }} full>
-        <Dropdown.Menu onSelect={handleSelect}>
-          <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
-          <Dropdown.Item disabled eventKey={2}>{`Exportar ${checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
-            }`}</Dropdown.Item>
-          {checkedKeys.length != 0 ? (
-            <Dropdown.Item
-              eventKey={3}
-            >{`Deletar (${checkedKeys.length})`}</Dropdown.Item>
-          ) : (
-            ""
-          )}
-        </Dropdown.Menu>
-      </Popover>
+      <Dropdown.Menu onSelect={handleSelect}>
+        <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
+        <Dropdown.Item disabled={checkedKeys.length == 0} eventKey={2}>{`Exportar ${
+          checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
+        }`}</Dropdown.Item>
+        {checkedKeys.length != 0 ? (
+          <Dropdown.Item
+            disabled
+            eventKey={3}
+          >{`Deletar (${checkedKeys.length})`}</Dropdown.Item>
+        ) : (
+          ""
+        )}
+      </Dropdown.Menu>
+    </Popover>
     );
   };
 
@@ -331,14 +333,14 @@ function Demo(args) {
         >
           <Modal.Header>
             <Modal.Title>
-              Exportar {checkedKeys.length || ""} palavras
+              Exportar {checkedKeys.length || ""} quickwins
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <ExportForm
               closeModal={handleClose}
               data={tableData.filter(
-                (word) => checkedKeys.indexOf(word.idworkedpage) > -1
+                (qw) => checkedKeys.indexOf(qw.id) > -1
               )}
             />
           </Modal.Body>

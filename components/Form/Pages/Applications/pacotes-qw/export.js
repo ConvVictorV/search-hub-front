@@ -65,8 +65,8 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
       await axios
         .get(
           projectCustomer
-            ? `/api/get/exportQuickWins?idcustomer=${projectCustomer}`
-            : `/api/get/exportQuickWins`
+            ? `/api/get/exportPackages?idcustomer=${projectCustomer}`
+            : `/api/get/exportPackages`
         )
         .then(({ data }) => downloadData(data))
         .catch((e) => {
@@ -74,7 +74,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         });
     } else {
       await axios
-        .post(`/api/get/exportQuickWins`, {
+        .post(`/api/get/exportPackages`, {
           content: exportData,
         })
         .then(({ data }) => downloadData(data))
@@ -106,6 +106,18 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
 
   return (
     <Form fluid>
+      {exportData.length == 0 ? (
+        <Select
+          fetch={"/api/get/select/customersId"}
+          placeholder={"Selecione o cliente"}
+          onSelect={setProjectCustomer}
+          style={{
+            width: "100%",
+          }}
+        />
+      ) : (
+        ""
+      )}
 
       <hr />
       <Form.Group>

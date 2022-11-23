@@ -17,7 +17,7 @@ import {
   useToaster,
   Whisper,
 } from "rsuite";
-import ExportForm from "../../../components/Form/Pages/Applications/quickwins/exportOld";
+import ExportForm from "../../../components/Form/Pages/Applications/pacotes-qw/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
 import TableWords from "../../../components/Tables/applications/pacotes-qw";
 import FullWidthLayout from "../../../Layouts/fullwidth";
@@ -121,13 +121,14 @@ function Demo(args) {
     return (
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
-          <Dropdown.Item eventKey={1}>Importar</Dropdown.Item>
-          <Dropdown.Item eventKey={2}>{`Exportar ${
+          <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
+          <Dropdown.Item disabled={checkedKeys.length == 0}  eventKey={2}>{`Exportar ${
             checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
           }`}</Dropdown.Item>
           {checkedKeys.length != 0 ? (
             <Dropdown.Item
               eventKey={3}
+              disabled
             >{`Deletar (${checkedKeys.length})`}</Dropdown.Item>
           ) : (
             ""
@@ -273,14 +274,14 @@ function Demo(args) {
         >
           <Modal.Header>
             <Modal.Title>
-              Exportar {checkedKeys.length || ""} palavras
+              Exportar {checkedKeys.length || ""} pacotes
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <ExportForm
               closeModal={handleClose}
               data={tableData.filter(
-                (word) => checkedKeys.indexOf(word.idworkedpage) > -1
+                (word) => checkedKeys.indexOf(word.idqwpackage) > -1
               )}
             />
           </Modal.Body>
