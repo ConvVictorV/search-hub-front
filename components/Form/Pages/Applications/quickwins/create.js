@@ -222,6 +222,42 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     setTableData(data)
                     setRefresh(refresh + 1)
                 }}
+                editItem={(tableid)=>{
+                    const data = tableData
+                    const removeIndex = []
+                    data.forEach((item, index) => {
+                        if (item.tableid == tableid) {
+                            removeIndex.push(index)
+                            setCustomer(item.idcustomer)
+                            setDskeyword(item.dskeyword)
+                            setDsresponsible(item.dsresponsible)
+                            setDsurl(item.dsurl)
+                            setDsvolume(item.dsvolume+"")
+                            setDsposition(item.dsposition)
+                            setDstype(item.dstype)
+                            setDscontent(item.dscontent)
+                            setDsobjective(item.dsobjective)
+                            setDsstatus(item.dsstatus)
+                            setDsdensity(item.dsdensity+"")
+                            setDsmonth(item.dsmonth)
+                            setDsyear(item.dsyear)
+                            setFormValue({
+                                dskeyword: item.dskeyword,
+                                dsvolume: item.dsvolume + "",
+                                dsurl: item.dsurl,
+                                dsposition: item.dsposition,
+                                dsdensity: item.dsdensity + "",
+                                dsyear: item.dsyear,
+                                dsresponsible: item.dsresponsible
+                            })
+
+                        }
+                    })
+                    removeIndex.map(i => data.splice(i, 1))
+                    setTableData(data)
+
+                    setRefresh(refresh + 1)
+                }}
                 tableData={tableData}
                 setRowData={setRowData}
             // setDrawerOpenEdit={}
@@ -274,7 +310,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     </Form.Group>
                     <Select
                         fetch={"/api/get/quickwinsType"}
-                        placeholder={"Tipo de otimização"}
+                        placeholder={dstype || "Tipo de otimização"}
                         onSelect={setDstype}
                         style={{
                             width: "94%",
@@ -284,7 +320,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
 
                     <Select
                         fetch={"/api/get/quickwinsTypeContent"}
-                        placeholder={"Tipo de conteúdo"}
+                        placeholder={dscontent || "Tipo de conteúdo"}
                         onSelect={setDscontent}
                         style={{
                             width: "94%",

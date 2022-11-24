@@ -73,31 +73,35 @@ const ActionCell = ({
     dataKey,
     setRowData,
     removeItem,
+    editItem,
     ...props
 }) => {
-    function handleAction() {
+    function handleDelete() {
         removeItem(rowData.tableid)
+    }
+    function handleEdit() {
+        editItem(rowData.tableid)
     }
     return (
         <Cell {...props} className="link-group">
             <div style={{ marginTop: "-8px" }}>
-                {/* <IconButton
-                    appearance="ghost"
-                    size={'sm'}
-                    // style={{
-                    //     background: "var(--color-conversion-1)",
-                    // }}
-                    onClick={handleAction}
-
-                    icon={<EditIcon />}
-                /> */}
                 <IconButton
                     appearance="ghost"
                     size={'sm'}
                     // style={{
                     //     background: "var(--color-conversion-1)",
                     // }}
-                    onClick={handleAction}
+                    onClick={handleEdit}
+
+                    icon={<EditIcon />}
+                />
+                <IconButton
+                    appearance="ghost"
+                    size={'sm'}
+                    // style={{
+                    //     background: "var(--color-conversion-1)",
+                    // }}
+                    onClick={handleDelete}
 
                     icon={<CloseIcon />}
                 />
@@ -110,7 +114,8 @@ const WordTable = ({
     tableData,
     setDrawerOpenEdit,
     setRowData,
-    removeItem
+    removeItem,
+    editItem
 }) => {
     let [defaultValues, setDefaultValues] = useState(0)
     // setInterval(() => {
@@ -167,6 +172,7 @@ const WordTable = ({
                 <HeaderCell>...</HeaderCell>
                 <ActionCell
                     removeItem={removeItem}
+                    editItem={editItem}
                     setDrawerOpenEdit={setDrawerOpenEdit}
                     setRowData={setRowData}
                     dataKey="idcustomer"
