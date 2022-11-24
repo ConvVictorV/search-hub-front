@@ -228,9 +228,9 @@ function Demo(args) {
           filterString = filterString.split("|");
           const column = filterString[0];
           const type = filterString[1];
-          const value = filterString[2];
+          const value = filterString[2]?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
           filteredData = filteredData.filter((row) => {
-            const rowColumn = row[column];
+            const rowColumn = row[column]?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
             switch (type) {
               case "is":
                 return rowColumn == value;

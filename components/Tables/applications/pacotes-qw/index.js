@@ -126,7 +126,7 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
         color: "var(--rs-text-link-hover)",
         textDecoration: "underline",
       }}
-      href={'/applications/fluxo-quickwin/package/'+rowData?.dskey}
+      href={'/applications/fluxo-quickwin/package/' + rowData?.dskey}
       target={"_blank"}
       rel="noopener noreferrer"
     >
@@ -173,11 +173,20 @@ const WordTable = ({
       setFilterData(data) && setPage(1)
     }
   };
+  const filterResponsible = (responsible) => {
+    if (responsible && responsible !== "") {
+      let data = filterData.filter(filter => filter.indexOf('dsresponsible') == -1)
+      setFilterData(data.concat(["dsresponsible|contains|" + responsible])) && setPage(1)
+    } else {
+      let data = filterData.filter(filter => filter.indexOf('dsresponsible') == -1)
+      setFilterData(data) && setPage(1)
+    }
+  };
   useEffect(() => {
     if (tableData?.length > 0) setLoading(false);
-    setTimeout(()=>{
+    setTimeout(() => {
       setLoading(false);
-    },5000)
+    }, 5000)
   }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {
@@ -197,19 +206,19 @@ const WordTable = ({
   const setPageData = (arrayData) => {
     return typeof tableData == "object"
       ? arrayData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
   };
   const data =
     typeof tableData == "object"
       ? tableData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
   const handleCheckAll = (value, checked) => {
     const keys = checked ? data.map((item) => item.idworkedpage) : [];
@@ -385,8 +394,34 @@ const WordTable = ({
               width: 150
             }}
           />
+          <InputGroup
+            inside
+            style={{
+              outlineStyle: "none",
+              boxShadow: "none",
+              borderColor: "transparent",
+            }}
+          >
+            <InputGroup.Addon>
+              <SearchIcon />
+            </InputGroup.Addon>
+            <input
+              className="rs-input"
+              type="text"
+              onChange={(event) => filterResponsible(event.target.value)}
+              placeholder={`Buscar pacote por responsável`}
+              style={{
+                width: "300px",
+                border: "none!important",
+                outlineStyle: "none",
+                boxShadow: "none",
+                borderColor: "transparent",
+                background: "var(--rs-btn-subtle-hover-bg)",
+              }}
+            />
+          </InputGroup>
         </Stack>
-        
+
         {headerMenu}
       </Stack>
       {filterActive ? (
@@ -448,7 +483,7 @@ const WordTable = ({
         </Column>
         <Column width={75} align="center">
           <HeaderCell>Visualizar</HeaderCell>
-          <LinkCell dataKey="idqwpackage"/>
+          <LinkCell dataKey="idqwpackage" />
         </Column>
         <Column sortable width={150} flexGrow={1} fixed>
           <HeaderCell>Cliente</HeaderCell>
