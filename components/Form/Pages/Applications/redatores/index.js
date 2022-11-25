@@ -145,7 +145,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     );
     const messageSucess = (
         <Message showIcon type={"success"} duration={5000}>
-            Quickwins criados!
+            Redator criado!
         </Message>
     );
     const messageError = (
@@ -370,6 +370,10 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             dscontentcategory,
                             dspagetypes,
                             dsclientes
+                        })
+                        .then((e) => {
+                            sucessHandle();
+                            closeModal(true);
                         })
                             .catch((e) => {
                                 typeof e.response.data != "object"

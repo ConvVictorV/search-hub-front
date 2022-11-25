@@ -29,7 +29,7 @@ import SearchIcon from "@rsuite/icons/Search";
 import LinkIcon from "@rsuite/icons/legacy/ExternalLink";
 
 const { HeaderCell, Cell, Column } = Table;
-const rowKey = "id";
+const rowKey = "idwriter";
 
 // custom cells
 const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (

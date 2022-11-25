@@ -337,7 +337,7 @@ function Demo(args) {
             <SendToContentForm 
               closeModal={handleClose}
               data={tableData.filter(
-                (word) =>  checkedKeys.indexOf(word.idqwpackage)
+                (qw) =>  checkedKeys.indexOf(qw.idqwpackage) > -1
               )}
               ></SendToContentForm>
           </Modal.Body>
