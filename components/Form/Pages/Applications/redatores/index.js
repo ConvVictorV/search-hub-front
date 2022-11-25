@@ -211,7 +211,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     </Form.Group>
                     <Form.ControlLabel style={{
                         lineHeight: "12px"
-                    }}>Status</Form.ControlLabel>
+                    }}>Dedicação</Form.ControlLabel>
             <       Select
                         fetch={"/api/get/writer/workavaiable"}
                         placeholder={dsworkavaiable}
@@ -358,11 +358,11 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             dsname,
                             nbwordsavaiable,
                             dsworkavaiable,
-                            dsphone,
+                            //dsphone,
                             dsemail,
                             dseducation,
                             dsportfolio,
-                            dtcreate,
+                            //dtcreate,
                             dsvalue,
                             dsstatus,
                             dspaymenttype,
