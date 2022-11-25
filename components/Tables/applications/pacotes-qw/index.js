@@ -25,6 +25,7 @@ import {
 import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
 import LinkIcon from "@rsuite/icons/legacy/ExternalLink";
+import Select from "../../../../components/Form/Components/Select";
 
 const { HeaderCell, Cell, Column } = Table;
 
@@ -125,7 +126,7 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
         color: "var(--rs-text-link-hover)",
         textDecoration: "underline",
       }}
-      href={'/applications/fluxo-quickwin/package/'+rowData?.dskey}
+      href={'/applications/fluxo-quickwin/package/' + rowData?.dskey}
       target={"_blank"}
       rel="noopener noreferrer"
     >
@@ -163,12 +164,29 @@ const WordTable = ({
   const toaster = useToaster();
   let checked = false;
   let indeterminate = false;
-
+  const filterStatus = (status) => {
+    if (status) {
+      let data = filterData.filter(filter => filter.indexOf('dsstatus') == -1)
+      setFilterData(data.concat(["dsstatus|is|" + status])) && setPage(1)
+    } else {
+      let data = filterData.filter(filter => filter.indexOf('dsstatus') == -1)
+      setFilterData(data) && setPage(1)
+    }
+  };
+  const filterResponsible = (responsible) => {
+    if (responsible && responsible !== "") {
+      let data = filterData.filter(filter => filter.indexOf('dsresponsible') == -1)
+      setFilterData(data.concat(["dsresponsible|contains|" + responsible])) && setPage(1)
+    } else {
+      let data = filterData.filter(filter => filter.indexOf('dsresponsible') == -1)
+      setFilterData(data) && setPage(1)
+    }
+  };
   useEffect(() => {
     if (tableData?.length > 0) setLoading(false);
-    setTimeout(()=>{
+    setTimeout(() => {
       setLoading(false);
-    },5000)
+    }, 5000)
   }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {
@@ -188,19 +206,19 @@ const WordTable = ({
   const setPageData = (arrayData) => {
     return typeof tableData == "object"
       ? arrayData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
   };
   const data =
     typeof tableData == "object"
       ? tableData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
 
   if (checkedKeys.length === data.length) {
@@ -267,13 +285,11 @@ const WordTable = ({
   //Configurações do filtro
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
     const manualKeys = [
-      { value: "dskeyword", label: "Palavra Chave" },
-      { value: "dsinitposition", label: "Posição Inicial" },
-      { value: "dspageurl", label: "Url" },
-      { value: "dtcomp", label: "Data de Competência" },
-      { value: "dsuser", label: "Usuário" },
-      { value: "dtimplement", label: "Data de Implementação" },
-      { value: "nmsquad", label: "Squad" },
+      { value: "nmcustomer", label: "Cliente" },
+      { value: "dsmounthyear", label: "Mês de referência" },
+      { value: "dsmounthyear", label: "Ano" },
+      { value: "dsstatus", label: "Status" },
+      { value: "dsresponsible", label: "Responsável" },
     ];
     const keys = Object.keys(tableData[0] || {});
     const handleSelect = (eventKey) => {
@@ -361,7 +377,7 @@ const WordTable = ({
               className="rs-input"
               type="text"
               onChange={(event) => setSearch(event.target.value)}
-              placeholder={`Buscar (${tableData.length + " Quickwins"})`}
+              placeholder={`Buscar (${tableData.length + " Pacotes"})`}
               style={{
                 width: "300px",
                 border: "none!important",
@@ -373,7 +389,42 @@ const WordTable = ({
               }}
             />
           </InputGroup>
+          <Select
+            fetch={"/api/get/quickWinStatus"}
+            placeholder={'Filtre por Status'}
+            onSelect={filterStatus}
+            style={{
+              width: 150
+            }}
+          />
+          <InputGroup
+            inside
+            style={{
+              outlineStyle: "none",
+              boxShadow: "none",
+              borderColor: "transparent",
+            }}
+          >
+            <InputGroup.Addon>
+              <SearchIcon />
+            </InputGroup.Addon>
+            <input
+              className="rs-input"
+              type="text"
+              onChange={(event) => filterResponsible(event.target.value)}
+              placeholder={`Buscar pacote por responsável`}
+              style={{
+                width: "300px",
+                border: "none!important",
+                outlineStyle: "none",
+                boxShadow: "none",
+                borderColor: "transparent",
+                background: "var(--rs-btn-subtle-hover-bg)",
+              }}
+            />
+          </InputGroup>
         </Stack>
+
         {headerMenu}
       </Stack>
       {filterActive ? (
@@ -435,11 +486,15 @@ const WordTable = ({
         </Column>
         <Column width={75} align="center">
           <HeaderCell>Visualizar</HeaderCell>
-          <LinkCell dataKey="idqwpackage"/>
+          <LinkCell dataKey="idqwpackage" />
         </Column>
         <Column sortable width={150} flexGrow={1} fixed>
           <HeaderCell>Cliente</HeaderCell>
           <Cell dataKey="nmcustomer" />
+        </Column>
+        <Column sortable width={150} flexGrow={1} fixed>
+          <HeaderCell>Analista SEO</HeaderCell>
+          <Cell dataKey="dsresponsible" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Mês de referência</HeaderCell>

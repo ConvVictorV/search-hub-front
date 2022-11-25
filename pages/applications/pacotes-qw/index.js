@@ -18,7 +18,7 @@ import {
   useToaster,
   Whisper,
 } from "rsuite";
-import ExportForm from "../../../components/Form/Pages/Applications/quickwins/exportOld";
+import ExportForm from "../../../components/Form/Pages/Applications/pacotes-qw/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
 import SendToContentForm from "../../../components/Form/Pages/Applications/pacotes-qw/sendtocontent"
 import TableWords from "../../../components/Tables/applications/pacotes-qw";
@@ -125,13 +125,14 @@ function Demo(args) {
     return (
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
-          <Dropdown.Item eventKey={1}>Importar</Dropdown.Item>
-          <Dropdown.Item eventKey={2}>{`Exportar ${
+          <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
+          <Dropdown.Item disabled={checkedKeys.length == 0}  eventKey={2}>{`Exportar ${
             checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
           }`}</Dropdown.Item>
           {checkedKeys.length != 0 ? (
             <Dropdown.Item
               eventKey={3}
+              disabled
             >{`Deletar (${checkedKeys.length})`}</Dropdown.Item>
           ) : (
             ""
@@ -248,9 +249,9 @@ function Demo(args) {
           filterString = filterString.split("|");
           const column = filterString[0];
           const type = filterString[1];
-          const value = filterString[2];
+          const value = filterString[2]?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
           filteredData = filteredData.filter((row) => {
-            const rowColumn = row[column];
+            const rowColumn = row[column]?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
             switch (type) {
               case "is":
                 return rowColumn == value;
@@ -294,7 +295,7 @@ function Demo(args) {
         >
           <Modal.Header>
             <Modal.Title>
-              Exportar {checkedKeys.length || ""} palavras
+              Exportar {checkedKeys.length || ""} pacotes
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -336,7 +337,7 @@ function Demo(args) {
             <SendToContentForm 
               closeModal={handleClose}
               data={tableData.filter(
-                (word) =>  checkedKeys.indexOf(word.idqwpackage)
+                (qw) =>  checkedKeys.indexOf(qw.idqwpackage) > -1
               )}
               ></SendToContentForm>
           </Modal.Body>

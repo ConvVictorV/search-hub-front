@@ -10,6 +10,7 @@ export default function handler(req, res) {
       "nbtotalqws": req.body.length,
       "nbtotalkeywords": req.body.length,
       "dsstatus": req.body[0].dsstatus,
+      "dsresponsible": req.body[0].dsresponsible,
       "dskey": req.body[0].fkIdqwpackage
   }    
     )

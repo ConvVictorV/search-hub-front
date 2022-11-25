@@ -25,11 +25,12 @@ const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref=
 
 const model = Schema.Model({
     dskeyword: StringType().isRequired('O campo não pode estar vazio.'),
-    dsvolume: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido."),
+    dsvolume: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido."),
     dsurl: StringType().isURL('Digite uma url válida'),
-    dsposition: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido.").max(150,"Digite um valor até 150."),
-    dsdensity: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido."),
-    dsyear: NumberType('Digite um número válido.').min(2017,"Digite um valor acima de 2017."),
+    dsposition: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido.").max(150, "Digite um valor até 150."),
+    dsdensity: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido."),
+    dsyear: NumberType('Digite um número válido.').min(2017, "Digite um valor acima de 2017."),
+    dsresponsible: StringType().isRequired('O campo não pode estar vazio.'),
 });
 
 function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
@@ -48,21 +49,23 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         dsposition,
         dsdensity,
         dsyear,
+        dsresponsible
     });
     const [dskeyword, setDskeyword] = useState('');
+    const [dsresponsible, setDsresponsible] = useState('')
     const [dsurl, setDsurl] = useState('');
     const [dsvolume, setDsvolume] = useState('');
     const [dsposition, setDsposition] = useState('');
     const [dstype, setDstype] = useState('');
     const [dscontent, setDscontent] = useState('');
     const [dsobjective, setDsobjective] = useState('');
-    const [dsstatus, setDsstatus] = useState('Planejamento de Termo');
+    const [dsstatus, setDsstatus] = useState('Planejamento de termos');
     const [dsdensity, setDsdensity] = useState('');
     const [dsmonth, setDsmonth] = useState('')
     const [dsyear, setDsyear] = useState(2022)
 
     function clearInputs() {
-        [...document.querySelectorAll('.rs-stack:not(:last-child):not(:first-child) span.rs-picker-toggle-clean.rs-btn-close, .rs-btn-toolbar span.rs-picker-toggle-clean.rs-btn-close')].map(clean=>clean.click())
+        [...document.querySelectorAll('.rs-stack:not(:last-child):not(:first-child) span.rs-picker-toggle-clean.rs-btn-close, .rs-btn-toolbar span.rs-picker-toggle-clean.rs-btn-close')].map(clean => clean.click())
         setDskeyword('');
         setDsurl('');
         setDsvolume('');
@@ -72,9 +75,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         setDsobjective('');
         setDsdensity('');
         setRefresh(refresh + 1)
-            
- 
-        
+
     }
 
     const [tableData, setTableData] = useState([]);
@@ -127,14 +128,14 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     };
 
     return (
-        <Form 
-        fluid 
-        layout="inline" 
-        ref={formRef}
-        onChange={setFormValue}
-        formValue={formValue}
-        onCheck={setFormError} 
-        model={model}>
+        <Form
+            fluid
+            layout="inline"
+            ref={formRef}
+            onChange={setFormValue}
+            formValue={formValue}
+            onCheck={setFormError}
+            model={model}>
             <Stack
                 direction="row"
                 alignItems="flex-start"
@@ -149,11 +150,11 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         placeholder={"Selecione o cliente"}
                         onSelect={setCustomer}
                         style={{
-                            width: "100%",
+                            width: "230px",
                         }}
                     />
                 </Form.Group>
-                
+
                 <Form.Group>
                     <Form.ControlLabel style={{
                         lineHeight: "40px"
@@ -168,24 +169,46 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     />
                 </Form.Group>
                 
-                <Form.Group controlId="dsyear" ref={forwardRef}
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}>
-                    <Form.ControlLabel style={{
-                        lineHeight: "40px"
-                    }}>Ano de Referência</Form.ControlLabel>
-                    <Form.Control name="dsyear" placeholder="" onChange={setDsyear} value={dsyear} style={{
-                        width: 100
-                    }} />
-                </Form.Group>
+                
+                
                 {/* <Form.Control name="name" placeholder="Escopo" disabled /> */}
+            </Stack>
+
+            <Stack
+                direction="row"
+                alignItems="flex-start"
+                justifyContent="space-between"
+            ><Form.Group controlId="dsyear" ref={forwardRef}
+            style={{
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+            <Form.ControlLabel style={{
+                lineHeight: "40px"
+            }}>Analista Responsável</Form.ControlLabel>
+            <Form.Control name="dsresponsible" onChange={setDsresponsible} value={dsresponsible} style={{
+                width: 230
+            }}  />
+        </Form.Group>
+
+        <Form.Group controlId="dsyear" ref={forwardRef}
+            style={{
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+            <Form.ControlLabel style={{
+                lineHeight: "40px"
+            }}>Ano de Referência</Form.ControlLabel>
+            <Form.Control name="dsyear" placeholder="" onChange={setDsyear} value={dsyear} style={{
+                width: 230
+            }} />
+        </Form.Group>
+                
             </Stack>
             
             <Form.ControlLabel style={{
-                        lineHeight: "40px"
-                    }}>Resumo do planejamento</Form.ControlLabel>
+                lineHeight: "40px"
+            }}>Resumo do planejamento</Form.ControlLabel>
             <Overview
                 removeItem={(tableid) => {
                     const data = tableData
@@ -197,6 +220,42 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     })
                     removeIndex.map(i => data.splice(i, 1))
                     setTableData(data)
+                    setRefresh(refresh + 1)
+                }}
+                editItem={(tableid)=>{
+                    const data = tableData
+                    const removeIndex = []
+                    data.forEach((item, index) => {
+                        if (item.tableid == tableid) {
+                            removeIndex.push(index)
+                            setCustomer(item.idcustomer)
+                            setDskeyword(item.dskeyword)
+                            setDsresponsible(item.dsresponsible)
+                            setDsurl(item.dsurl)
+                            setDsvolume(item.dsvolume+"")
+                            setDsposition(item.dsposition)
+                            setDstype(item.dstype)
+                            setDscontent(item.dscontent)
+                            setDsobjective(item.dsobjective)
+                            setDsstatus(item.dsstatus)
+                            setDsdensity(item.dsdensity+"")
+                            setDsmonth(item.dsmonth)
+                            setDsyear(item.dsyear)
+                            setFormValue({
+                                dskeyword: item.dskeyword,
+                                dsvolume: item.dsvolume + "",
+                                dsurl: item.dsurl,
+                                dsposition: item.dsposition,
+                                dsdensity: item.dsdensity + "",
+                                dsyear: item.dsyear,
+                                dsresponsible: item.dsresponsible
+                            })
+
+                        }
+                    })
+                    removeIndex.map(i => data.splice(i, 1))
+                    setTableData(data)
+
                     setRefresh(refresh + 1)
                 }}
                 tableData={tableData}
@@ -251,7 +310,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     </Form.Group>
                     <Select
                         fetch={"/api/get/quickwinsType"}
-                        placeholder={"Tipo de otimização"}
+                        placeholder={dstype || "Tipo de otimização"}
                         onSelect={setDstype}
                         style={{
                             width: "94%",
@@ -261,7 +320,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
 
                     <Select
                         fetch={"/api/get/quickwinsTypeContent"}
-                        placeholder={"Tipo de conteúdo"}
+                        placeholder={dscontent || "Tipo de conteúdo"}
                         onSelect={setDscontent}
                         style={{
                             width: "94%",
@@ -272,16 +331,16 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                 </Stack>
             </Stack>
             <Form.ControlLabel style={{
-                        lineHeight: "40px"
-                    }}>Status do QW</Form.ControlLabel>
+                lineHeight: "40px"
+            }}>Status do QW</Form.ControlLabel>
             <Select
-                        fetch={"/api/get/quickWinStatus"}
-                        placeholder={dsstatus}
-                        onSelect={setDsstatus}
-                        style={{
-                            width:200
-                        }}
-                    />
+                fetch={"/api/get/quickWinStatus"}
+                placeholder={dsstatus}
+                onSelect={setDsstatus}
+                style={{
+                    width: 200
+                }}
+            />
             <Stack
                 direction="row"
                 justifyContent="end"
@@ -296,7 +355,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     display: "flex",
                     width: "100%"
                 }}>
-                    
+
                     <Button
                         onClick={() => {
                             setFormValue({
@@ -306,7 +365,8 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                                 dsposition,
                                 dsdensity,
                                 dsyear,
-                            })  
+                                dsresponsible
+                            })
                             formRef.current.check()
 
                             const requiredFields = [
@@ -328,10 +388,10 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             const erroredFields = requiredFields.map((field, index) => {
                                 if (field == undefined || field?.length == 0) {
                                     return index
-                                }else{
+                                } else {
                                     return false
                                 }
-                            }).filter(row=>row !== false)
+                            }).filter(row => row !== false)
 
                             if (erroredFields?.length) {
                                 toast.push(<Message showIcon type={"error"}>
@@ -350,6 +410,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             data.push({
                                 tableid: Math.floor(Math.random() * 9999999999),
                                 dskeyword,
+                                dsresponsible,
                                 dsurl,
                                 dsstatus,
                                 dsvolume: parseFloat(dsvolume.replace(',', '.')),
@@ -367,6 +428,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             clearInputs()
                             setFormValue({
                                 dskeyword,
+                                dsresponsible,
                                 dsvolume,
                                 dsurl,
                                 dsposition,
@@ -393,7 +455,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         backgroundColor: "var(--color-conversion-11)",
                         color: "var(--color-darkness-background)",
                     }}>Exportar para planilha</Button>
-                <Button 
+                <Button
                     disabled={tableData?.length == 0}
                     style={{
                         backgroundColor: "var(--color-conversion-1)",

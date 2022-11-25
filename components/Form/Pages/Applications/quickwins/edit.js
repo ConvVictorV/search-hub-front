@@ -29,6 +29,7 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
     const session = useSession();
     const toast = useToaster();
 
+    const [dsresponsible, setDsresponsible] = useState(rowData.dsresponsible || '')
     const [dskeyword, setDskeyword] = useState(rowData.dskeyword);
     const [dsurl, setDsurl] = useState(rowData.dsurl);
     const [dsvolume, setDsvolume] = useState(rowData.dsvolume);
@@ -49,16 +50,6 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
     })
 
 
-    function clearInputs() {
-        setDskeyword('');
-        setDsurl('');
-        setDsvolume('');
-        setDsposition('');
-        setDstype('');
-        setDscontent('');
-        setDsobjective('');
-        setDsdensity('');
-    }
     const [tableData, setTableData] = useState([]);
 
     const [refresh, setRefresh] = useState(0);
@@ -137,6 +128,10 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                     spacing="10px"
                     alignItems="flex-end"
                 >
+                    <Form.Group controlId="dsterm">
+                        <Form.ControlLabel>Analista Responsável</Form.ControlLabel>
+                        <Form.Control name="dsterm" onChange={setDsresponsible} value={dsresponsible} />
+                    </Form.Group>
                     <Form.Group controlId="dsterm">
                         <Form.ControlLabel>Termo Principal</Form.ControlLabel>
                         <Form.Control name="dsterm" onChange={setDskeyword} value={dskeyword} />
@@ -248,6 +243,7 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                                     idcustomer: rowData.idcustomer,
                                     dsobjective,
                                     dsmonth,
+                                    dsresponsible,
                                     dsyear
                                 }).then((e) => {
                                     sucessHandle();

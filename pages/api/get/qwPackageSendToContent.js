@@ -1,11 +1,15 @@
 import axios from "axios";
 
-export default function handler(req, res) {
-  const { idqwpackage, page } = req.query || {};
-  return axios
-    .get(`https://search-hub-backend-nukcfjbsza-rj.a.run.app/qwpackages/mail-contentteam/${idqwpackage || ""}?items=2000&page=${page}`)
-    .then(({ data }) => res.status(200).send(data))
+export default async function handler(req, res) {
+  const { qwPackages } = req.body || {};
+
+  for await(let qw of qwPackages){
+    axios
+    .get(`https://search-hub-backend-nukcfjbsza-rj.a.run.app/qwpackages/mail-contentteam/${qw || ""}?items=2000&page=1`)
     .catch((err) => res.status(500).send(err.data));
+  }
+
+  res.status(200).send("ok")
 }
 
 export const config = {

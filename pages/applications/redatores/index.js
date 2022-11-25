@@ -84,7 +84,6 @@ function Demo(args) {
         (item) => item.indexOf("idcustomer") == -1
       );
       setFilterData(filters);
-      console.log(filterData);
     };
     const addCustomerFilter = () => {
       removeCustomerFilter();
