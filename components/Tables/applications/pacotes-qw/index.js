@@ -203,7 +203,7 @@ const WordTable = ({
         })
       : [];
   const handleCheckAll = (value, checked) => {
-    const keys = checked ? data.map((item) => item.idworkedpage) : [];
+    const keys = checked ? data.map((item) => item.idqwpackage) : [];
     setCheckedKeys(keys);
   };
   if (checkedKeys.length === data.length) {
