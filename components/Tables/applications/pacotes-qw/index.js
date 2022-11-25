@@ -220,10 +220,7 @@ const WordTable = ({
         return i >= start && i < end;
       })
       : [];
-  const handleCheckAll = (value, checked) => {
-    const keys = checked ? data.map((item) => item.idworkedpage) : [];
-    setCheckedKeys(keys);
-  };
+
   if (checkedKeys.length === data.length) {
     checked = true;
   } else if (checkedKeys.length === 0) {
@@ -231,6 +228,12 @@ const WordTable = ({
   } else if (checkedKeys.length > 0 && checkedKeys.length < data.length) {
     indeterminate = true;
   }
+
+  const handleCheckAll = (value, checked) => {
+    const keys = checked ? data.map((item) => item.idqwpackage) : [];
+    setCheckedKeys(keys);
+  };
+  
   const handleCheck = (value, checked) => {
     const keys = checked
       ? [...checkedKeys, value]

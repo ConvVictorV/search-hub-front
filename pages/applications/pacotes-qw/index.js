@@ -9,6 +9,7 @@ import {
   Container,
   Dropdown,
   IconButton,
+  Button,
   Message,
   Modal,
   Popover,
@@ -19,6 +20,7 @@ import {
 } from "rsuite";
 import ExportForm from "../../../components/Form/Pages/Applications/pacotes-qw/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
+import SendToContentForm from "../../../components/Form/Pages/Applications/pacotes-qw/sendtocontent"
 import TableWords from "../../../components/Tables/applications/pacotes-qw";
 import FullWidthLayout from "../../../Layouts/fullwidth";
 
@@ -28,6 +30,7 @@ function Demo(args) {
   const [search, setSearch] = useState("");
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
+  const[openSendToContent, setOpenSendToContent] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const route = useRouter()
@@ -37,6 +40,7 @@ function Demo(args) {
   const handleClose = () => {
     setOpenExportForm(false);
     setOpenImportForm(false);
+    setOpenSendToContent(false);
     updateData();
   };
   const getData = () => {
@@ -150,6 +154,23 @@ function Demo(args) {
       >
         <div></div>
         <ButtonToolbar>
+          <Whisper
+              trigger="hover"
+              placement="top"
+              speaker={<Tooltip>Envio para conteúdo</Tooltip>}
+            >
+              <Button
+                style={
+                  {
+                    backgroundColor: "var(--color-conversion-1)",
+                    color: "white",
+                    borderColor: "var(--color-conversion-1)"
+                  }
+                }
+                appearance={"ghost"}
+                onClick={() => {setOpenSendToContent(true)}}
+              >Envio para conteúdo</Button>
+            </Whisper>
           <Whisper
             trigger="hover"
             placement="top"
@@ -300,6 +321,30 @@ function Demo(args) {
             <ImportForm closeModal={handleClose} />
           </Modal.Body>
         </Modal>
+
+        <Modal
+          open={openSendToContent}
+          onClose={handleClose}
+          size="xs"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Enviar para o time de Conteúdo</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Tem certeza que deseja enviar esses {checkedKeys.length} pacotes para conteúdo?
+            <SendToContentForm 
+              closeModal={handleClose}
+              data={tableData.filter(
+                (word) =>  checkedKeys.indexOf(word.idqwpackage)
+              )}
+              ></SendToContentForm>
+          </Modal.Body>
+        </Modal>
+
+
+
         <TableWords
           checkedKeys={checkedKeys}
           setCheckedKeys={setCheckedKeys}
