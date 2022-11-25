@@ -32,7 +32,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
       .post(
         "/api/get/qwPackageSendToContent",
         {
-          qwPackages: qwPackages.map((word) => word.idqwpackage),
+          qwPackages: qwPackages.map((qwpackage) => qwpackage.idqwpackage),
         },
         {
           headers: {
