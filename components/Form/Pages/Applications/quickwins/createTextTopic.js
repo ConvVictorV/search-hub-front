@@ -47,9 +47,9 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
         dstitle: StringType().isRequired('O campo não pode estar vazio.'),
         dsdescription: StringType().isRequired('O campo não pode estar vazio.'),
         dsh1: StringType().isRequired('O campo não pode estar vazio.'),
-        dstextlink: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida').addRule((value,data)=>{
+        dstextlink: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida').addRule((value, data) => {
             return value.indexOf('docs') > - 1
-        },"A url precisa ser um docs."),
+        }, "A url precisa ser um docs."),
         dstextstructure: StringType(),
         dssecundarykeywords: StringType(),
         dspeopleask: StringType().isRequired('O campo não pode estar vazio.'),
@@ -167,7 +167,26 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             return true
         }
     }
+    function getTextWidth(text, font) {
+        // re-use canvas object for better performance
+        const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+        const context = canvas.getContext("2d");
+        context.font = font;
+        const metrics = context.measureText(text);
+        return metrics.width;
+    }
 
+    function getCssStyle(element, prop) {
+        return window.getComputedStyle(element, null).getPropertyValue(prop);
+    }
+
+    function getCanvasFont(el = document.body) {
+        const fontWeight = getCssStyle(el, 'font-weight') || 'normal';
+        const fontSize = getCssStyle(el, 'font-size') || '16px';
+        const fontFamily = getCssStyle(el, 'font-family') || 'Times New Roman';
+
+        return `${fontWeight} ${fontSize} ${fontFamily}`;
+    }
     return (
         <Form
             fluid
@@ -201,27 +220,39 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 marginTop: "20px"
             }}>
                 <Form.Group controlId="dstitle">
-                    <Form.ControlLabel>Title otimizado ( Recomendamos até 60 caracteres )</Form.ControlLabel>
+                    <Form.ControlLabel>Title otimizado</Form.ControlLabel>
                     <Form.Control name="dstitle" onChange={setDstitle} value={dstitle} />
                     <Form.ControlLabel>title com {dstitle.length > 60 ? <b style={{
                         lineHeight: "40px",
                         color: "var(--color-conversion-4)"
-                    }}>{dstitle.length} caracteres</b> : <b style={{
+                    }}>({dstitle.length}/60)</b>: <b style={{
                         lineHeight: "40px",
                         color: "var(--color-conversion-7)"
-                    }}>{dstitle.length} caracteres</b>}</Form.ControlLabel>
+                    }}>({dstitle.length}/60)</b>} caracteres e {Math.round(getTextWidth(dstitle, "20px arial")) > 580 ? <b style={{
+                        lineHeight: "40px",
+                        color: "var(--color-conversion-4)"
+                    }}>({Math.round(getTextWidth(dstitle, "20px arial"))}/580)</b>: <b style={{
+                        lineHeight: "40px",
+                        color: "var(--color-conversion-7)"
+                    }}>({Math.round(getTextWidth(dstitle, "20px arial"))}/580)</b>} pixels</Form.ControlLabel>
                 </Form.Group>
                 <Form.Group controlId="dsdescription">
 
-                    <Form.ControlLabel>Description otimizada ( Recomendamos até 155 caracteres )</Form.ControlLabel>
+                    <Form.ControlLabel>Description otimizada</Form.ControlLabel>
                     <Form.Control rows={3} name="dsdescription" onChange={setDsdescription} value={dsdescription} accepter={Textarea} />
                     <Form.ControlLabel>description com {dsdescription.length > 155 ? <b style={{
                         lineHeight: "40px",
                         color: "var(--color-conversion-4)"
-                    }}>{dsdescription.length} caracteres</b> : <b style={{
+                    }}>({dsdescription.length}/155)</b> : <b style={{
                         lineHeight: "40px",
                         color: "var(--color-conversion-7)"
-                    }}>{dsdescription.length} caracteres</b>}</Form.ControlLabel>
+                    }}>({dsdescription.length}/155)</b>} caracteres e {Math.round(getTextWidth(dsdescription, "20px arial")) > 990 ? <b style={{
+                        lineHeight: "40px",
+                        color: "var(--color-conversion-4)"
+                    }}>({Math.round(getTextWidth(dsdescription, "20px arial"))}/990)</b>: <b style={{
+                        lineHeight: "40px",
+                        color: "var(--color-conversion-7)"
+                    }}>({Math.round(getTextWidth(dsdescription, "20px arial"))}/990)</b>} pixels</Form.ControlLabel>
                 </Form.Group>
             </Panel>
 
@@ -342,57 +373,57 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                             color: "var(--color-darkness-background)",
                         }}
                         onClick={() => {
-                            if(validate() == false){
+                            if (validate() == false) {
                                 return
-                            }else{
+                            } else {
                                 idtexttopic == 0 ?
-                                axios.post('/api/post/textTopic', {
-                                    idquickwin,
-                                    dstitle,
-                                    dsdescription,
-                                    dsh1,
-                                    dstextlink,
-                                    dstextstructure,
-                                    dssecundarykeywords,
-                                    dspeopleask,
-                                    dspagestructure,
-                                    dsrecommendations,
-                                    dscta,
-                                    dsfunnel
-                                }).then((e) => {
-                                    createSuccessHandle();
-                                    closeModal(true);
-                                })
-                                    .catch((e) => {
-                                        typeof e.response.data != "object"
-                                            ? errorHandle(e.response.data)
-                                            : errorHandle(e.response.data?.message);
+                                    axios.post('/api/post/textTopic', {
+                                        idquickwin,
+                                        dstitle,
+                                        dsdescription,
+                                        dsh1,
+                                        dstextlink,
+                                        dstextstructure,
+                                        dssecundarykeywords,
+                                        dspeopleask,
+                                        dspagestructure,
+                                        dsrecommendations,
+                                        dscta,
+                                        dsfunnel
+                                    }).then((e) => {
+                                        createSuccessHandle();
+                                        closeModal(true);
                                     })
-                                :
-                                axios.patch('/api/put/textTopic', {
-                                    idtexttopic,
-                                    dstitle,
-                                    dsdescription,
-                                    dsh1,
-                                    dstextlink,
-                                    dstextstructure,
-                                    dssecundarykeywords,
-                                    dspeopleask,
-                                    dspagestructure,
-                                    dsrecommendations,
-                                    dscta,
-                                    dsfunnel
-                                }).then((e) => {
-                                    updateSuccessHandle();
-                                    closeModal(true);
-                                })
-                                    .catch((e) => {
-                                        typeof e.response.data != "object"
-                                            ? errorHandle(e.response.data)
-                                            : errorHandle(e.response.data?.message);
+                                        .catch((e) => {
+                                            typeof e.response.data != "object"
+                                                ? errorHandle(e.response.data)
+                                                : errorHandle(e.response.data?.message);
+                                        })
+                                    :
+                                    axios.patch('/api/put/textTopic', {
+                                        idtexttopic,
+                                        dstitle,
+                                        dsdescription,
+                                        dsh1,
+                                        dstextlink,
+                                        dstextstructure,
+                                        dssecundarykeywords,
+                                        dspeopleask,
+                                        dspagestructure,
+                                        dsrecommendations,
+                                        dscta,
+                                        dsfunnel
+                                    }).then((e) => {
+                                        updateSuccessHandle();
+                                        closeModal(true);
                                     })
+                                        .catch((e) => {
+                                            typeof e.response.data != "object"
+                                                ? errorHandle(e.response.data)
+                                                : errorHandle(e.response.data?.message);
+                                        })
                             }
-                            
+
                         }}
                     >Salvar e sair</Button>
 
@@ -403,60 +434,60 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 }}>
 
 
-                    <Button 
-                    style={{
-                        backgroundColor: "var(--color-conversion-12)",
-                        color: "var(--color-darkness-background)",
-                    }}
+                    <Button
+                        style={{
+                            backgroundColor: "var(--color-conversion-12)",
+                            color: "var(--color-darkness-background)",
+                        }}
                         onClick={() => {
-                            if(validate() == false){
+                            if (validate() == false) {
                                 return
                             }
-                            else{
+                            else {
                                 idtexttopic == 0 ?
-                                axios.post('/api/post/textTopic', {
-                                    idquickwin,
-                                    dstitle,
-                                    dsdescription,
-                                    dsh1,
-                                    dstextlink,
-                                    dstextstructure,
-                                    dssecundarykeywords,
-                                    dspeopleask,
-                                    dspagestructure,
-                                    dsrecommendations,
-                                    dscta,
-                                    dsfunnel
-                                }).then((e) => {
-                                    createSuccessHandle();
-                                })
-                                    .catch((e) => {
-                                        typeof e.response.data != "object"
-                                            ? errorHandle(e.response.data)
-                                            : errorHandle(e.response.data?.message);
+                                    axios.post('/api/post/textTopic', {
+                                        idquickwin,
+                                        dstitle,
+                                        dsdescription,
+                                        dsh1,
+                                        dstextlink,
+                                        dstextstructure,
+                                        dssecundarykeywords,
+                                        dspeopleask,
+                                        dspagestructure,
+                                        dsrecommendations,
+                                        dscta,
+                                        dsfunnel
+                                    }).then((e) => {
+                                        createSuccessHandle();
                                     })
-                                :
-                                axios.patch('/api/put/textTopic', {
-                                    idtexttopic,
-                                    dstitle,
-                                    dsdescription,
-                                    dsh1,
-                                    dstextlink,
-                                    dstextstructure,
-                                    dssecundarykeywords,
-                                    dspeopleask,
-                                    dspagestructure,
-                                    dsrecommendations,
-                                    dscta,
-                                    dsfunnel
-                                }).then((e) => {
-                                    updateSuccessHandle();
-                                })
-                                    .catch((e) => {
-                                        typeof e.response.data != "object"
-                                            ? errorHandle(e.response.data)
-                                            : errorHandle(e.response.data?.message);
+                                        .catch((e) => {
+                                            typeof e.response.data != "object"
+                                                ? errorHandle(e.response.data)
+                                                : errorHandle(e.response.data?.message);
+                                        })
+                                    :
+                                    axios.patch('/api/put/textTopic', {
+                                        idtexttopic,
+                                        dstitle,
+                                        dsdescription,
+                                        dsh1,
+                                        dstextlink,
+                                        dstextstructure,
+                                        dssecundarykeywords,
+                                        dspeopleask,
+                                        dspagestructure,
+                                        dsrecommendations,
+                                        dscta,
+                                        dsfunnel
+                                    }).then((e) => {
+                                        updateSuccessHandle();
                                     })
+                                        .catch((e) => {
+                                            typeof e.response.data != "object"
+                                                ? errorHandle(e.response.data)
+                                                : errorHandle(e.response.data?.message);
+                                        })
                             }
                         }}
                     >Salvar Pauta</Button>
