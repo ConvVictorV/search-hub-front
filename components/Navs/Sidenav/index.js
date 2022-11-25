@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
+import FunnelStepsIcon from '@rsuite/icons/FunnelSteps';
 function Sidenav() {
   const { Sidebar, Sidenav, Nav } = require("rsuite/esm/");
   const [expanded, setExpanded] = useState(
@@ -12,6 +12,7 @@ function Sidenav() {
   const [activeKey, setActiveKey] = useState(1);
   const { sidenavItems } = require("./items");
   const { settingsItems } = require("./settings");
+  const { qwItems } = require("./quickwins")
   const route = useRouter();
   return (
     <div style={{ zIndex: 3 }}>
@@ -22,6 +23,7 @@ function Sidenav() {
       >
         <Sidenav
           expanded={expanded == true || expanded == "true" ? true : false}
+          defaultOpenKeys={[11]}
           style={{
             height: "100vh",
             position: "fixed",
@@ -95,6 +97,31 @@ function Sidenav() {
                   ""
                 )
               )}
+              <Nav.Menu
+                placement="rightEnd"
+                title="Fluxo Quickwins"
+                icon={<FunnelStepsIcon />}
+                eventKey={11}
+                active={false}
+              >
+                
+                {qwItems.map((item, key) =>
+                  item.active ? (
+                    <Link href={item.url || "/"} passHref key={key}>
+                      <Nav.Item
+                        active={item.url === route.pathname}
+                        eventKey={"11-" + key}
+                        icon={<item.icon /> || false}
+                      >
+                        {item.name || ""}
+                      </Nav.Item>
+                    </Link>
+                  ) : (
+                    ""
+                  )
+                )}
+                
+              </Nav.Menu>
               <hr/>
               <Nav.Menu
                 placement="rightEnd"
