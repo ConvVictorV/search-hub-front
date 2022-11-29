@@ -31,7 +31,17 @@ function Demo(args) {
   };
   const getData = () => {
     const axios = require("axios");
-    axios.get("/api/get/customers").then(({ data }) => setTableData(data));
+    axios.get("/api/get/customers")
+    .then(({ data }) => data)
+    .then((tableData)=>{
+      axios.get('/api/get/select/squadsId').then(({ data }) => {
+        setTableData(tableData.map((row, index) => {
+          const { idsquad } = row
+          row.dsname = data.filter(squad => squad.value == idsquad)[0]?.label || ''
+          return row
+        }))
+      })
+    })
   };
   const updateData = () => {
     toast.push(
