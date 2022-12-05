@@ -389,7 +389,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         dspagestructure,
                                         dsrecommendations,
                                         dscta,
-                                        dsfunnel
+                                        dsfunnel,
+                                        user: session.data
                                     }).then((e) => {
                                         createSuccessHandle();
                                         closeModal(true);
@@ -412,7 +413,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         dspagestructure,
                                         dsrecommendations,
                                         dscta,
-                                        dsfunnel
+                                        dsfunnel,
+                                        user: session.data
                                     }).then((e) => {
                                         updateSuccessHandle();
                                         closeModal(true);

@@ -369,7 +369,8 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             dscontenttype,
                             dscontentcategory,
                             dspagetypes,
-                            dsclientes
+                            dsclientes,
+                            user: session.data
                         })
                         .then((e) => {
                             sucessHandle();

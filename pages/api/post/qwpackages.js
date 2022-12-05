@@ -11,7 +11,8 @@ export default function handler(req, res) {
       "nbtotalkeywords": req.body.length,
       "dsstatus": req.body[0].dsstatus,
       "dsresponsible": req.body[0].dsresponsible,
-      "dskey": req.body[0].fkIdqwpackage
+      "dskey": req.body[0].fkIdqwpackage,
+      user: req.body[0].user
   }    
     )
     .then(({ data }) => res.status(200).send(data))

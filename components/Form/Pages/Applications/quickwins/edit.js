@@ -244,7 +244,8 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                                     dsobjective,
                                     dsmonth,
                                     dsresponsible,
-                                    dsyear
+                                    dsyear,
+                                    user: session.data
                                 }).then((e) => {
                                     sucessHandle();
                                     closeModal(true);
