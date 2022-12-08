@@ -390,7 +390,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         dsrecommendations,
                                         dscta,
                                         dsfunnel,
-                                        user: session.data
+                                        
                                     }).then((e) => {
                                         createSuccessHandle();
                                         closeModal(true);
@@ -414,7 +414,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         dsrecommendations,
                                         dscta,
                                         dsfunnel,
-                                        user: session.data
+                                        
                                     }).then((e) => {
                                         updateSuccessHandle();
                                         closeModal(true);

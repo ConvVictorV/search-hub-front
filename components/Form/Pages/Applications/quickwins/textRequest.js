@@ -306,7 +306,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
                                         dsrecommendations,
                                         dscta,
                                         dsfunnel,
-                                        user: session.data
+                                        
                                     }).then((e) => {
                                         updateSuccessHandle();
                                         closeModal(true);
