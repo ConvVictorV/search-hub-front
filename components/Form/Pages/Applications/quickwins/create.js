@@ -462,7 +462,6 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         color: "var(--color-darkness-background)",
                     }}
                     onClick={() => {
-                        tableData[0].user = session.data
                         axios.post('/api/post/qwpackages', tableData)
                             .catch((e) => {
                                 typeof e.response.data != "object"
