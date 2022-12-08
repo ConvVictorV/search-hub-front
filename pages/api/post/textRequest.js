@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default function handler(req, res) {
   axios
-    .post(`http://localhost:3005/textsrequests/`, req.body)
+    .post(`https://search-hub-backend-nukcfjbsza-rj.a.run.app/textsrequests/`, req.body)
     .then(({ data }) => res.status(200).send(data))
     .catch((err) => {
         console.log(err)

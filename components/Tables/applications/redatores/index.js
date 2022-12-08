@@ -83,9 +83,11 @@ const ExpandCell = ({
           <div className="expandable-col"  style={{
             maxHeight:400
           }}>
+            {console.log(rowData)}
             <h5>Dados Pessoais</h5>
-            <strong>Área de Formação:</strong>{rowData.dseducation}<br></br>
-            <strong>Portfólio</strong> {rowData.dsportfolio}
+            <strong>Área de Formação: </strong>{rowData.dseducation}<br></br>
+            <strong>Portfólio: </strong> {rowData.dsportfolio}<br></br>
+            <strong>Telefone: </strong> {rowData.dsphone}
           </div>
           <div className="expandable-col" style={{
             maxHeight:400
@@ -578,16 +580,16 @@ const WordTable = ({
           <HeaderCell>E-mail</HeaderCell>
           <Cell dataKey="dsemail" />
         </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Data de entrada</HeaderCell>
-          <DateEntrance dataKey="dtcreate" />
+        <Column sortable width={150} flexGrow={1} fixed>
+          <HeaderCell>Categorias de conteúdo</HeaderCell>
+          <Cell dataKey="dscontentcategory" />
+        </Column>
+        <Column sortable width={150} flexGrow={1} fixed>
+          <HeaderCell>Tipos de conteúdo</HeaderCell>
+          <Cell dataKey="dscontenttype" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Clientes</HeaderCell>
-          <Cell dataKey="nmcustomers" />
-        </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Valor 50 palavras</HeaderCell>
+          <HeaderCell>Valor cobrado por 500 palavras</HeaderCell>
           <Cell dataKey="dsvalue" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">

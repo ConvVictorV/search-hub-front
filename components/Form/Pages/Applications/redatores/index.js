@@ -358,7 +358,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             dsname,
                             nbwordsavaiable,
                             dsworkavaiable,
-                            //dsphone,
+                            dsphone,
                             dsemail,
                             dseducation,
                             dsportfolio,
