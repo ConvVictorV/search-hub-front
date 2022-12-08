@@ -16,6 +16,7 @@ import {
   Tooltip,
   useToaster,
   Whisper,
+  Button
 } from "rsuite";
 import Select from "../../../../../components/Form/Components/Select";
 import DeleteForm from "../../../../../components/Form/Pages/Applications/quickwins/delete";
@@ -23,6 +24,7 @@ import ExportForm from "../../../../../components/Form/Pages/Applications/quickw
 import ImportForm from "../../../../../components/Form/Pages/Applications/quickwins/import";
 import CreateForm from "../../../../../components/Form/Pages/Applications/quickwins/create";
 import CreateTextTopic from "../../../../../components/Form/Pages/Applications/quickwins/createTextTopic";
+import CreateTextRequest from "../../../../../components/Form/Pages/Applications/quickwins/textRequest";
 import EditForm from "../../../../../components/Form/Pages/Applications/quickwins/edit";
 import TableWords from "../../../../../components/Tables/applications/quickwins";
 import FullWidthLayout from "../../../../../Layouts/fullwidth";
@@ -59,9 +61,11 @@ function Demo(args) {
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [openCreateTextTopicForm, setOpenCreateTextTopicForm] = useState(false);
+  const [openTextRequestForm, setOpenTextRequestForm] = useState(false)
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const [rowData, setRowData] = useState();
+  const [showButton, setShowButton] = useState(false)
   const toast = useToaster();
 
   const handleClose = () => {
@@ -71,9 +75,10 @@ function Demo(args) {
     setOpenDeleteForm(false);
     setOpenCreateForm(false);
     setOpenCreateTextTopicForm(false);
+    setOpenTextRequestForm(false)
     updateData();
   };
-  
+
   const getData = () => {
     const axios = require("axios");
     setTableData([])
@@ -86,9 +91,9 @@ function Demo(args) {
             tableD = tableD.concat(data)
             setTableData(tableD);
             getQuickwins()
-          }else {
+          } else {
             axios.get('/api/get/select/customersId').then(({ data }) => {
-              setTableData(tableD.map((row,index) => {
+              setTableData(tableD.map((row, index) => {
                 const { idcustomer } = row
                 row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
                 return row
@@ -147,9 +152,8 @@ function Demo(args) {
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
           <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
-          <Dropdown.Item disabled={checkedKeys.length == 0} eventKey={2}>{`Exportar ${
-            checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
-          }`}</Dropdown.Item>
+          <Dropdown.Item disabled={checkedKeys.length == 0} eventKey={2}>{`Exportar ${checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
+            }`}</Dropdown.Item>
           {checkedKeys.length != 0 ? (
             <Dropdown.Item
               disabled
@@ -175,6 +179,23 @@ function Demo(args) {
       >
         <div></div>
         <ButtonToolbar>
+
+          {tableData.filter(
+            (row) => checkedKeys.indexOf(row.id) > -1
+          ).map(row => {
+            return row.dsstatus?.indexOf('Planejamento') > -1
+          }).includes(false) == false && checkedKeys.length > 0 && (<Button
+            onClick={() => { setOpenTextRequestForm(true) }}
+            appearance={"ghost"} style={
+              {
+                backgroundColor: "transparent",
+                color: "var(--color-conversion-1)",
+                borderColor: "var(--color-conversion-1)"
+              }
+            }>
+            Pedido de Produção
+          </Button>)}
+
           <Whisper
             trigger="hover"
             placement="top"
@@ -299,7 +320,7 @@ function Demo(args) {
         return flatRow.includes(search.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ""));
       });
     }
-    if(filterData.length == 0) return []
+    if (filterData.length == 0) return []
     return filteredData;
   }
 
@@ -393,6 +414,23 @@ function Demo(args) {
           </Modal.Header>
           <Modal.Body>
             <CreateTextTopic rowData={rowData} closeModal={handleClose} />
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          open={openTextRequestForm}
+          onClose={handleClose}
+          size="md"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Planejamento de Pauta</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <CreateTextRequest rowData={tableData.filter(
+              (qw) => checkedKeys.indexOf(qw.id) > -1
+            )} closeModal={handleClose} />
           </Modal.Body>
         </Modal>
         {/*         
