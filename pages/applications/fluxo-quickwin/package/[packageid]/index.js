@@ -180,11 +180,12 @@ function Demo(args) {
         <div></div>
         <ButtonToolbar>
 
-          {tableData.filter(
-            (row) => checkedKeys.indexOf(row.id) > -1
-          ).map(row => {
-            return row.dsstatus?.indexOf('Planejamento') > -1
-          }).includes(false) == false && checkedKeys.length > 0 && (<Button
+           <Button
+            disabled={tableData.filter(
+              (row) => checkedKeys.indexOf(row.id) > -1
+            ).map(row => {
+              return row.dsstatus?.indexOf('Planejamento') > -1
+            }).includes(false) != false}
             onClick={() => { setOpenTextRequestForm(true) }}
             appearance={"ghost"} style={
               {
@@ -194,7 +195,7 @@ function Demo(args) {
               }
             }>
             Pedido de Produção
-          </Button>)}
+          </Button>
 
           <Whisper
             trigger="hover"
