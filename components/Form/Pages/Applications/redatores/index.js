@@ -55,8 +55,7 @@ const model = Schema.Model({
     dsemail : StringType().isRequired('O campo não pode estar vazio'),
     dseducation : StringType(),
     dsportfolio : StringType().isURL(),
-    nbwordsavaiable : NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido.").max(150,"Digite um valor até 150."),
-    dsworkavaiable :StringType().isRequired('O campo não pode estar vazio'),
+    nbwordsavaiable : NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido."),
     dscontenttype :StringType().isRequired('O campo não pode estar vazio'),
     dscontentcategory:StringType().isRequired('O campo não pode estar vazio'),
     dspagetypes :StringType().isRequired('O campo não pode estar vazio'),
@@ -96,7 +95,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     
     const [dsname, setDsname] = useState('');
     const [nbwordsavaiable, setNbwordsavaiable] = useState('');
-    const [dsworkavaiable, setDsworkavaiable] = useState('Select');
+    const [dsworkavaiable, setDsworkavaiable] = useState([]);
     const [dsphone, setDsphone] = useState('');
     const [dsemail, setDsemail] = useState('');
     const [dseducation, setDseducation] = useState('');
@@ -104,12 +103,12 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const [dtcreate, setDtcreate] = useState('');
     const [dsvalue, setDsvalue] = useState('');
 
-    const [dsstatus, setDsstatus] = useState('Select');
-    const [dspaymenttype, setDspaymenttype] = useState('Select');
-    const [dscontenttype, setDscontenttype] = useState('Select');
-    const [dscontentcategory, setDscontentcategory] = useState('Select');
-    const [dspagetypes, setDspagetypes] = useState('Select');
-    const [dsclientes, setDsclientes] = useState('Select');
+    const [dsstatus, setDsstatus] = useState('');
+    const [dspaymenttype, setDspaymenttype] = useState('');
+    const [dscontenttype, setDscontenttype] = useState([]);
+    const [dscontentcategory, setDscontentcategory] = useState([]);
+    const [dspagetypes, setDspagetypes] = useState([]);
+    const [dsclientes, setDsclientes] = useState([]);
     
     const [dsdensity, setDsdensity] = useState('');
     const [dsmonth, setDsmonth] = useState('')
@@ -319,7 +318,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     alignItems={"initial"}
                 >
                     <Form.Group controlId="dsvalue" ref={forwardRef}>
-                        <Form.ControlLabel>Valor cobrado por 50 palavras</Form.ControlLabel>
+                        <Form.ControlLabel>Valor cobrado por 500 palavras</Form.ControlLabel>
                         <Form.Control name="dsvalue" onChange={setDsvalue} value={dsvalue} />
                     </Form.Group>
 
@@ -354,6 +353,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         color: "var(--color-darkness-background)",
                     }}
                     onClick={() => {
+                        if(!formRef.current.check()) return
                         axios.post('/api/post/writers', {
                             dsname,
                             nbwordsavaiable,

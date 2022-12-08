@@ -93,7 +93,7 @@ const ExpandCell = ({
             maxHeight:400
           }}>
             <h5>Tipos de textos</h5>
-            <strong>Categorias:</strong>
+            <strong>Categorias: </strong>
             <ul>
               {rowData.dscontentcategory == null
                 ? <li key={1}>Campo vazio</li>
@@ -103,7 +103,7 @@ const ExpandCell = ({
                         row && <li key={index}>{row?.trim() || ""}</li>
                     )}
             </ul>
-            <strong>Tipos de Texto:</strong>
+            <strong>Tipos de Texto: </strong>
             <ul>
               {rowData.dscontenttype == null
                 ? <li key={1}>Tipos de Conteúdo</li>
@@ -113,7 +113,7 @@ const ExpandCell = ({
                         row && <li key={index}>{row?.trim() || ""}</li>
                     )}
             </ul>
-            <strong>Tipos de Página:</strong>
+            <strong>Tipos de Página: </strong>
             <ul>
               {rowData.dspagetypes == null
                 ? <li key={1}>Tipos de Páginas</li>
@@ -128,8 +128,8 @@ const ExpandCell = ({
             maxHeight:400
           }}>
             <h5>Dados Pagamento</h5>
-            <strong>Disponibilidade de Trabalho:</strong>{rowData.dsworkavaiable}<br></br>
-            <strong>Tipo de Pagamento</strong> {rowData.dspaymenttype}
+            <strong>Disponibilidade de Trabalho: </strong>{rowData.dsworkavaiable}<br></br>
+            <strong>Tipo de Pagamento: </strong> {rowData.dspaymenttype}
           </div>
         </div>
       </div>
