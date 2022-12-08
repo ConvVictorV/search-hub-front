@@ -116,12 +116,12 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
     );
     const messageSucess = (
         <Message showIcon type={"success"} duration={5000}>
-            Pauta criada!
+            Dados Enviados!
         </Message>
     );
     const messageUpdateSucess = (
         <Message showIcon type={"success"} duration={5000}>
-            Pauta editada!
+            Dados Enviados!
         </Message>
     );
     const messageError = (
