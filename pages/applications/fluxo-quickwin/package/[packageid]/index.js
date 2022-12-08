@@ -180,8 +180,8 @@ function Demo(args) {
         <div></div>
         <ButtonToolbar>
 
-           <Button
-            disabled={tableData.filter(
+          <Button
+            disabled={checkedKeys.length == 0 || tableData.filter(
               (row) => checkedKeys.indexOf(row.id) > -1
             ).map(row => {
               return row.dsstatus?.indexOf('Planejamento') > -1
@@ -421,12 +421,12 @@ function Demo(args) {
         <Modal
           open={openTextRequestForm}
           onClose={handleClose}
-          size="md"
+          size="full"
           keyboard={false}
           backdrop={"static"}
         >
           <Modal.Header>
-            <Modal.Title>Planejamento de Pauta</Modal.Title>
+            <Modal.Title>Pedido de produção</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <CreateTextRequest rowData={tableData.filter(

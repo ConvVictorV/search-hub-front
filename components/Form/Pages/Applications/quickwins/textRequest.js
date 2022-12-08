@@ -17,14 +17,15 @@ import {
     DatePicker
 } from "rsuite";
 import Select from "../../../Components/Select";
-import Overview from "../../../../Tables/applications/quickwins/overview"
+import SelectWriter from "../../../../Tables/applications/redatores/select"
 const { StringType, NumberType } = Schema.Types;
 // eslint-disable-next-line react/display-name
 const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
 
-function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest }) {
+function FormComponent({ data, rowData, closeModal, footer, sendText, tableData, ...rest }) {
     const dataCustomer = rowData[0]?.nmcustomer
+    const dataIdCustomer = rowData[0]?.idcustomer
     const dataMonth = rowData[0]?.dsmonth
     const dataYear = rowData[0]?.dsyear
     const dataContent = rowData[0]?.dscontent
@@ -57,16 +58,20 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
     const [dscta, setDscta] = useState(rowData.textTopic?.dscta || '')
     const [dsfunnel, setDsfunnel] = useState(rowData.textTopic?.dsfunnel || '')
     const [formError, setFormError] = useState({});
+
+    const [writers, setWriters] = useState([])
+    const [writer,setWriter] = useState({})
+    
     const model = Schema.Model({
-        dstitle: StringType().isRequired('O campo não pode estar vazio.'),
-        dsdescription: StringType().isRequired('O campo não pode estar vazio.'),
-        dstextlink: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida').addRule((value, data) => {
-            return value.indexOf('docs') > - 1
-        }, "A url precisa ser um docs."),
-        dstextstructure: StringType(),
-        dssecundarykeywords: StringType(),
-        dspeopleask: StringType().isRequired('O campo não pode estar vazio.'),
-        dsrecommendations: StringType().isRequired('O campo não pode estar vazio.'),
+        // dstitle: StringType().isRequired('O campo não pode estar vazio.'),
+        // dsdescription: StringType().isRequired('O campo não pode estar vazio.'),
+        // dstextlink: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida').addRule((value, data) => {
+        //     return value.indexOf('docs') > - 1
+        // }, "A url precisa ser um docs."),
+        // dstextstructure: StringType(),
+        // dssecundarykeywords: StringType(),
+        // dspeopleask: StringType().isRequired('O campo não pode estar vazio.'),
+        // dsrecommendations: StringType().isRequired('O campo não pode estar vazio.'),
     });
     const [formValue, setFormValue] = useState({
         dstitle,
@@ -81,18 +86,28 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
         dsfunnel,
     });
 
-    const [tableData, setTableData] = useState([]);
 
     const [refresh, setRefresh] = useState(0);
 
     useEffect(() => {
-        axios.get('/api/get/select/customersId').then(({ data }) => {
-            data.filter((row, index) => {
-                const idcustomer = row.value
-                rowData.idcustomer == idcustomer && setCustomer(data[index].label)
+        let pageWriter = 0
+        let writersD = []
+        let nextPage = true
+
+        getWriters()
+
+        function getWriters() {
+            pageWriter = pageWriter + 1
+            axios.get('/api/get/writers?page=' + pageWriter)
+            .then(({ data }) => {
+                writersD = writersD.concat(data)
+                setWriters(writersD)
+                data.length != 0 && getWriters()
             })
-        })
-    }, [tableData])
+           
+        }
+        
+    }, [])
 
     const messageLoading = (
         <Message showIcon type={"info"} duration={0}>
@@ -147,15 +162,9 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
 
     function validate() {
         const requiredFields = [
-            dspagestructure,
-            dscta,
-            dsfunnel,
         ]
 
         const requiredMessages = [
-            'Selecione um tipo de estrutura para a página',
-            'Selecione um tipo de cta',
-            'Selecione uma etapa do funil',
         ]
 
         const erroredFields = requiredFields.map((field, index) => {
@@ -187,9 +196,10 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             onChange={setFormValue}
             formValue={formValue}
             onCheck={setFormError}
-            onFocus={() => { formRef.current.check(); }}
-            onBlur={() => { formRef.current.check(); }}
-            model={model}>
+            // onFocus={() => { formRef.current?.check(); }}
+            // onBlur={() => { formRef.current?.check(); }}
+            model={model}
+        >
 
             <Panel bordered shaded header={"Resumo do pedido"} style={{
                 width: "97%",
@@ -208,27 +218,28 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 padding: "20px 0px",
                 marginTop: "20px"
             }}>
-                <Form.Group controlId="dstitle">
+                <Form.Group controlId="dsvalue">
                     <Form.ControlLabel>Valor Total do pedido</Form.ControlLabel>
-                    <Form.Control name="dstitle" onChange={setDsTotalValue} value={dsTotalValue} />
+                    <Form.Control name="dsvalue" onChange={setDsTotalValue} value={dsTotalValue} />
                 </Form.Group>
                 <Form.Group controlId="datePicker">
                     <Form.ControlLabel>Prazo de entrega final do pedido</Form.ControlLabel>
                     <Form.Control name="datePicker" accepter={DatePicker} onChange={(value) => {
-                        value ? setDsFinalDate(value.toLocaleDateString()) : setDsFinalDate(false)
+                        value ? setDsFinalDate(value.toISOString()) : setDsFinalDate(false)
                     }} />
                 </Form.Group>
                 <Form.Group controlId="dsobs">
-                <Form.ControlLabel>Observações para o redator</Form.ControlLabel>
+                    <Form.ControlLabel>Observações para o redator</Form.ControlLabel>
                     <Form.Control rows={3} name="dsobs" onChange={setDsObservations} value={dsObservations} accepter={Textarea} placeholder={"Observações"} />
                 </Form.Group>
             </Panel>
-            <Panel bordered header={"Redatores"} shaded style={{
+            <Panel bordered shaded style={{
                 width: "97%",
                 padding: "20px 0px",
                 marginTop: "20px"
             }}>
-                
+                <h5>Redator: <i style={{fontWeight:"normal"}}>{writer.dsname || "Nenhum redator selecionado, clique na linha para selecionar um redator"}</i></h5><br></br>
+                <SelectWriter setWriter={setWriter} tableData={writers} />
             </Panel>
 
             <Panel bordered shaded style={{
@@ -257,20 +268,22 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                             if (validate() == false) {
                                 return
                             } else {
+
                                 idtexttopic == 0 ?
-                                    axios.post('/api/post/textTopic', {
-                                        idquickwin,
-                                        dstitle,
-                                        dsdescription,
-                                        dstextlink,
-                                        dstextstructure,
-                                        dssecundarykeywords,
-                                        dspeopleask,
-                                        dspagestructure,
-                                        dsrecommendations,
-                                        dscta,
-                                        dsfunnel,
-                                        user: session.data
+                                    axios.post('/api/post/textRequest', {
+                                        dsvalue: dsTotalValue,
+                                        dtdeadline: dsFinalDate,
+                                        fkwriter: writer.idwriter,
+                                        dsstatus: "Pedido aguardando aceite",
+                                        dtcreate: new Date().toISOString(),
+                                        dsorientation: dsObservations,
+                                        nbtotalkeywords: dataTotalWords,
+                                        nbtotalqws: dataTotalQuickwins,
+                                        dsresponsible: dsresponsible,
+                                        dscontenttype: dataContent,
+                                        dsmonth: dataMonth,
+                                        idcustomer: dataIdCustomer,
+                                        fkidquickwin: rowData.map(row=>row.id)
                                     }).then((e) => {
                                         createSuccessHandle();
                                         closeModal(true);
