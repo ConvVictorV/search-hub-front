@@ -194,8 +194,6 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             onChange={setFormValue}
             formValue={formValue}
             onCheck={setFormError}
-            onFocus={() => { formRef.current.check(); }}
-            onBlur={() => { formRef.current.check(); }}
             model={model}>
             <Panel bordered shaded header={"Quickwin"} style={{
                 width: "97%",
