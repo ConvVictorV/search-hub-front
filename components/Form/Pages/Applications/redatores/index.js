@@ -68,28 +68,27 @@ const model = Schema.Model({
 function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest }) {
     const idwriter = rowData?.idwriter
 
-
     const formRef = React.useRef();
     const toast = useToaster();
     const [formError, setFormError] = useState({});
 
     
-    const [dsname, setDsname] = useState(rowData.dsname || '');
-    const [nbwordsavaiable, setNbwordsavaiable] = useState(rowData.nbwordsavaiable || '');
-    const [dsworkavaiable, setDsworkavaiable] = useState(rowData.dsworkavaiable || []);
-    const [dsphone, setDsphone] = useState(rowData.dsphone || '');
-    const [dsemail, setDsemail] = useState(rowData.dsemail || '');
-    const [dseducation, setDseducation] = useState(rowData.dseducation || '');
-    const [dsportfolio, setDsportfolio] = useState(rowData.dsportfolio || '');
-    const [dtcreate, setDtcreate] = useState(rowData.dtcreate || '');
-    const [dsvalue, setDsvalue] = useState(rowData.dsvalue || '');
+    const [dsname, setDsname] = useState(rowData?.dsname || '');
+    const [nbwordsavaiable, setNbwordsavaiable] = useState(rowData?.nbwordsavaiable || '');
+    const [dsworkavaiable, setDsworkavaiable] = useState(rowData?.dsworkavaiable || []);
+    const [dsphone, setDsphone] = useState(rowData?.dsphone || '');
+    const [dsemail, setDsemail] = useState(rowData?.dsemail || '');
+    const [dseducation, setDseducation] = useState(rowData?.dseducation || '');
+    const [dsportfolio, setDsportfolio] = useState(rowData?.dsportfolio || '');
+    const [dtcreate, setDtcreate] = useState(rowData?.dtcreate || '');
+    const [dsvalue, setDsvalue] = useState(rowData?.dsvalue || '');
 
-    const [dsstatus, setDsstatus] = useState(rowData.dsstatus || '');
-    const [dspaymenttype, setDspaymenttype] = useState(rowData.dspaymenttype || '');
-    const [dscontenttype, setDscontenttype] = useState(rowData.dscontenttype || []);
-    const [dscontentcategory, setDscontentcategory] = useState(rowData.dscontentcategory || []);
-    const [dspagetypes, setDspagetypes] = useState(rowData.dspagetypes || []);
-    const [dsclientes, setDsclientes] = useState(rowData.dsclientes || []);
+    const [dsstatus, setDsstatus] = useState(rowData?.dsstatus || '');
+    const [dspaymenttype, setDspaymenttype] = useState(rowData?.dspaymenttype || '');
+    const [dscontenttype, setDscontenttype] = useState(rowData?.dscontenttype || []);
+    const [dscontentcategory, setDscontentcategory] = useState(rowData?.dscontentcategory || []);
+    const [dspagetypes, setDspagetypes] = useState(rowData?.dspagetypes || []);
+    const [dsclientes, setDsclientes] = useState(rowData?.dsclientes || []);
 
     const [formValue, setFormValue] = useState({
         dsname,
