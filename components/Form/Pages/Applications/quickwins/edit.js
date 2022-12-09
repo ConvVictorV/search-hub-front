@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState, useRef } from "react";
 import {
     Button,
     ButtonToolbar,
@@ -11,11 +11,12 @@ import {
     Stack,
     Input,
     ButtonGroup,
-    Divider
+    Divider,
+    Schema
 } from "rsuite";
 import Select from "../../../Components/Select";
 import Overview from "../../../../Tables/applications/quickwins/overview"
-
+const { StringType, NumberType } = Schema.Types;
 // eslint-disable-next-line react/display-name
 const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
@@ -42,6 +43,27 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
     const [dsmonth, setDsmonth] = useState(rowData.dsmonth)
     const [dsyear, setDsyear] = useState(rowData.dsyear)
     
+    const model = Schema.Model({
+        dskeyword: StringType().isRequired('O campo não pode estar vazio.'),
+        dsvolume: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido."),
+        dsurl: StringType().isURL('Digite uma url válida'),
+        dsposition: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido.").max(150, "Digite um valor até 150."),
+        dsdensity: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido."),
+        dsyear: NumberType('Digite um número válido.').min(2017, "Digite um valor acima de 2017."),
+        dsresponsible: StringType().isRequired('O campo não pode estar vazio.'),
+    });
+    const [formError, setFormError] = useState({});
+    const formRef = useRef();
+    const [formValue, setFormValue] = useState({
+        dskeyword,
+        dsvolume,
+        dsurl,
+        dsposition,
+        dsdensity,
+        dsyear,
+        dsresponsible
+    });
+
     axios.get('/api/get/select/customersId').then(({ data }) => {
         data.filter((row, index) => {
             const idcustomer = row.value
@@ -100,7 +122,12 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
     };
 
     return (
-        <Form fluid layout="inline">
+        <Form fluid layout="inline" 
+        ref={formRef}
+        onChange={setFormValue}
+        formValue={formValue}
+        onCheck={setFormError}
+        model={model}>
             <Stack
                 direction="row"
                 alignItems="flex-start"
@@ -126,29 +153,34 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                 <Stack
                     direction="column"
                     spacing="10px"
-                    alignItems="flex-end"
+                    alignItems={"initial"}
                 >
                     <Form.Group controlId="dsterm">
                         <Form.ControlLabel>Analista Responsável</Form.ControlLabel>
                         <Form.Control name="dsterm" onChange={setDsresponsible} value={dsresponsible} />
                     </Form.Group>
-                    <Form.Group controlId="dsterm">
+                    <Form.Group controlId="dskeyword" ref={forwardRef}>
                         <Form.ControlLabel>Termo Principal</Form.ControlLabel>
-                        <Form.Control name="dsterm" onChange={setDskeyword} value={dskeyword} />
+                        <Form.Control name="dskeyword" onChange={setDskeyword} value={dskeyword} />
                     </Form.Group>
-                    <Form.Group controlId="dsname">
+                    <Form.Group controlId="dsvolume" ref={forwardRef}>
                         <Form.ControlLabel>Volume de busca</Form.ControlLabel>
-                        <Form.Control name="dsname" onChange={setDsvolume} value={dsvolume} />
+                        <Form.Control name="dsvolume" onChange={setDsvolume} value={dsvolume} />
                     </Form.Group>
-                    <Form.Group controlId="dsposition">
+                    <Form.Group controlId="dsposition" ref={forwardRef}>
                         <Form.ControlLabel>Posição inicial</Form.ControlLabel>
                         <Form.Control name="dsposition" onChange={setDsposition} value={dsposition} />
                     </Form.Group>
-                    <Form.Group controlId="dsdensity">
+                    <Form.Group controlId="dsdensity" ref={forwardRef}>
                         <Form.ControlLabel>Densidade de palavras</Form.ControlLabel>
                         <Form.Control name="dsdensity" onChange={setDsdensity} value={dsdensity} />
                     </Form.Group>
-
+                    <Form.Group controlId="dsobjective" ref={forwardRef} style={{
+                        width: 356
+                    }}>
+                        <Form.ControlLabel>Objetivo da otimização</Form.ControlLabel>
+                        <Textarea name="dsobjective" onChange={setDsobjective} value={dsobjective}></Textarea>
+                    </Form.Group>
                 </Stack>
 
                 <Stack
@@ -159,59 +191,43 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                     }}
                     alignItems={"initial"}
                 >
-                    <Form.Group controlId="dsurl">
+                    <Form.Group controlId="dsurl" ref={forwardRef}>
                         <Form.ControlLabel>Url da página</Form.ControlLabel>
                         <Form.Control name="dsurl" onChange={setDsurl} value={dsurl} />
                     </Form.Group>
-                    <Form.Group style={{
-                        width: "90%"
-                    }}>
-                    <Form.ControlLabel>Tipo de otimização:</Form.ControlLabel>
                     <Select
                         fetch={"/api/get/quickwinsType"}
-                        placeholder={dstype}
+                        placeholder={dstype || "Tipo de otimização"}
                         onSelect={setDstype}
                         style={{
-                            width: "100%",
+                            width: "94%",
+                            margin: "24px 0px"
                         }}
                     />
-                    </Form.Group>
-                    <Form.Group style={{
-                        width: "90%"
-                    }}>
-                    <Form.ControlLabel>Tipo de conteúdo</Form.ControlLabel>
+
                     <Select
                         fetch={"/api/get/quickwinsTypeContent"}
-                        placeholder={dscontent}
+                        placeholder={dscontent || "Tipo de conteúdo"}
                         onSelect={setDscontent}
                         style={{
-                            width: "100%",
+                            width: "94%",
+                            margin: "10px 0px"
+
                         }}
                     />
-                    </Form.Group>
-                    
                 </Stack>
             </Stack>
-            <Form.Group controlId="dsobjective" style={{
-                width: '96%'
-            }}>
-                <Form.ControlLabel>Description otimizada</Form.ControlLabel>
-                <Textarea name="dsobjective" onChange={setDsobjective} value={dsobjective}></Textarea>
-            </Form.Group>
-
-            <Form.Group controlId="dsobjective" style={{
-                width: '96%'
-            }}>
-                <Form.ControlLabel>Status:</Form.ControlLabel>
-                <Select
-                    fetch={"/api/get/quickWinStatus"}
-                    placeholder={dsstatus}
-                    onSelect={setDsstatus}
-                    style={{
-                        width: 250
-                    }}
-                />
-            </Form.Group>
+            <Form.ControlLabel style={{
+                lineHeight: "40px"
+            }}>Status do QW</Form.ControlLabel>
+            <Select
+                fetch={"/api/get/quickWinStatus"}
+                placeholder={dsstatus}
+                onSelect={setDsstatus}
+                style={{
+                    width: 200
+                }}
+            />
             <Stack
                 direction="row"
                 justifyContent="end"
@@ -229,6 +245,51 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
 
                     <Button
                         onClick={() => {
+                            setFormValue({
+                                dskeyword,
+                                dsvolume,
+                                dsurl,
+                                dsposition,
+                                dsdensity,
+                                dsyear,
+                                dsresponsible
+                            })
+                            formRef.current.check()
+
+                            const requiredFields = [
+                                customer,
+                                dstype,
+                                dscontent,
+                                dsstatus,
+                                dsmonth,
+                            ]
+
+                            const requiredMessages = [
+                                'Selecione um cliente',
+                                'Selecione um tipo de otimização',
+                                'Selecione um tipo de conteúdo',
+                                'Selecione um status',
+                                'Selecione um mês de referência'
+                            ]
+
+                            const erroredFields = requiredFields.map((field, index) => {
+                                if (field == undefined || field?.length == 0) {
+                                    return index
+                                } else {
+                                    return false
+                                }
+                            }).filter(row => row !== false)
+
+                            if (erroredFields?.length) {
+                                toast.push(<Message showIcon type={"error"}>
+                                    {requiredMessages[erroredFields[0]]}
+                                </Message>, { placement: "bottomCenter" });
+
+                                return
+                            }
+                            if (!formRef.current.check()) {
+                                return;
+                            }
                             axios.post('/api/put/quickwins',
                                 {
                                     id: rowData.id,
