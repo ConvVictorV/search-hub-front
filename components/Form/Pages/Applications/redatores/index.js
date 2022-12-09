@@ -75,7 +75,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
     
     const [dsname, setDsname] = useState(rowData?.dsname || '');
     const [nbwordsavaiable, setNbwordsavaiable] = useState(rowData?.nbwordsavaiable || '');
-    const [dsworkavaiable, setDsworkavaiable] = useState(rowData?.dsworkavaiable || []);
+    const [dsworkavaiable, setDsworkavaiable] = useState(rowData?.dsworkavaiable);
     const [dsphone, setDsphone] = useState(rowData?.dsphone || '');
     const [dsemail, setDsemail] = useState(rowData?.dsemail || '');
     const [dseducation, setDseducation] = useState(rowData?.dseducation || '');
@@ -197,7 +197,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                     <Form.ControlLabel style={{
                         lineHeight: "12px"
                     }}>Dedicação</Form.ControlLabel>
-            <       Select
+                    <Select
                         fetch={"/api/get/writer/workavaiable"}
                         placeholder={dsworkavaiable || "Selecione"}
                         onSelect={setDsworkavaiable}
