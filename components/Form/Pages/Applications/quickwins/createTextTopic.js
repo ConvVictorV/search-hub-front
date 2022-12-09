@@ -296,14 +296,14 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             </Panel>
 
 
-            <Panel bordered shaded header={"Quais perguntas o texto deve responder?"} style={{
+            <Panel bordered shaded header={"O que as pessoas perguntam sobre esse tema?"} style={{
                 width: "97%",
                 padding: "20px 0px",
                 marginTop: "20px"
             }}>
                 <p style={{
                     paddingBottom: 20
-                }}>Caso você não tenha uma sugestão de heading tags insira as principais dúvidas para ajudar o redator a entender as dúvidas da persona</p>
+                }}>Verifique o campo People Also Asked disponível na SERP do Google para complementar a pauta</p>
                 <Form.Group controlId="dspeopleask">
                     <Form.Control rows={3} name="dspeopleask" onChange={setDspeopleask} value={dspeopleask} accepter={Textarea} placeholder={"As pessoas perguntam"} />
                 </Form.Group>
@@ -334,11 +334,14 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
 
                 </Form.Group>
             </Panel>
-            <Panel bordered shaded header={"Qual é o formato do conteúdo para essa página?"} style={{
+            <Panel bordered shaded header={"Qual é o CTA (Call to Action)?"} style={{
                 width: "97%",
                 padding: "20px 0px",
                 marginTop: "20px"
             }}>
+                <p style={{
+                    paddingBottom: 20
+                }}>O que esperamos que o leitor faça depois de ler o texto?</p>
                 <Select
                     fetch={"/api/get/textTopic/cta"}
                     placeholder={dscta || "CTA"}
