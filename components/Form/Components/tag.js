@@ -13,6 +13,7 @@ const Tag = (props) => {
     if (props.fetch == undefined) return <></>;
     axios.get(props.fetch).then(({ data }) => {
       setCustomers(data);
+      updateData()
     });
   }, []);
 

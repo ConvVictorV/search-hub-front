@@ -19,9 +19,10 @@ import {
   TagGroup,
   useToaster,
   Whisper,
-  Badge
+  Badge,
+  Tooltip
 } from "rsuite";
-
+import EditIcon from "@rsuite/icons/Edit";
 import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
 import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
 import PlusIcon from "@rsuite/icons/Plus";
@@ -251,6 +252,8 @@ const WordTable = ({
   filterActive,
   setFilterData,
   filterData,
+  setOpenEditForm,
+  setRowData,
 }) => {
   const [loading, setLoading] = React.useState(true);
   const [limit, setLimit] = React.useState(12);
@@ -450,7 +453,38 @@ const WordTable = ({
     const nextTags = filterData.filter((item) => item !== tag);
     setFilterData(nextTags);
   };
-
+  const ActionCell = ({
+    setOpenEditForm,
+    rowData,
+    dataKey,
+    setRowData,
+    ...props
+  }) => {
+    function openEdit() {
+      setRowData(rowData);
+      setOpenEditForm(true);
+    }
+    return (
+      <Cell {...props} className="link-group">
+        <div style={{ marginTop: "-8px", display: "flex", justifyContent: "space-between" }}>
+          <Whisper
+            trigger="hover"
+            placement="top"
+            speaker={<Tooltip>Editar QuickWin</Tooltip>}
+          >
+            <IconButton
+              appearance="primary"
+              style={{
+                background: "var(--color-conversion-1)",
+              }}
+              onClick={openEdit}
+              icon={<EditIcon />}
+            />
+          </Whisper>
+        </div>
+      </Cell>
+    );
+  };
   const renderFilters = () => {
     return (
       <TagGroup>
@@ -599,6 +633,14 @@ const WordTable = ({
         <Column sortable width={250} flexGrow={1} align="center">
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="status" />
+        </Column>
+        <Column width={100} verticalAlign={"top"} align="center">
+          <HeaderCell>...</HeaderCell>
+          <ActionCell
+            setOpenEditForm={setOpenEditForm}
+            setRowData={setRowData}
+            dataKey="idwriter"
+          />
         </Column>
       </Table>
       <div style={{ padding: 20 }}>

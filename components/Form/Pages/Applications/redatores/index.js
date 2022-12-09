@@ -44,7 +44,7 @@ const dataDsclientes = ['Posts de blog','Textos jornalísticos','Branded content
 
 
 
-const { StringType, NumberType } = Schema.Types;
+const { StringType, NumberType, ArrayType } = Schema.Types;
 
 
 // eslint-disable-next-line react/display-name
@@ -56,24 +56,41 @@ const model = Schema.Model({
     dseducation : StringType(),
     dsportfolio : StringType().isURL(),
     nbwordsavaiable : NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido."),
-    dscontenttype :StringType().isRequired('O campo não pode estar vazio'),
-    dscontentcategory:StringType().isRequired('O campo não pode estar vazio'),
-    dspagetypes :StringType().isRequired('O campo não pode estar vazio'),
-    dsclientes :StringType().isRequired('O campo não pode estar vazio'),
-    dspaymenttype :StringType().isRequired('O campo não pode estar vazio'),
-    dsvalue : StringType().isRequired('O campo não pode estar vazio'),
-    dsstatus :StringType().isRequired('O campo não pode estar vazio'),
+    dscontenttype: ArrayType().isRequired('O campo não pode estar vazio'),
+    dscontentcategory: ArrayType().isRequired('O campo não pode estar vazio'),
+    dspagetypes: ArrayType().isRequired('O campo não pode estar vazio'),
+    dsclientes: ArrayType().isRequired('O campo não pode estar vazio'),
+    dspaymenttype: StringType().isRequired('O campo não pode estar vazio'),
+    dsvalue: StringType().isRequired('O campo não pode estar vazio'),
+    dsstatus:StringType().isRequired('O campo não pode estar vazio'),
 });
 
-function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
+function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest }) {
+    const idwriter = rowData?.idwriter
+
+
     const formRef = React.useRef();
-    const [customer, setCustomer] = useState('');
-    const [exportData, setExportData] = useState(data || []);
-    const [files, setFiles] = useState([]);
-    const session = useSession();
     const toast = useToaster();
-    const [rowData, setRowData] = useState([]);
     const [formError, setFormError] = useState({});
+
+    
+    const [dsname, setDsname] = useState(rowData.dsname || '');
+    const [nbwordsavaiable, setNbwordsavaiable] = useState(rowData.nbwordsavaiable || '');
+    const [dsworkavaiable, setDsworkavaiable] = useState(rowData.dsworkavaiable || []);
+    const [dsphone, setDsphone] = useState(rowData.dsphone || '');
+    const [dsemail, setDsemail] = useState(rowData.dsemail || '');
+    const [dseducation, setDseducation] = useState(rowData.dseducation || '');
+    const [dsportfolio, setDsportfolio] = useState(rowData.dsportfolio || '');
+    const [dtcreate, setDtcreate] = useState(rowData.dtcreate || '');
+    const [dsvalue, setDsvalue] = useState(rowData.dsvalue || '');
+
+    const [dsstatus, setDsstatus] = useState(rowData.dsstatus || '');
+    const [dspaymenttype, setDspaymenttype] = useState(rowData.dspaymenttype || '');
+    const [dscontenttype, setDscontenttype] = useState(rowData.dscontenttype || []);
+    const [dscontentcategory, setDscontentcategory] = useState(rowData.dscontentcategory || []);
+    const [dspagetypes, setDspagetypes] = useState(rowData.dspagetypes || []);
+    const [dsclientes, setDsclientes] = useState(rowData.dsclientes || []);
+
     const [formValue, setFormValue] = useState({
         dsname,
         nbwordsavaiable,
@@ -83,53 +100,14 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         dseducation,
         dsportfolio,
         dtcreate,
-        dsvalue
+        dsvalue,
+        dsstatus,
+        dspaymenttype,
+        dscontenttype,
+        dscontentcategory,
+        dspagetypes,
+        dsclientes,
     });
-    const [dskeyword, setDskeyword] = useState('');
-    const [dsurl, setDsurl] = useState('');
-    const [dsvolume, setDsvolume] = useState('');
-    const [dsposition, setDsposition] = useState('');
-    const [dstype, setDstype] = useState('');
-    const [dscontent, setDscontent] = useState('');
-    const [dsobjective, setDsobjective] = useState('');
-    
-    const [dsname, setDsname] = useState('');
-    const [nbwordsavaiable, setNbwordsavaiable] = useState('');
-    const [dsworkavaiable, setDsworkavaiable] = useState([]);
-    const [dsphone, setDsphone] = useState('');
-    const [dsemail, setDsemail] = useState('');
-    const [dseducation, setDseducation] = useState('');
-    const [dsportfolio, setDsportfolio] = useState('');
-    const [dtcreate, setDtcreate] = useState('');
-    const [dsvalue, setDsvalue] = useState('');
-
-    const [dsstatus, setDsstatus] = useState('');
-    const [dspaymenttype, setDspaymenttype] = useState('');
-    const [dscontenttype, setDscontenttype] = useState([]);
-    const [dscontentcategory, setDscontentcategory] = useState([]);
-    const [dspagetypes, setDspagetypes] = useState([]);
-    const [dsclientes, setDsclientes] = useState([]);
-    
-    const [dsdensity, setDsdensity] = useState('');
-    const [dsmonth, setDsmonth] = useState('')
-    const [dsyear, setDsyear] = useState(2022)
-
-    function clearInputs() {
-        [...document.querySelectorAll('.rs-stack:not(:last-child):not(:first-child) span.rs-picker-toggle-clean.rs-btn-close, .rs-btn-toolbar span.rs-picker-toggle-clean.rs-btn-close')].map(clean=>clean.click())
-        setDskeyword('');
-        setDsurl('');
-        setDsvolume('');
-        setDsposition('');
-        setDstype('');
-        setDscontent('');
-        setDsobjective('');
-        setDsdensity('');
-        setRefresh(refresh + 1)
-            
- 
-        
-    }
-
     const [tableData, setTableData] = useState([]);
 
     const [refresh, setRefresh] = useState(0);
@@ -145,6 +123,11 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const messageSucess = (
         <Message showIcon type={"success"} duration={5000}>
             Redator criado!
+        </Message>
+    );
+    const messageSucessEdit = (
+        <Message showIcon type={"success"} duration={5000}>
+            Redator Editado!
         </Message>
     );
     const messageError = (
@@ -167,7 +150,11 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
             toast.push(messageSucess, { placement: "topCenter" });
         });
     };
-
+    const sucessEditHandle = async () => {
+        await clearToast().then(() => {
+            toast.push(messageSucessEdit, { placement: "topCenter" });
+        });
+    };
     const errorHandle = async (message) => {
         await clearToast().finally(() => {
             toast.push(
@@ -213,7 +200,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     }}>Dedicação</Form.ControlLabel>
             <       Select
                         fetch={"/api/get/writer/workavaiable"}
-                        placeholder={dsworkavaiable}
+                        placeholder={dsworkavaiable || "Selecione"}
                         onSelect={setDsworkavaiable}
                         style={{
                             width:300,
@@ -257,22 +244,22 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
             <Form.ControlLabel style={{
                 lineHeight: "25px"
             }}>Tipos de Conteúdo</Form.ControlLabel><br></br>
-            <TagPicker data={dataDscontenttype} onChange={setDscontenttype} style={{ width: 700 }} />            
+            <TagPicker defaultValue={dscontenttype} data={dataDscontenttype} onChange={setDscontenttype} style={{ width: 700 }} />            
 
             <Form.ControlLabel style={{
                 lineHeight: "25px"
             }}>Categorias de Conteúdo</Form.ControlLabel><br></br>
-            <TagPicker data={dataDscontentcategory} onChange={setDscontentcategory} style={{ width: 700 }} />
+            <TagPicker defaultValue={dscontentcategory} data={dataDscontentcategory} onChange={setDscontentcategory} style={{ width: 700 }} />
 
             <Form.ControlLabel style={{
                 lineHeight: "25px"
             }}>Tipos de Páginas</Form.ControlLabel><br></br>
-            <TagPicker data={dataDspagetypes} onChange={setDspagetypes} style={{ width: 700 }} />            
+            <TagPicker defaultValue={dspagetypes} data={dataDspagetypes} onChange={setDspagetypes} style={{ width: 700 }} />            
 
             <Form.ControlLabel style={{
                 lineHeight: "25px"
             }}>Clientes que atende</Form.ControlLabel><br></br>
-            <Tag fetch={"/api/get/select/customersId"} onChange={setDsclientes} style={{ width: 700 }} />
+            <Tag fetch={"/api/get/select/customersId"} onChange={setDsclientes} defaultValue={dsclientes} style={{ width: 700 }} />
 
 
 
@@ -303,11 +290,6 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             marginTop:-4
                         }}
                     />
-
-                    <Form.Group controlId="dtcreate" ref={forwardRef}>
-                        <Form.ControlLabel>Data de entrada</Form.ControlLabel>
-                        <Form.Control name="dtcreate" onChange={setDtcreate} value={dtcreate} />
-                    </Form.Group>
                 </Stack>
                 <Stack
                     direction="column"
@@ -321,9 +303,11 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         <Form.ControlLabel>Valor cobrado por 500 palavras</Form.ControlLabel>
                         <Form.Control name="dsvalue" onChange={setDsvalue} value={dsvalue} />
                     </Form.Group>
-
-                    <Form.ControlLabel style={{
-                        lineHeight: "12px"
+                </Stack>
+            </Stack>
+            <Form.ControlLabel style={{
+                        lineHeight: "12px",
+                        paddingBottom: "10px"
                     }}>Status</Form.ControlLabel>
             <Select
                         fetch={"/api/get/writer/status"}
@@ -334,12 +318,6 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             marginTop:-4
                         }}
                     />
-
-
-
-                </Stack>
-            </Stack>
-
 
 
             <hr />
@@ -353,8 +331,11 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         color: "var(--color-darkness-background)",
                     }}
                     onClick={() => {
+                        console.log(formError)
                         if(!formRef.current.check()) return
-                        axios.post('/api/post/writers', {
+                        
+                        let url = '/api/post/writers'
+                        const data = {
                             dsname,
                             nbwordsavaiable,
                             dsworkavaiable,
@@ -370,10 +351,18 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             dscontentcategory,
                             dspagetypes,
                             dsclientes,
-                            
-                        })
+                        }
+                        if(idwriter){
+                            url = '/api/put/writers'
+                            data.idwriter = idwriter
+                        }
+                        axios.post(url, data)
                         .then((e) => {
-                            sucessHandle();
+                            if(idwriter){
+                                sucessEditHandle()
+                            }else{
+                                sucessHandle();
+                            }
                             closeModal(true);
                         })
                             .catch((e) => {

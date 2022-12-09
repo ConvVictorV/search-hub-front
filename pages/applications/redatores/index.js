@@ -31,6 +31,7 @@ function Demo(args) {
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
   const [openCreateForm, setOpenCreateForm] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const route = useRouter()
@@ -40,6 +41,7 @@ function Demo(args) {
   const handleClose = () => {
     setOpenExportForm(false);
     setOpenImportForm(false);
+    setOpenEditForm(false);
     setOpenCreateForm(false);
     updateData();
   };
@@ -343,7 +345,20 @@ function Demo(args) {
             <CreateForm closeModal={handleClose} />
           </Modal.Body>
         </Modal>
-
+        <Modal
+          open={openEditForm}
+          onClose={handleClose}
+          size="md"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Editar Redator</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <CreateForm rowData={rowData} closeModal={handleClose} />
+          </Modal.Body>
+        </Modal>
         <TableWords
           checkedKeys={checkedKeys}
           setCheckedKeys={setCheckedKeys}
@@ -354,6 +369,7 @@ function Demo(args) {
           filterActive={filterActive}
           filterData={filterData}
           setFilterData={setFilterData}
+          setOpenEditForm={setOpenEditForm}
         />
       </Container>
     </FullWidthLayout>
