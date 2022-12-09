@@ -45,7 +45,15 @@ export default function MyApp({
       // Re-fetches session when window is focused
       refetchOnWindowFocus={true}
     >
-      {Component.auth ? (
+      {Component.auth ? 
+       (Component.auth == 'open') ? 
+       
+            <Component
+              toggleTheme={toggleTheme}
+              {...pageProps}
+            />
+         
+       : (
         <Auth>
           <CustomProvider theme={theme} locale={ptbr}>
             <Component
