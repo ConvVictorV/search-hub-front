@@ -184,7 +184,7 @@ function Demo(args) {
             disabled={checkedKeys.length == 0 || tableData.filter(
               (row) => checkedKeys.indexOf(row.id) > -1
             ).map(row => {
-              return row.dsstatus?.indexOf('Planejamento') > -1
+              return row.dsstatus?.indexOf('Alocação Redatores') > -1
             }).includes(false) != false}
             onClick={() => { setOpenTextRequestForm(true) }}
             appearance={"ghost"} style={
