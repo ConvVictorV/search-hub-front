@@ -1,9 +1,14 @@
 import Script from "next/script";
 
 export const pageview = (url) => {
-  window.gtag("config", "G-2PRL8SJ7PM", {
-    page_path: url,
-  });
+  try {
+    window.gtag("config", "G-2PRL8SJ7PM", {
+      page_path: url,
+    });
+  } catch (error) {
+    console.log("erro no gtag")
+  }
+  
 };
 
 export const event = ({ action, category, label, value }) => {
