@@ -108,7 +108,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
         dsclientes,
     });
     const [tableData, setTableData] = useState([]);
-
+    const [sending, setSending] = useState(false)
     const [refresh, setRefresh] = useState(0);
 
     useEffect(() => {
@@ -298,10 +298,11 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                     </Form.Group>
                 </Stack>
             </Stack>
-            <Form.ControlLabel style={{
-                lineHeight: "12px",
-                paddingBottom: "10px"
-            }}>Status</Form.ControlLabel>
+            <Form.ControlLabel
+                style={{
+                    lineHeight: "12px",
+                    paddingBottom: "10px"
+                }}>Status</Form.ControlLabel>
             <Select
                 fetch={"/api/get/writer/status"}
                 placeholder={dsstatus}
@@ -319,12 +320,13 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             }}>
 
                 <Button
+                    loading={sending}
                     style={{
                         backgroundColor: "var(--color-conversion-1)",
                         color: "var(--color-darkness-background)",
                     }}
-                    disabled={!formRef.current.check()}
                     onClick={() => {
+                        setSending(true)
                         const data = {
                             dsname,
                             nbwordsavaiable,
@@ -346,27 +348,33 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                             (data.idwriter = idwriter) && '/api/put/writers' : '/api/post/writers';
                         if (!formRef.current.check()) {
                             setFormValue(data)
-                            if (!formRef.current.check()) return
-                            else {
-                                // axios.post(url, data)
-                                //     .then((e) => {
-                                //         if (idwriter) {
-                                //             sucessEditHandle()
-                                //         } else {
-                                //             sucessHandle();
-                                //         }
-                                //         closeModal(true);
-                                //     })
-                                //     .catch((e) => {
-                                //         typeof e.response.data != "object"
-                                //             ? errorHandle(e.response.data)
-                                //             : errorHandle(e.response.data?.message);
-                                //     });
-                            }
-                        } else {
-                            console.log(formRef.current.check())
+                            setTimeout(() => {
+                                if (!formRef.current.check()) {
+                                    setSending(false)
+                                    return
+                                }
+                                else {
+                                    axios.post(url, data)
+                                        .then((e) => {
+                                            if (idwriter) {
+                                                sucessEditHandle()
+                                            } else {
+                                                sucessHandle();
+                                            }
+                                            closeModal(true);
+                                        })
+                                        .catch((e) => {
+                                            typeof e.response.data != "object"
+                                                ? errorHandle(e.response.data)
+                                                : errorHandle(e.response.data?.message);
+                                        })
+                                        .finally(()=>{
+                                            setSending(false)
+                                        })
+                                        ;
+                                }
+                            }, 1000);
                         }
-
                     }}
                 >Salvar Redator</Button>
 
