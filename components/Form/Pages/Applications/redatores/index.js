@@ -21,26 +21,26 @@ import Overview from "../../../../Tables/applications/quickwins/overview"
 
 
 
-const dataDscontenttype = ['Post de blog','Institucional','Página de produto','Texto de apoio'].map(
+const dataDscontenttype = ['Post de blog', 'Institucional', 'Página de produto', 'Texto de apoio'].map(
     item => ({ label: item, value: item })
-  );
+);
 
-const dataDscontentcategory = ['Animais','Beleza','Carreira','Casa e Decoração','Cinema','Comercial',
-'Comércio','Comportamento','Criatividade','Cultura','Direito','Educação','Empreendedorismo','Floricultura',
-'Finanças','Gastronomia','Intercâmbio','Manutenção e Construção','Marketing','Mercado Imobiliário','Moda',
-'Música','Paisagismo','Política','Previdência','Psicologia','Saúde','Tecnologia','Viagens'].map(
-    item => ({ label: item, value: item })
-  );
+const dataDscontentcategory = ['Animais', 'Beleza', 'Carreira', 'Casa e Decoração', 'Cinema', 'Comercial',
+    'Comércio', 'Comportamento', 'Criatividade', 'Cultura', 'Direito', 'Educação', 'Empreendedorismo', 'Floricultura',
+    'Finanças', 'Gastronomia', 'Intercâmbio', 'Manutenção e Construção', 'Marketing', 'Mercado Imobiliário', 'Moda',
+    'Música', 'Paisagismo', 'Política', 'Previdência', 'Psicologia', 'Saúde', 'Tecnologia', 'Viagens'].map(
+        item => ({ label: item, value: item })
+    );
 
-const dataDspagetypes = ['Posts de blog','Textos jornalísticos','Branded content','Textos de apoio e-commerce',
-'Texto de apoio institucional','Texto de apoio FAQ Page','Landing Page','Guia definitivo'].map(
-    item => ({ label: item, value: item })
-  );
+const dataDspagetypes = ['Posts de blog', 'Textos jornalísticos', 'Branded content', 'Textos de apoio e-commerce',
+    'Texto de apoio institucional', 'Texto de apoio FAQ Page', 'Landing Page', 'Guia definitivo'].map(
+        item => ({ label: item, value: item })
+    );
 
-const dataDsclientes = ['Posts de blog','Textos jornalísticos','Branded content','Textos de apoio e-commerce',
-'Texto de apoio institucional','Texto de apoio FAQ Page','Landing Page','Guia definitivo'].map(
-    item => ({ label: item, value: item })
-  );
+const dataDsclientes = ['Posts de blog', 'Textos jornalísticos', 'Branded content', 'Textos de apoio e-commerce',
+    'Texto de apoio institucional', 'Texto de apoio FAQ Page', 'Landing Page', 'Guia definitivo'].map(
+        item => ({ label: item, value: item })
+    );
 
 
 
@@ -51,18 +51,18 @@ const { StringType, NumberType, ArrayType } = Schema.Types;
 const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
 const model = Schema.Model({
-    dsname : StringType().isRequired('O campo não pode estar vazio'),
-    dsemail : StringType().isRequired('O campo não pode estar vazio'),
-    dseducation : StringType(),
-    dsportfolio : StringType().isURL(),
-    nbwordsavaiable : NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1,"Digite um valor válido."),
+    dsname: StringType().isRequired('O campo não pode estar vazio'),
+    dsemail: StringType().isRequired('O campo não pode estar vazio'),
+    dseducation: StringType(),
+    dsportfolio: StringType().isURL(),
+    nbwordsavaiable: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido."),
     dscontenttype: ArrayType().isRequired('O campo não pode estar vazio'),
     dscontentcategory: ArrayType().isRequired('O campo não pode estar vazio'),
     dspagetypes: ArrayType().isRequired('O campo não pode estar vazio'),
     dsclientes: ArrayType().isRequired('O campo não pode estar vazio'),
     dspaymenttype: StringType().isRequired('O campo não pode estar vazio'),
     dsvalue: StringType().isRequired('O campo não pode estar vazio'),
-    dsstatus:StringType().isRequired('O campo não pode estar vazio'),
+    dsstatus: StringType().isRequired('O campo não pode estar vazio'),
 });
 
 function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest }) {
@@ -72,7 +72,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
     const toast = useToaster();
     const [formError, setFormError] = useState({});
 
-    
+
     const [dsname, setDsname] = useState(rowData?.dsname || '');
     const [nbwordsavaiable, setNbwordsavaiable] = useState(rowData?.nbwordsavaiable || '');
     const [dsworkavaiable, setDsworkavaiable] = useState(rowData?.dsworkavaiable);
@@ -166,15 +166,15 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
     };
 
     return (
-        <Form 
-        fluid 
-        layout="inline" 
-        ref={formRef}
-        onChange={setFormValue}
-        formValue={formValue}
-        onCheck={setFormError} 
-        model={model}>
-            
+        <Form
+            fluid
+            layout="inline"
+            ref={formRef}
+            onChange={setFormValue}
+            formValue={formValue}
+            onCheck={setFormError}
+            model={model}>
+
             <Stack
                 direction="row"
                 alignItems="flex-start"
@@ -202,8 +202,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                         placeholder={dsworkavaiable || "Selecione"}
                         onSelect={setDsworkavaiable}
                         style={{
-                            width:300,
-                            marginTop:-4
+                            width: 300,
+                            marginTop: -4
                         }}
                     />
                 </Stack>
@@ -243,7 +243,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             <Form.ControlLabel style={{
                 lineHeight: "25px"
             }}>Tipos de Conteúdo</Form.ControlLabel><br></br>
-            <TagPicker defaultValue={dscontenttype} data={dataDscontenttype} onChange={setDscontenttype} style={{ width: 700 }} />            
+            <TagPicker defaultValue={dscontenttype} data={dataDscontenttype} onChange={setDscontenttype} style={{ width: 700 }} />
 
             <Form.ControlLabel style={{
                 lineHeight: "25px"
@@ -253,18 +253,12 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             <Form.ControlLabel style={{
                 lineHeight: "25px"
             }}>Tipos de Páginas</Form.ControlLabel><br></br>
-            <TagPicker defaultValue={dspagetypes} data={dataDspagetypes} onChange={setDspagetypes} style={{ width: 700 }} />            
+            <TagPicker defaultValue={dspagetypes} data={dataDspagetypes} onChange={setDspagetypes} style={{ width: 700 }} />
 
             <Form.ControlLabel style={{
                 lineHeight: "25px"
             }}>Clientes que atende</Form.ControlLabel><br></br>
             <Tag fetch={"/api/get/select/customersId"} onChange={setDsclientes} defaultValue={dsclientes} style={{ width: 700 }} />
-
-
-
-
-
-
 
             <Stack
                 direction="row"
@@ -280,13 +274,13 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                     <Form.ControlLabel style={{
                         lineHeight: "12px"
                     }}>Tipo de Pagamento</Form.ControlLabel>
-            <Select
+                    <Select
                         fetch={"/api/get/writer/paymenttype"}
                         placeholder={dspaymenttype}
                         onSelect={setDspaymenttype}
                         style={{
-                            width:300,
-                            marginTop:-4
+                            width: 300,
+                            marginTop: -4
                         }}
                     />
                 </Stack>
@@ -305,18 +299,18 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 </Stack>
             </Stack>
             <Form.ControlLabel style={{
-                        lineHeight: "12px",
-                        paddingBottom: "10px"
-                    }}>Status</Form.ControlLabel>
+                lineHeight: "12px",
+                paddingBottom: "10px"
+            }}>Status</Form.ControlLabel>
             <Select
-                        fetch={"/api/get/writer/status"}
-                        placeholder={dsstatus}
-                        onSelect={setDsstatus}
-                        style={{
-                            width:300,
-                            marginTop:-4
-                        }}
-                    />
+                fetch={"/api/get/writer/status"}
+                placeholder={dsstatus}
+                onSelect={setDsstatus}
+                style={{
+                    width: 300,
+                    marginTop: -4
+                }}
+            />
 
 
             <hr />
@@ -324,16 +318,13 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                 float: "right"
             }}>
 
-                <Button 
+                <Button
                     style={{
                         backgroundColor: "var(--color-conversion-1)",
                         color: "var(--color-darkness-background)",
                     }}
+                    disabled={!formRef.current.check()}
                     onClick={() => {
-                        console.log(formError)
-                        if(!formRef.current.check()) return
-                        
-                        let url = '/api/post/writers'
                         const data = {
                             dsname,
                             nbwordsavaiable,
@@ -351,24 +342,31 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                             dspagetypes,
                             dsclientes,
                         }
-                        if(idwriter){
-                            url = '/api/put/writers'
-                            data.idwriter = idwriter
-                        }
-                        axios.post(url, data)
-                        .then((e) => {
-                            if(idwriter){
-                                sucessEditHandle()
-                            }else{
-                                sucessHandle();
+                        let url = idwriter ?
+                            (data.idwriter = idwriter) && '/api/put/writers' : '/api/post/writers';
+                        if (!formRef.current.check()) {
+                            setFormValue(data)
+                            if (!formRef.current.check()) return
+                            else {
+                                // axios.post(url, data)
+                                //     .then((e) => {
+                                //         if (idwriter) {
+                                //             sucessEditHandle()
+                                //         } else {
+                                //             sucessHandle();
+                                //         }
+                                //         closeModal(true);
+                                //     })
+                                //     .catch((e) => {
+                                //         typeof e.response.data != "object"
+                                //             ? errorHandle(e.response.data)
+                                //             : errorHandle(e.response.data?.message);
+                                //     });
                             }
-                            closeModal(true);
-                        })
-                            .catch((e) => {
-                                typeof e.response.data != "object"
-                                    ? errorHandle(e.response.data)
-                                    : errorHandle(e.response.data?.message);
-                            });
+                        } else {
+                            console.log(formRef.current.check())
+                        }
+
                     }}
                 >Salvar Redator</Button>
 

@@ -336,8 +336,7 @@ const WordTable = ({
 
         <Panel bordered shaded header={"Informações do QuickWin"} style={{
           background: "var(--rs-btn-subtle-hover-bg)",
-          width: '28vw',
-          minWidth: '400px'
+          width: '47vw'
         }}>
           <div style={{
             padding: 20
@@ -358,8 +357,7 @@ const WordTable = ({
 
         {rowData.textTopic ? rowData.textTopic == "Sem pautas" ? "Sem pautas cadastradas" : <Panel bordered shaded header={"Informações da pauta"} style={{
           background: "var(--rs-btn-subtle-hover-bg)",
-          width: '28vw',
-          minWidth: '400px'
+          width: '47vw'
         }}>
           <div style={{
             padding: 20,

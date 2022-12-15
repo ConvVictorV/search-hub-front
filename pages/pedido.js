@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Badge, Button, Container, FlexboxGrid, Table, Panel, Placeholder } from "rsuite";
 import getBackground from "../components/Backgrounds";
-import Quickwins from "../components/Tables/applications/quickwins/readonly";
+import Quickwins from "../components/Tables/applications/pedidos-de-producao/readonly";
 
 const { HeaderCell, Cell, Column } = Table;
 
@@ -80,6 +80,7 @@ function Teste(props) {
       style={{
         background: `no-repeat center/cover url('${getBackground(1)}')`,
       }}
+
     >
       <Head>
         <title>Search Hub | Conversion</title>
@@ -87,12 +88,16 @@ function Teste(props) {
         <link rel="icon" href="/favicon.ico" />
         <meta key="robots" name="robots" content="noindex,nofollow" />
       </Head>
-      <Container style={{ height: "100vh", maxWidth:1200, margin: 'auto', paddingTop: 150 }} >
-        <Panel>
+      <Container style={{ height: "100vh", margin: 'auto', overflowY: 'scroll!important' }} >
+        <Panel style={{
+        overflowY: 'scroll!important'
+      }}>
           {requestData.nbtotalqws ?
             <Panel>
-              <h5>Quantidade total de textos: {requestData.nbtotalqws}</h5>
-              <h5>Quantidade total de palavras: {requestData.nbtotalkeywords}</h5>
+              <h5>Quantidade total de textos: <br></br><i>{requestData.nbtotalqws}</i></h5><br></br>
+              <h5>Quantidade total de palavras: <br></br><i>{requestData.nbtotalkeywords}</i></h5><br></br>
+              <h5>Prazo final de entrega do pedido: <br></br><i>{new Date((requestData.dtdeadline)).toLocaleDateString()}</i></h5><br></br>
+              <h5>Orientações: <br></br><i>{requestData.dsorientation}</i></h5><br></br>
             </Panel> :
             <Panel>
               <Placeholder />
