@@ -28,7 +28,7 @@ import CreateTextRequest from "../../../../../components/Form/Pages/Applications
 import EditForm from "../../../../../components/Form/Pages/Applications/quickwins/edit";
 import TableWords from "../../../../../components/Tables/applications/quickwins";
 import FullWidthLayout from "../../../../../Layouts/fullwidth";
-
+import SendToContentForm from "../../../../../components/Form/Pages/Applications/pacotes-qw/sendtocontent"
 
 
 
@@ -65,6 +65,8 @@ function Demo(args) {
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const [rowData, setRowData] = useState();
+  const [packageData, setPackageData] = useState({});
+  const[openSendToContent, setOpenSendToContent] = useState(false);
   const [showButton, setShowButton] = useState(false)
   const toast = useToaster();
 
@@ -76,6 +78,7 @@ function Demo(args) {
     setOpenCreateForm(false);
     setOpenCreateTextTopicForm(false);
     setOpenTextRequestForm(false)
+    setOpenSendToContent(false)
     updateData();
   };
 
@@ -85,20 +88,26 @@ function Demo(args) {
     let page = 0
     let tableD = []
     let getQuickwins = () => {
-      axios.get("/api/get/quickwins?page=" + (++page))
+      return axios.get("/api/get/quickwins?page=" + (++page))
         .then(({ data }) => {
           if (data.length > 0) {
             tableD = tableD.concat(data)
             setTableData(tableD);
             getQuickwins()
           } else {
-            axios.get('/api/get/select/customersId').then(({ data }) => {
-              setTableData(tableD.map((row, index) => {
-                const { idcustomer } = row
-                row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
-                return row
-              }))
+            packageid && axios.get('/api/get/qwPackageByKey?key=' + packageid).then(({ data: _package }) => {
+              setPackageData(_package[0])
+              if(_package[0]) axios.get('/api/get/select/customersId').then(({ data }) => {
+                console.log(_package[0]);
+                ((_package[0].nmcustomer = data.filter(customer => customer.value == _package[0].idcustomer)[0]?.label || '') && setPackageData(_package[0]));
+                setTableData(tableD.map((row, index) => {
+                  const { idcustomer } = row
+                  row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
+                  return row
+                }))
+              })
             })
+
           }
         });
     }
@@ -178,6 +187,24 @@ function Demo(args) {
         }}
       >
         <div></div>
+        <Modal
+          open={openSendToContent}
+          onClose={handleClose}
+          size="xs"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Enviar para o time de Conteúdo</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Tem certeza que deseja enviar esse pacote para conteúdo?
+            <SendToContentForm 
+              closeModal={handleClose}
+              data={[packageData]}
+              ></SendToContentForm>
+          </Modal.Body>
+        </Modal>
         <ButtonToolbar>
 
           <Button
@@ -196,31 +223,28 @@ function Demo(args) {
             }>
             Pedido de Produção
           </Button>
-
-          <Whisper
-            trigger="hover"
-            placement="top"
-            speaker={<Tooltip>Novo Planejamento</Tooltip>}
-          >
-            <IconButton
+          <Button
+            onClick={() => { setOpenSendToContent(true) }}
+            appearance={"default"} style={
+              {
+                backgroundColor: "var(--color-conversion-1)",
+                color: "white",
+                borderColor: "var(--color-conversion-1)"
+              }
+            }>
+            Envio para conteúdo
+          </Button>
+          <Button
               style={
                 {
-                  backgroundColor: "transparent",
-                  color: "var(--color-conversion-1)",
+                  backgroundColor: "var(--color-conversion-1)",
+                  color: "white",
                   borderColor: "var(--color-conversion-1)"
                 }
               }
-              icon={<FunnelIcon style={
-                {
-                  backgroundColor: "transparent",
-                  color: "var(--color-conversion-1)",
-                  borderColor: "var(--color-conversion-1)"
-                }
-              } />}
-              appearance={"ghost"}
+              appearance={"default"}
               onClick={() => { setOpenCreateForm(true) }}
-            >Novo Planejamento</IconButton>
-          </Whisper>
+            >Editar Pacote</Button>
           <Whisper
             trigger="hover"
             placement="top"
@@ -331,7 +355,7 @@ function Demo(args) {
       title="QuickWins | SearchHub"
       description="SearchHub Conversion"
       background={2}
-      pageName="QuickWins"
+      pageName="Pacote Quickwins"
     >
       <Container
         style={{
@@ -480,6 +504,7 @@ function Demo(args) {
           filterActive={filterActive}
           filterData={filterData}
           setFilterData={setFilterData}
+          packageData={packageData}
         />
       </Container>
     </FullWidthLayout>

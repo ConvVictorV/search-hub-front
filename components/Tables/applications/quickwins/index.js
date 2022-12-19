@@ -20,7 +20,9 @@ import {
   useToaster,
   Whisper,
   Badge,
-  Tooltip
+  Tooltip,
+  Divider,
+  Placeholder
 } from "rsuite";
 
 import PlusIcon from "@rsuite/icons/Plus";
@@ -184,7 +186,7 @@ const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   <Cell {...props}>{rowData?.dtimplement?.split("T")[0]}</Cell>
 );
 function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  return string ? string.charAt(0).toUpperCase() + string.slice(1) : ''
 }
 
 const rowKey = "id";
@@ -200,7 +202,8 @@ const WordTable = ({
   filterData,
   setOpenEditForm,
   setRowData,
-  setOpenCreateTextTopicForm
+  setOpenCreateTextTopicForm,
+  packageData
 }) => {
   const [loading, setLoading] = React.useState(true);
   const [limit, setLimit] = React.useState(12);
@@ -589,8 +592,192 @@ const WordTable = ({
       />
     </Cell>
   );
+  function sumValues(array) {
+    return array.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+  }
   return (
     <Panel className="nopadding">
+      {
+        packageData && <Stack direction="column" alignItems={"baseline"} justifyContent={"space-between"} style={{
+          width: "100%"
+        }}>
+          <p><Tag style={{
+            background: "var(--color-conversion-1)",
+            color: 'white'
+          }}>{packageData.nmcustomer && packageData.nmcustomer}</Tag> {capitalizeFirstLetter((packageData.dsmounthyear)?.toLowerCase()).replace('-', ', ')}</p>
+
+          <Stack alignItems={"center"} justifyContent={"space-between"} style={{
+            marginTop: 20
+          }}>
+            <Stack alignItems={"center"} justifyContent={"space-between"}>
+              Status: {<Tag style={{
+                margin: '0px 10px'
+              }}>{packageData.dsstatus}</Tag>}
+            </Stack>
+            <Stack alignItems={"center"} justifyContent={"space-between"}>
+              Total de quickwins: {<Tag style={{
+                margin: '0px 10px'
+              }}>{packageData.nbtotalqws}</Tag>}
+            </Stack>
+            <Stack alignItems={"center"} justifyContent={"space-between"}>
+              Total de palavras: {<Tag style={{
+                margin: '0px 10px'
+              }}>{packageData.nbtotalkeywords}</Tag>}
+            </Stack>
+          </Stack>
+          <Divider style={{
+            width: 565
+          }}></Divider>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 20
+          }}>
+            <div style={{
+              display: 'flex',
+              gap: 20,
+              flexDirection: 'row',
+
+            }}>
+              <Panel style={{
+                width: 150,
+                borderTop: 'solid 3px var(--color-conversion-1)',
+              }} header="Planejamento" bordered>
+                <p style={{
+                  padding: '0px 20px 20px 20px',
+                  fontSize: 24
+                }}>
+                  {
+                    sumValues([
+                      'Planejamento de termos',
+                      'Planejamento de pautas',
+                      'Validação planejamento',
+                      'Ajuste planejamento',
+                    ].map(status => tableData.filter(row => (row.dsstatus.toLowerCase()).indexOf(status.toLowerCase()) > -1).length))
+                  }
+                </p>
+              </Panel>
+              <Panel style={{
+                width: 150,
+                borderTop: 'solid 3px var(--color-conversion-1)'
+              }} header="Produção" bordered>
+                <p style={{
+                  padding: '0px 20px 20px 20px',
+                  fontSize: 24
+                }}>
+                  {
+                    sumValues([
+                      'Alocação redatores',
+                      'Aguardando aceite redator',
+                      'Conteúdo em produção',
+                      'Validação requisitos básicos',
+                      'Revisão ortográfica e gramatical',
+                      'Validação qualidade e SEO',
+                    ].map(status => tableData.filter(row => (row.dsstatus.toLowerCase()).indexOf(status.toLowerCase()) > -1).length))
+                  }
+                </p>
+              </Panel>
+            </div>
+            <div style={{
+              display: 'flex',
+              gap: 20,
+              flexDirection: 'row',
+
+            }}><Panel style={{
+              width: 150,
+              borderTop: 'solid 3px var(--color-conversion-1)'
+            }} header="Refação" bordered>
+                <p style={{
+                  padding: '0px 20px 20px 20px',
+                  fontSize: 24
+                }}>
+                  {
+                    sumValues([
+                      'Pedido de ajustes',
+                      'Conteúdo em ajuste',
+                      'Ajuste conteúdo produzido',
+                    ].map(status => tableData.filter(row => (row.dsstatus.toLowerCase()).indexOf(status.toLowerCase()) > -1).length))
+                  }
+                </p>
+              </Panel>
+              <Panel style={{
+                width: 150,
+                borderTop: 'solid 3px var(--color-conversion-1)'
+              }} header="Aprovação" bordered>
+                <p style={{
+                  padding: '0px 20px 20px 20px',
+                  fontSize: 24
+                }}>
+                  {
+                    sumValues([
+                      'Aguardando envio ao cliente',
+                      'Aguardando aprovação cliente',
+                      'Aguardando aprovação produção',
+                      'Aprovado pelo cliente',
+                    ].map(status => tableData.filter(row => (row.dsstatus.toLowerCase()).indexOf(status.toLowerCase()) > -1).length))
+                  }
+                </p>
+              </Panel></div>
+            <div style={{
+              display: 'flex',
+              gap: 20,
+              flexDirection: 'row',
+
+            }}><Panel style={{
+              width: 150,
+              borderTop: 'solid 3px var(--color-conversion-1)'
+            }} header="Implementação" bordered>
+                <p style={{
+                  padding: '0px 20px 20px 20px',
+                  fontSize: 24
+                }}>
+                  {
+                    sumValues([
+                      'Aguardando implementação',
+                      'Validação implementação',
+                    ].map(status => tableData.filter(row => (row.dsstatus.toLowerCase()).indexOf(status.toLowerCase()) > -1).length))
+                  }
+                </p>
+              </Panel>
+              <Panel style={{
+                width: 150,
+                borderTop: 'solid 3px var(--color-conversion-1)'
+              }} header="Finalizado" bordered>
+                <p style={{
+                  padding: '0px 20px 20px 20px',
+                  fontSize: 24
+                }}>
+                  {
+                    sumValues([
+                      'Finalizado',
+                    ].map(status => tableData.filter(row => (row.dsstatus.toLowerCase()).indexOf(status.toLowerCase()) > -1).length))
+                  }
+                </p>
+              </Panel></div>
+            <div style={{
+              display: 'flex',
+              gap: 20,
+              flexDirection: 'row',
+
+            }}><Panel style={{
+              width: 150,
+              borderTop: 'solid 3px var(--color-conversion-1)'
+            }} header="Cancelado" bordered>
+                <p style={{
+                  padding: '0px 20px 20px 20px',
+                  fontSize: 24
+                }}>
+                  {
+                    sumValues([
+                      'Cancelado',
+                    ].map(status => tableData.filter(row => (row.dsstatus.toLowerCase()).indexOf(status.toLowerCase()) > -1).length))
+                  }
+                </p>
+              </Panel></div>
+          </div>
+        </Stack>
+
+      }
       <Stack alignItems={"center"} justifyContent={"space-between"}>
         <Stack wrap spacing={24} alignItems={"center"}>
           <InputGroup
@@ -610,7 +797,7 @@ const WordTable = ({
               onChange={(event) => setSearch(event.target.value)}
               placeholder={`Buscar (${tableData.length + " Quickwins"})`}
               style={{
-                width: "300px",
+                width: "200px",
                 border: "none!important",
                 outlineStyle: "none",
                 boxShadow: "none",
@@ -625,26 +812,26 @@ const WordTable = ({
            */}
           <Select
             fetch={"/api/get/quickWinDate"}
-            placeholder={"Filtre por mês de referência"}
+            placeholder={"Mês"}
             onSelect={filterMonth}
             style={{
-              width: 220,
+              width: 100,
             }}
           />
           <Select
             fetch={"/api/get/quickWinStatus"}
-            placeholder={'Filtre por Status'}
+            placeholder={'Status'}
             onSelect={filterStatus}
             style={{
-              width: 150
+              width: 100
             }}
           />
           <Select
             fetch={"/api/get/quickwinsTypeContent"}
-            placeholder={"Filtre por Tipo de Conteúdo"}
+            placeholder={"Tipo de Conteúdo"}
             onSelect={filterContent}
             style={{
-              width: 220,
+              width: 180,
             }}
           />
         </Stack>
@@ -725,22 +912,21 @@ const WordTable = ({
           <HeaderCell>Palavra</HeaderCell>
           <Cell dataKey="dskeyword" />
         </Column>
-        <Column sortable resizable width={150} align="center">
-          <HeaderCell>Cliente</HeaderCell>
-          <NmCustomer dataKey="nmcustomer" />
-        </Column>
-
         <Column sortable resizable width={200} flexGrow={1} align="center">
           <HeaderCell>Url</HeaderCell>
           <LinkCell dataKey="dsurl" />
         </Column>
-        <Column sortable resizable width={100} align="center">
-          <HeaderCell>Mês</HeaderCell>
-          <Cell dataKey="dsmonth" />
+        <Column sortable resizable width={150} align="center">
+          <HeaderCell>Tipo de otimização</HeaderCell>
+          <Cell dataKey="dstype" />
         </Column>
         <Column sortable resizable width={150} align="center">
-          <HeaderCell>Tipo</HeaderCell>
+          <HeaderCell>Tipo de conteúdo</HeaderCell>
           <Cell dataKey="dscontent" />
+        </Column>
+        <Column sortable resizable width={150} align="center">
+          <HeaderCell>Densidade</HeaderCell>
+          <Cell dataKey="dsdensity" />
         </Column>
         <Column sortable resizable width={225} align="center">
           <HeaderCell>Status</HeaderCell>
