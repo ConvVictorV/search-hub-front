@@ -18,7 +18,7 @@ import {
 } from "rsuite";
 import Select from "../../../Components/Select";
 import SelectWriter from "../../../../Tables/applications/redatores/select"
-const { StringType, NumberType } = Schema.Types;
+const { StringType, NumberType, DateType, ObjectType } = Schema.Types;
 // eslint-disable-next-line react/display-name
 const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
@@ -72,10 +72,19 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
         // dssecundarykeywords: StringType(),
         // dspeopleask: StringType().isRequired('O campo não pode estar vazio.'),
         // dsrecommendations: StringType().isRequired('O campo não pode estar vazio.'),
+        dsvalue: StringType().isRequired('Digite um valor válido'),
+        datePicker: DateType().isRequired('Selecione uma data').min(new Date(), 'Data a partir de:'+new Date().toLocaleDateString()),
+        dsobs: StringType().isRequired('O campo não pode estar vazio.'),
+        dsresponsible: StringType().isRequired('O campo não pode estar vazio.'),
     });
     const [formValue, setFormValue] = useState({
         dstitle,
         dsdescription,
+        dsvalue: dsTotalValue,
+        // datePicker: dsFinalDate,
+        dsobs: dsObservations,
+        writer,
+        dsresponsible,
         dstextlink,
         dstextstructure,
         dssecundarykeywords,
@@ -162,12 +171,17 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
 
     function validate() {
         const requiredFields = [
+            writer,
         ]
 
         const requiredMessages = [
-        ]
+            'Selecione um redator',
 
+        ]
         const erroredFields = requiredFields.map((field, index) => {
+            if(typeof field == 'object' && (Object.keys(field)).length == 0){
+                return index
+            }
             if (field == undefined || field?.length == 0) {
                 return index
             } else {
