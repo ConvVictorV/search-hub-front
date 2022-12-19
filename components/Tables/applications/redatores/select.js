@@ -35,115 +35,115 @@ const rowKey = "idwriter";
 
 
 const ExpandCell = ({
-    rowData,
-    dataKey,
-    expandedRowKeys,
-    onChange,
-    ...props
-  }) => (
-    <Cell {...props} style={{ padding: 5 }}>
-      <IconButton
-        appearance="subtle"
-        onClick={() => {
-          onChange(rowData);
-        }}
-        icon={
-          expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
-            <CollaspedOutlineIcon
-              style={{ color: "var(--color-conversion-1)" }}
-            />
-          ) : (
-            <ExpandOutlineIcon />
-          )
-        }
-      />
-    </Cell>
-  );
+  rowData,
+  dataKey,
+  expandedRowKeys,
+  onChange,
+  ...props
+}) => (
+  <Cell {...props} style={{ padding: 5 }}>
+    <IconButton
+      appearance="subtle"
+      onClick={() => {
+        onChange(rowData);
+      }}
+      icon={
+        expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
+          <CollaspedOutlineIcon
+            style={{ color: "var(--color-conversion-1)" }}
+          />
+        ) : (
+          <ExpandOutlineIcon />
+        )
+      }
+    />
+  </Cell>
+);
 
-  const renderRowExpanded = (rowData) => {  
-    return (
-      <div id="expandable">
-        <div id="expandable-header">
-          <div className="expandable-header-text">
-            <h4>Detalhes do Redator</h4>
-          </div>
-        </div>
-        <div id="expandable-body">
-          <div className="expandable-col"  style={{
-            maxHeight:400
-          }}>
-            <h5>Dados Pessoais</h5>
-            <strong>Área de Formação:</strong>{rowData.dseducation}<br></br>
-            <strong>Portfólio</strong> {rowData.dsportfolio}
-          </div>
-          <div className="expandable-col" style={{
-            maxHeight:400
-          }}>
-            <h5>Tipos de textos</h5>
-            <strong>Categorias:</strong>
-            <ul>
-              {rowData.dscontentcategory == null
-                ? <li key={1}>Campo vazio</li>
-                : (rowData.dscontentcategory || "")
-                    .map(
-                      (row, index) =>
-                        row && <li key={index}>{row?.trim() || ""}</li>
-                    )}
-            </ul>
-            <strong>Tipos de Texto:</strong>
-            <ul>
-              {rowData.dscontenttype == null
-                ? <li key={1}>Tipos de Conteúdo</li>
-                : (rowData.dscontenttype || "")
-                    .map(
-                      (row, index) =>
-                        row && <li key={index}>{row?.trim() || ""}</li>
-                    )}
-            </ul>
-            <strong>Tipos de Página:</strong>
-            <ul>
-              {rowData.dspagetypes == null
-                ? <li key={1}>Tipos de Páginas</li>
-                : (rowData.dspagetypes || "")
-                    .map(
-                      (row, index) =>
-                        row && <li key={index}>{row?.trim() || ""}</li>
-                    )}
-            </ul>
-          </div>
-          <div className="expandable-col"  style={{
-            maxHeight:400
-          }}>
-            <h5>Dados Pagamento</h5>
-            <strong>Disponibilidade de Trabalho:</strong>{rowData.dsworkavaiable}<br></br>
-            <strong>Tipo de Pagamento</strong> {rowData.dspaymenttype}
-          </div>
+const renderRowExpanded = (rowData) => {
+  return (
+    <div id="expandable">
+      <div id="expandable-header">
+        <div className="expandable-header-text">
+          <h4>Detalhes do Redator</h4>
         </div>
       </div>
-    );
-  };
+      <div id="expandable-body">
+        <div className="expandable-col" style={{
+          maxHeight: 400
+        }}>
+          <h5>Dados Pessoais</h5>
+          <strong>Área de Formação:</strong>{rowData.dseducation}<br></br>
+          <strong>Portfólio</strong> {rowData.dsportfolio}
+        </div>
+        <div className="expandable-col" style={{
+          maxHeight: 400
+        }}>
+          <h5>Tipos de textos</h5>
+          <strong>Categorias:</strong>
+          <ul>
+            {rowData.dscontentcategory == null
+              ? <li key={1}>Campo vazio</li>
+              : (rowData.dscontentcategory || "")
+                .map(
+                  (row, index) =>
+                    row && <li key={index}>{row?.trim() || ""}</li>
+                )}
+          </ul>
+          <strong>Tipos de Texto:</strong>
+          <ul>
+            {rowData.dscontenttype == null
+              ? <li key={1}>Tipos de Conteúdo</li>
+              : (rowData.dscontenttype || "")
+                .map(
+                  (row, index) =>
+                    row && <li key={index}>{row?.trim() || ""}</li>
+                )}
+          </ul>
+          <strong>Tipos de Página:</strong>
+          <ul>
+            {rowData.dspagetypes == null
+              ? <li key={1}>Tipos de Páginas</li>
+              : (rowData.dspagetypes || "")
+                .map(
+                  (row, index) =>
+                    row && <li key={index}>{row?.trim() || ""}</li>
+                )}
+          </ul>
+        </div>
+        <div className="expandable-col" style={{
+          maxHeight: 400
+        }}>
+          <h5>Dados Pagamento</h5>
+          <strong>Disponibilidade de Trabalho:</strong>{rowData.dsworkavaiable}<br></br>
+          <strong>Tipo de Pagamento</strong> {rowData.dspaymenttype}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-  const TagsCell = ({ rowData, dataKey, ...props }) => {
-    return (
-      <Cell {...props} className="link-group">
-        {rowData[dataKey].map((v,index)=><Tag key={index}>{v}</Tag> )}
-      </Cell>
-    );
-  }
-  const AvailabilityCell = ({ rowData, dataKey, ...props }) => {
-    return (
-      <Cell {...props} className="link-group">
-        {rowData.dtnextavailability.split('T')[0]}
-      </Cell>
-    );
-  }
-  const RadioButtonCell = ({ rowData, dataKey, ...props }) => {
-    return (
-      <Cell {...props} className="link-group" style={{ marginTop: "-8px", pointerEvents: 'none' }}>
-        <Radio checked={rowData.selected} />
-      </Cell>
-    );
-  }
+const TagsCell = ({ rowData, dataKey, ...props }) => {
+  return (
+    <Cell {...props} className="link-group">
+      {rowData[dataKey].map((v, index) => <Tag key={index}>{v}</Tag>)}
+    </Cell>
+  );
+}
+const AvailabilityCell = ({ rowData, dataKey, ...props }) => {
+  return (
+    <Cell {...props} className="link-group">
+      {rowData.dtnextavailability.split('T')[0]}
+    </Cell>
+  );
+}
+const RadioButtonCell = ({ rowData, dataKey, ...props }) => {
+  return (
+    <Cell {...props} className="link-group" style={{ marginTop: "-8px", pointerEvents: 'none' }}>
+      <Radio checked={rowData.selected} />
+    </Cell>
+  );
+}
 const StatusCell = ({ rowData, dataKey, ...props }) => {
   const { dsstatus } = rowData;
   let color = "var(--color-conversion-1)"
@@ -234,7 +234,8 @@ const WordTable = ({
   setFilterData,
   filterData,
   setWriter,
-  setTableData
+  setTableData,
+  dataBkp
 }) => {
   const [loading, setLoading] = React.useState(true);
   const [limit, setLimit] = React.useState(12);
@@ -242,6 +243,7 @@ const WordTable = ({
   const [sortColumn, setSortColumn] = React.useState();
   const [sortType, setSortType] = React.useState();
   const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
+
   const handleExpanded = (rowData, dataKey) => {
     let open = false;
     const nextExpandedRowKeys = [];
@@ -266,9 +268,9 @@ const WordTable = ({
 
   useEffect(() => {
     if (tableData?.length > 0) setLoading(false);
-    setTimeout(()=>{
+    setTimeout(() => {
       setLoading(false);
-    },5000)
+    }, 5000)
   }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {
@@ -288,19 +290,19 @@ const WordTable = ({
   const setPageData = (arrayData) => {
     return typeof tableData == "object"
       ? arrayData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
   };
   const data =
     typeof tableData == "object"
       ? tableData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
 
   const getMessage = (key) => {
@@ -348,24 +350,24 @@ const WordTable = ({
   //Configurações do filtro
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
     const manualKeys = [
-        { value: "idwriter", label: "Id Redator"},
-        { value: "dsname", label: "Nome"},
-        { value: "dsemail", label: "E-mail"},
-        { value: "dseducation", label: "Área de Formação"},
-        { value: "dsportfolio", label: "Portfólio"},
-        { value: "nbwordsavaiable", label: "Disponibilidade de Palavras"},
-        { value: "dsworkavaiable", label: "Disponibilidade de Trabalho"},
-        { value: "dscontenttype", label: "Tipos de Conteúdo"},
-        { value: "dscontentcategory", label: "Categorias de Conteúdo"},
-        { value: "dspagetypes", label: "Tipos de Páginas"},
-        { value: "dsclientes", label: "Clientes que atende"},
-        { value: "dspaymenttype", label: "Tipo de Pagamento"},
-        { value: "dsvalue", label: "Valor cobrado por 50 palavras"},
-        { value: "dsstatus", label: "Status"},
-        { value: "dtcreate", label: "Data de entrada"},
+      { value: "idwriter", label: "Id Redator" },
+      { value: "dsname", label: "Nome" },
+      { value: "dsemail", label: "E-mail" },
+      { value: "dseducation", label: "Área de Formação" },
+      { value: "dsportfolio", label: "Portfólio" },
+      { value: "nbwordsavaiable", label: "Disponibilidade de Palavras" },
+      { value: "dsworkavaiable", label: "Disponibilidade de Trabalho" },
+      { value: "dscontenttype", label: "Tipos de Conteúdo" },
+      { value: "dscontentcategory", label: "Categorias de Conteúdo" },
+      { value: "dspagetypes", label: "Tipos de Páginas" },
+      { value: "dsclientes", label: "Clientes que atende" },
+      { value: "dspaymenttype", label: "Tipo de Pagamento" },
+      { value: "dsvalue", label: "Valor cobrado por 50 palavras" },
+      { value: "dsstatus", label: "Status" },
+      { value: "dtcreate", label: "Data de entrada" },
     ];
     const keys = Object.keys(tableData[0] || {});
-    
+
     const handleSelect = (eventKey) => {
       onClose();
       const message = getMessage(manualKeys[eventKey].value);
@@ -434,21 +436,97 @@ const WordTable = ({
   };
   return (
     <Panel className="nopadding">
+      <Stack wrap spacing={24} alignItems={"center"}>
+        <InputGroup
+          inside
+          style={{
+            outlineStyle: "none",
+            boxShadow: "none",
+            borderColor: "transparent",
+            margin: '20px'
+          }}
+        >
+          <InputGroup.Addon>
+            <SearchIcon />
+          </InputGroup.Addon>
+          <input
+            className="rs-input"
+            type="text"
+            onChange={(e) => {
+              const { value } = e.target
+              if(value.length == 0) setTableData(dataBkp)
+              else{
+                setTableData(dataBkp.filter(row =>
+                  (row.dsname.toLowerCase().replace(/ /g, '-').replace(/\(/g, '').replace(/\)/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "")).indexOf(value.toLowerCase().replace(/ /g, '-').replace(/\(/g, '').replace(/\)/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "")) > -1
+                ))
+              }
+              
+            }}
+            placeholder={`Buscar pelo nome do redator`}
+            style={{
+              width: "250px",
+              border: "none!important",
+              outlineStyle: "none",
+              boxShadow: "none",
+              borderColor: "transparent",
+              borderLeft: "solid 3px var(--color-conversion-1)",
+              background: "var(--rs-btn-subtle-hover-bg)",
+            }}
+          />
+        </InputGroup>
+        <InputGroup
+          inside
+          style={{
+            outlineStyle: "none",
+            boxShadow: "none",
+            borderColor: "transparent",
+            margin: '20px'
+          }}
+        >
+          <InputGroup.Addon>
+            <SearchIcon />
+          </InputGroup.Addon>
+          <input
+            className="rs-input"
+            type="text"
+            onChange={(e) => {
+              const { value } = e.target
+              if(value.length == 0) setTableData(dataBkp)
+              else{
+                setTableData(dataBkp.filter(row =>
+                  (row.dscontentcategory.toString().toLowerCase().replace(/ /g, '-').replace(/\(/g, '').replace(/\)/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "")).indexOf(value.toLowerCase().replace(/ /g, '-').replace(/\(/g, '').replace(/\)/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, "")) > -1
+                ))
+              }
+              
+            }}
+            placeholder={`Buscar por categoria`}
+            style={{
+              width: "250px",
+              border: "none!important",
+              outlineStyle: "none",
+              boxShadow: "none",
+              borderColor: "transparent",
+              borderLeft: "solid 3px var(--color-conversion-1)",
+              background: "var(--rs-btn-subtle-hover-bg)",
+            }}
+          />
+        </InputGroup>
+      </Stack>
       {/* <hr /> */}
       <Table
         virtualized
         autoHeight
         expandedRowKeys={expandedRowKeys}
         onRowClick={(data) => {
-          tableData.map((row,index)=>{
+          tableData.map((row, index) => {
             tableData[index].selected = false
           })
-          tableData[tableData.map((row,index)=> row.idwriter == data.idwriter && index).filter(row=>row)[0] || 0].selected = true
+          tableData[tableData.map((row, index) => row.idwriter == data.idwriter && index).filter(row => row)[0] || 0].selected = true
           setWriter(data)
         }}
         shouldUpdateScroll={false}
         renderRowExpanded={renderRowExpanded}
-        rowKey={rowKey}        
+        rowKey={rowKey}
         data={getData().length == 0 ? [] : getData()}
         loading={loading}
         sortColumn={sortColumn}
@@ -481,7 +559,7 @@ const WordTable = ({
         <Column sortable width={250} resizable align="center">
           <HeaderCell>Tipos de conteúdo</HeaderCell>
           <TagsCell dataKey="dscontenttype" />
-        </Column> 
+        </Column>
         <Column sortable width={150} resizable align="center">
           <HeaderCell>Disponibilidade</HeaderCell>
           <Cell dataKey="dsavailability" />

@@ -61,6 +61,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
 
     const [writers, setWriters] = useState([])
     const [writer,setWriter] = useState({})
+    const [dataBkp, setDataBkp] = useState([])
     
     const model = Schema.Model({
         // dstitle: StringType().isRequired('O campo não pode estar vazio.'),
@@ -111,6 +112,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
             .then(({ data }) => {
                 writersD = writersD.concat(data)
                 setWriters(writersD)
+                setDataBkp(writersD)
                 data.length != 0 && getWriters()
             })
            
@@ -275,7 +277,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
                 marginTop: "20px"
             }}>
                 <h5>Redator selecionado: <i style={{fontWeight:"normal"}}>{writer.dsname || "Nenhum redator selecionado, clique na linha para selecionar um redator"}</i></h5><br></br>
-                <SelectWriter setTableData={setWriters} setWriter={setWriter} tableData={writers} />
+                <SelectWriter setTableData={setWriters} setWriter={setWriter} tableData={writers} dataBkp={dataBkp} />
             </Panel>
 
             
@@ -283,8 +285,6 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
                 <ButtonToolbar style={{
                     float: "right"
                 }}>
-
-
                     <Button
                         disabled={session.status !== "authenticated"}
                         style={{
