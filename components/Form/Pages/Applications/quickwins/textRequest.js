@@ -206,6 +206,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
     return (
         <Form
             fluid
+            layout="inline" 
             ref={formRef}
             onChange={setFormValue}
             formValue={formValue}
@@ -232,40 +233,52 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
                 padding: "20px 0px",
                 marginTop: "20px"
             }}>
-                <Form.Group controlId="dsvalue">
+                <Form.Group controlId="dsvalue" style={{
+                    display: 'inline-flex',
+                    flexDirection: 'column'
+                }}>
                     <Form.ControlLabel>Valor Total do pedido</Form.ControlLabel>
                     <Form.Control name="dsvalue" onChange={setDsTotalValue} value={dsTotalValue} />
                 </Form.Group>
-                <Form.Group controlId="datePicker">
+                <Form.Group controlId="datePicker" style={{
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    marginLeft: 30
+                }}>
                     <Form.ControlLabel>Prazo de entrega final do pedido</Form.ControlLabel>
                     <Form.Control name="datePicker" accepter={DatePicker} onChange={(value) => {
                         value ? setDsFinalDate(value.toISOString()) : setDsFinalDate(false)
                     }} />
                 </Form.Group>
-                <Form.Group controlId="dsobs">
-                    <Form.ControlLabel>Observações para o redator</Form.ControlLabel>
-                    <Form.Control rows={3} name="dsobs" onChange={setDsObservations} value={dsObservations} accepter={Textarea} placeholder={"Observações"} />
-                </Form.Group>
-            </Panel>
-            <Panel bordered shaded style={{
-                width: "97%",
-                padding: "20px 0px",
-                marginTop: "20px"
-            }}>
-                <h5>Redator: <i style={{fontWeight:"normal"}}>{writer.dsname || "Nenhum redator selecionado, clique na linha para selecionar um redator"}</i></h5><br></br>
-                <SelectWriter setWriter={setWriter} tableData={writers} />
-            </Panel>
-
-            <Panel bordered shaded style={{
-                width: "97%",
-                padding: "20px 0px",
-                marginTop: "20px"
-            }}>
-                <Form.Group controlId="dsresponsible">
+                <Form.Group controlId="dsresponsible" style={{
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    marginLeft: 30
+                }}>
                     <Form.ControlLabel>Analista Responsável</Form.ControlLabel>
                     <Form.Control name="dsresponsible" onChange={setDsresponsible} value={dsresponsible} />
                 </Form.Group>
+
+                <Form.Group controlId="dsobs" style={{
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                    <Form.ControlLabel>Observações para o redator</Form.ControlLabel>
+                    <Form.Control rows={3} name="dsobs" style={{
+                        width: 875
+                    }} onChange={setDsObservations} value={dsObservations} accepter={Textarea} placeholder={"Observações"} />
+                </Form.Group>
             </Panel>
+            <Panel bordered shaded style={{
+                width: "97%",
+                padding: "20px 0px",
+                marginTop: "20px"
+            }}>
+                <h5>Redator selecionado: <i style={{fontWeight:"normal"}}>{writer.dsname || "Nenhum redator selecionado, clique na linha para selecionar um redator"}</i></h5><br></br>
+                <SelectWriter setTableData={setWriters} setWriter={setWriter} tableData={writers} />
+            </Panel>
+
+            
             <Panel>
                 <ButtonToolbar style={{
                     float: "right"

@@ -123,6 +123,27 @@ const ExpandCell = ({
     );
   };
 
+  const TagsCell = ({ rowData, dataKey, ...props }) => {
+    return (
+      <Cell {...props} className="link-group">
+        {rowData[dataKey].map((v,index)=><Tag key={index}>{v}</Tag> )}
+      </Cell>
+    );
+  }
+  const AvailabilityCell = ({ rowData, dataKey, ...props }) => {
+    return (
+      <Cell {...props} className="link-group">
+        {rowData.dtnextavailability.split('T')[0]}
+      </Cell>
+    );
+  }
+  const RadioButtonCell = ({ rowData, dataKey, ...props }) => {
+    return (
+      <Cell {...props} className="link-group" style={{ marginTop: "-8px", pointerEvents: 'none' }}>
+        <Radio checked={rowData.selected} />
+      </Cell>
+    );
+  }
 const StatusCell = ({ rowData, dataKey, ...props }) => {
   const { dsstatus } = rowData;
   let color = "var(--color-conversion-1)"
@@ -212,7 +233,8 @@ const WordTable = ({
   filterActive,
   setFilterData,
   filterData,
-  setWriter
+  setWriter,
+  setTableData
 }) => {
   const [loading, setLoading] = React.useState(true);
   const [limit, setLimit] = React.useState(12);
@@ -418,6 +440,10 @@ const WordTable = ({
         autoHeight
         expandedRowKeys={expandedRowKeys}
         onRowClick={(data) => {
+          tableData.map((row,index)=>{
+            tableData[index].selected = false
+          })
+          tableData[tableData.map((row,index)=> row.idwriter == data.idwriter && index).filter(row=>row)[0] || 0].selected = true
           setWriter(data)
         }}
         shouldUpdateScroll={false}
@@ -440,33 +466,36 @@ const WordTable = ({
             onChange={handleExpanded}
           />
         </Column>
-        
+        <Column width={70} align="center">
+          <HeaderCell>#</HeaderCell>
+          <RadioButtonCell dataKey="selected" />
+        </Column>
         <Column sortable width={150} flexGrow={1} fixed>
           <HeaderCell>Nome</HeaderCell>
           <Cell dataKey="dsname" />
         </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
+        <Column sortable width={250} resizable align="center">
           <HeaderCell>Categoria de conteúdo</HeaderCell>
-          <Cell dataKey="dscontentcategory" />
+          <TagsCell dataKey="dscontentcategory" />
         </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
+        <Column sortable width={250} resizable align="center">
           <HeaderCell>Tipos de conteúdo</HeaderCell>
-          <Cell dataKey="dscontenttype" />
+          <TagsCell dataKey="dscontenttype" />
         </Column> 
-        <Column sortable width={150} flexGrow={1} align="center">
+        <Column sortable width={150} resizable align="center">
           <HeaderCell>Disponibilidade</HeaderCell>
           <Cell dataKey="dsavailability" />
         </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
+        <Column sortable width={150} resizable align="center">
           <HeaderCell>Disponível a partir de</HeaderCell>
-          <Cell dataKey="dtnextavailability" />
+          <AvailabilityCell dataKey="dtnextavailability" />
         </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
+        <Column sortable width={150} resizable align="center">
           <HeaderCell>Valor cobrado (500 palavras)</HeaderCell>
           <Cell dataKey="dsvalue" />
         </Column>
 
-        <Column sortable width={250} flexGrow={1} align="center">
+        <Column sortable width={250} resizable align="center">
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="status" />
         </Column>
