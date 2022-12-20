@@ -173,12 +173,12 @@ const WordTable = ({
       setFilterData(data) && setPage(1)
     }
   };
-  const filterResponsible = (responsible) => {
-    if (responsible && responsible !== "") {
-      let data = filterData.filter(filter => filter.indexOf('dsresponsible') == -1)
-      setFilterData(data.concat(["dsresponsible|contains|" + responsible])) && setPage(1)
+  const filterSquad = (squad) => {
+    if (squad && squad !== "") {
+      let data = filterData.filter(filter => filter.indexOf('dssquadid') == -1)
+      setFilterData(data.concat(["dssquadid|is|" + squad])) && setPage(1)
     } else {
-      let data = filterData.filter(filter => filter.indexOf('dsresponsible') == -1)
+      let data = filterData.filter(filter => filter.indexOf('dssquadid') == -1)
       setFilterData(data) && setPage(1)
     }
   };
@@ -233,7 +233,7 @@ const WordTable = ({
     const keys = checked ? data.map((item) => item.idqwpackage) : [];
     setCheckedKeys(keys);
   };
-  
+
   const handleCheck = (value, checked) => {
     const keys = checked
       ? [...checkedKeys, value]
@@ -391,38 +391,20 @@ const WordTable = ({
           </InputGroup>
           <Select
             fetch={"/api/get/quickWinStatus"}
-            placeholder={'Filtre por Status'}
+            placeholder={'Status'}
             onSelect={filterStatus}
             style={{
-              width: 150
+              width: 100
             }}
           />
-          <InputGroup
-            inside
+          <Select
+            fetch={"/api/get/select/squadsId"}
+            placeholder={'Squad'}
+            onSelect={filterSquad}
             style={{
-              outlineStyle: "none",
-              boxShadow: "none",
-              borderColor: "transparent",
+              width: 100
             }}
-          >
-            <InputGroup.Addon>
-              <SearchIcon />
-            </InputGroup.Addon>
-            <input
-              className="rs-input"
-              type="text"
-              onChange={(event) => filterResponsible(event.target.value)}
-              placeholder={`Buscar pacote por responsável`}
-              style={{
-                width: "300px",
-                border: "none!important",
-                outlineStyle: "none",
-                boxShadow: "none",
-                borderColor: "transparent",
-                background: "var(--rs-btn-subtle-hover-bg)",
-              }}
-            />
-          </InputGroup>
+          />
         </Stack>
 
         {headerMenu}
@@ -492,25 +474,30 @@ const WordTable = ({
           <HeaderCell>Cliente</HeaderCell>
           <Cell dataKey="nmcustomer" />
         </Column>
-        <Column sortable width={150} flexGrow={1} fixed>
-          <HeaderCell>Analista SEO</HeaderCell>
-          <Cell dataKey="dsresponsible" />
-        </Column>
         <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Mês de referência</HeaderCell>
           <Month dataKey="dsmounthyear" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Tipo de conteúdo</HeaderCell>
-          <Cell dataKey="dstype" />
+          <HeaderCell>Squad</HeaderCell>
+          <Cell dataKey="dssquad" />
         </Column>
+        <Column sortable width={150} flexGrow={1} fixed>
+          <HeaderCell>Analista SEO</HeaderCell>
+          <Cell dataKey="dsresponsible" />
+        </Column>
+
         <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Total de QuickWins</HeaderCell>
+          <HeaderCell>QuickWins</HeaderCell>
           <Cell dataKey="nbtotalqws" />
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Total de Palavras</HeaderCell>
+          <HeaderCell>Palavras</HeaderCell>
           <Cell dataKey="nbtotalkeywords" />
+        </Column>
+        <Column sortable width={150} flexGrow={1} align="center">
+          <HeaderCell>Entrega Planejamento</HeaderCell>
+          <Cell dataKey="dsdelivery" />
         </Column>
         <Column sortable width={250} flexGrow={1} align="center">
           <HeaderCell>Status</HeaderCell>

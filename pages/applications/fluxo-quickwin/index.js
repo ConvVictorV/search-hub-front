@@ -16,6 +16,7 @@ import {
   Tooltip,
   useToaster,
   Whisper,
+  Button
 } from "rsuite";
 import Select from "../../../components/Form/Components/Select";
 import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/delete";
@@ -157,12 +158,7 @@ function Demo(args) {
       >
         <div></div>
         <ButtonToolbar>
-        <Whisper
-            trigger="hover"
-            placement="top"
-            speaker={<Tooltip>Novo Planejamento</Tooltip>}
-          >
-            <IconButton
+        <Button
               style={
                 {
                   backgroundColor: "transparent",
@@ -179,8 +175,7 @@ function Demo(args) {
               }/>}
               appearance={"ghost"}
               onClick={() => {setOpenCreateForm(true)}}
-            >Novo Planejamento</IconButton>
-          </Whisper>
+            >Novo Planejamento</Button>
           <Whisper
             trigger="hover"
             placement="top"

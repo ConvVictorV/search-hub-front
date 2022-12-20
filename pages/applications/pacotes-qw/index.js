@@ -21,6 +21,7 @@ import {
 import ExportForm from "../../../components/Form/Pages/Applications/pacotes-qw/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
 import SendToContentForm from "../../../components/Form/Pages/Applications/pacotes-qw/sendtocontent"
+import CreateForm from "../../../components/Form/Pages/Applications/quickwins/create";
 import TableWords from "../../../components/Tables/applications/pacotes-qw";
 import FullWidthLayout from "../../../Layouts/fullwidth";
 
@@ -30,7 +31,8 @@ function Demo(args) {
   const [search, setSearch] = useState("");
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
-  const[openSendToContent, setOpenSendToContent] = useState(false);
+  const [openCreateForm, setOpenCreateForm] = useState(false);
+  const [openSendToContent, setOpenSendToContent] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const route = useRouter()
@@ -41,6 +43,7 @@ function Demo(args) {
     setOpenExportForm(false);
     setOpenImportForm(false);
     setOpenSendToContent(false);
+    setOpenCreateForm(false)
     updateData();
   };
   const getData = () => {
@@ -48,7 +51,7 @@ function Demo(args) {
     setTableData([])
     let page = 0
     let tableD = []
-      let getWords = () => {
+    let getWords = () => {
       axios.get("/api/get/qwPackages?page=" + (++page))
         .then(({ data }) => {
           if (data.length > 0) {
@@ -56,13 +59,26 @@ function Demo(args) {
             setTableData(tableD);
             getWords()
           } else {
-            axios.get('/api/get/select/customersId').then(({ data }) => {
-              setTableData(tableD.map((row,index) => {
+            axios.get('/api/get/customers').then(({ data: customers }) => {
+              axios.get('/api/get/select/squadsId').then(({ data: squads }) => {
+                setTableData(tableD.map((row, index) => {
+                  const { idcustomer } = row
+                  const { nmcustomer, idsquad } = customers.filter(customer => customer.idcustomer == idcustomer)[0]
+                  row.nmcustomer = nmcustomer || ''
+                  row.dssquadid = idsquad || 0
+                  row.dssquad = squads.filter(squad => squad.value == idsquad)[0]?.label || ''
+                  return row
+                }))
+              })
+              setTableData(tableD.map((row, index) => {
                 const { idcustomer } = row
-                row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
+                row.nmcustomer = data.filter(customer => customer.idcustomer == idcustomer)[0]?.nmcustomer || ''
                 return row
               }))
+            }).finally(()=>{
+              
             })
+            
           }
         });
     }
@@ -103,10 +119,10 @@ function Demo(args) {
     getData();
   };
   useEffect(() => {
-    if(localStorage.getItem('customerName')){
-      const routePath = (route.pathname.split('/')[1]) + "/" +(route.pathname.split('/')[2])
-      route.push("/"+routePath+"/customer/"+localStorage.getItem('customerName'))
-    }else{
+    if (localStorage.getItem('customerName')) {
+      const routePath = (route.pathname.split('/')[1]) + "/" + (route.pathname.split('/')[2])
+      route.push("/" + routePath + "/customer/" + localStorage.getItem('customerName'))
+    } else {
       getData();
     }
   }, []);
@@ -126,9 +142,8 @@ function Demo(args) {
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
           <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
-          <Dropdown.Item disabled={checkedKeys.length == 0}  eventKey={2}>{`Exportar ${
-            checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
-          }`}</Dropdown.Item>
+          <Dropdown.Item disabled={checkedKeys.length == 0} eventKey={2}>{`Exportar ${checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
+            }`}</Dropdown.Item>
           {checkedKeys.length != 0 ? (
             <Dropdown.Item
               eventKey={3}
@@ -154,23 +169,28 @@ function Demo(args) {
       >
         <div></div>
         <ButtonToolbar>
-          <Whisper
-              trigger="hover"
-              placement="top"
-              speaker={<Tooltip>Envio para conteúdo</Tooltip>}
-            >
-              <Button
-                style={
-                  {
-                    backgroundColor: "var(--color-conversion-1)",
-                    color: "white",
-                    borderColor: "var(--color-conversion-1)"
-                  }
-                }
-                appearance={"ghost"}
-                onClick={() => {setOpenSendToContent(true)}}
-              >Envio para conteúdo</Button>
-            </Whisper>
+          <Button
+            style={
+              {
+                color: "var(--color-conversion-1)",
+                borderColor: "var(--color-conversion-1)"
+              }
+            }
+            appearance={"ghost"}
+            onClick={() => { setOpenCreateForm(true) }}
+          >Novo Planejamento</Button>
+
+          <Button
+            style={
+              {
+                backgroundColor: "var(--color-conversion-1)",
+                color: "white",
+                borderColor: "var(--color-conversion-1)"
+              }
+            }
+            appearance={"ghost"}
+            onClick={() => { setOpenSendToContent(true) }}
+          >Envio para conteúdo</Button>
           <Whisper
             trigger="hover"
             placement="top"
@@ -180,13 +200,13 @@ function Demo(args) {
               style={
                 !filterActive
                   ? {
-                      backgroundColor: "transparent",
-                      color: "var(--color-conversion-1)",
-                    }
+                    backgroundColor: "transparent",
+                    color: "var(--color-conversion-1)",
+                  }
                   : {
-                      backgroundColor: "var(--color-conversion-1)",
-                      color: "white",
-                    }
+                    backgroundColor: "var(--color-conversion-1)",
+                    color: "white",
+                  }
               }
               icon={<FunnelIcon />}
               appearance={"subtle"}
@@ -242,7 +262,7 @@ function Demo(args) {
   };
 
   function filter(search, data) {
-    let filteredData = [...data]; 
+    let filteredData = [...data];
     if (filterData.length > 0) {
       if (typeof data === "object") {
         filterData.map((filterString) => {
@@ -251,7 +271,7 @@ function Demo(args) {
           const type = filterString[1];
           const value = filterString[2]?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
           filteredData = filteredData.filter((row) => {
-            const rowColumn = row[column]?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            const rowColumn = row[column]?.toString()?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
             switch (type) {
               case "is":
                 return rowColumn == value;
@@ -266,7 +286,7 @@ function Demo(args) {
     }
     if (search.length && typeof data === "object") {
       return data.filter((row) => {
-                const flatRow = JSON.stringify(row).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        const flatRow = JSON.stringify(row).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
         return flatRow.includes(search.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ""));
       });
     }
@@ -286,6 +306,20 @@ function Demo(args) {
           padding: "0px 20px 0px 50px",
         }}
       >
+        <Modal
+          open={openCreateForm}
+          onClose={handleClose}
+          size="md"
+          keyboard={false}
+          backdrop={"static"}
+        >
+          <Modal.Header>
+            <Modal.Title>Planejamento de QuickWins</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <CreateForm closeModal={handleClose} />
+          </Modal.Body>
+        </Modal>
         <Modal
           open={openExportForm}
           onClose={handleClose}
@@ -334,12 +368,12 @@ function Demo(args) {
           </Modal.Header>
           <Modal.Body>
             Tem certeza que deseja enviar esses {checkedKeys.length} pacotes para conteúdo?
-            <SendToContentForm 
+            <SendToContentForm
               closeModal={handleClose}
               data={tableData.filter(
-                (qw) =>  checkedKeys.indexOf(qw.idqwpackage) > -1
+                (qw) => checkedKeys.indexOf(qw.idqwpackage) > -1
               )}
-              ></SendToContentForm>
+            ></SendToContentForm>
           </Modal.Body>
         </Modal>
 
