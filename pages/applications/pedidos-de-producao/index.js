@@ -157,7 +157,7 @@ function Demo(args) {
             placement="top"
             speaker={<Tooltip>Novo Redator</Tooltip>}
           >
-            <IconButton
+            {/* <IconButton
               style={
                 {
                   backgroundColor: "transparent",
@@ -174,7 +174,7 @@ function Demo(args) {
               }/>}
               appearance={"ghost"}
               onClick={() => {setOpenCreateForm(true)}}
-            >Novo Pedido</IconButton>
+            >Novo Pedido</IconButton> */}
           </Whisper>
           <Whisper
             trigger="hover"
