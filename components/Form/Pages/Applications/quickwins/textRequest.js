@@ -47,7 +47,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
 
     const [dsTotalValue, setDsTotalValue] = useState(rowData[0]?.dsvalue || '')
     const [dsObservations, setDsObservations] = useState(rowData[0]?.dsorientation||'')
-    const [dsFinalDate, setDsFinalDate] = useState(rowData[0]?.dtdeadline ||'')
+    const [dsFinalDate, setDsFinalDate] = useState(rowData[0]?.dtdeadline || new Date())
     const [dsresponsible, setDsresponsible] = useState(rowData[0]?.dsresponsible ||'')
 
     const [dstextlink, setDstextlink] = useState(rowData.textTopic?.dstextlink || '')
