@@ -152,30 +152,6 @@ function Demo(args) {
       >
         <div></div>
         <ButtonToolbar>
-        <Whisper
-            trigger="hover"
-            placement="top"
-            speaker={<Tooltip>Novo Redator</Tooltip>}
-          >
-            {/* <IconButton
-              style={
-                {
-                  backgroundColor: "transparent",
-                  color: "var(--color-conversion-1)",
-                  borderColor: "var(--color-conversion-1)"
-                }
-              }
-              icon={<FunnelIcon style={
-                {
-                  backgroundColor: "transparent",
-                  color: "var(--color-conversion-1)",
-                  borderColor: "var(--color-conversion-1)"
-                }
-              }/>}
-              appearance={"ghost"}
-              onClick={() => {setOpenCreateForm(true)}}
-            >Novo Pedido</IconButton> */}
-          </Whisper>
           <Whisper
             trigger="hover"
             placement="top"

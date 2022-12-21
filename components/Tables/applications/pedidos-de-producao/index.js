@@ -19,7 +19,8 @@ import {
   TagGroup,
   useToaster,
   Whisper,
-  Badge
+  Badge,
+  Tooltip
 } from "rsuite";
 
 import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
@@ -48,81 +49,91 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 );
 
 const ExpandCell = ({
-    rowData,
-    dataKey,
-    expandedRowKeys,
-    onChange,
-    ...props
-  }) => (
-    <Cell {...props} style={{ padding: 5 }}>
-      <IconButton
-        appearance="subtle"
-        onClick={() => {
-          onChange(rowData);
-        }}
-        icon={
-          expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
-            <CollaspedOutlineIcon
-              style={{ color: "var(--color-conversion-1)" }}
-            />
-          ) : (
-            <ExpandOutlineIcon />
-          )
-        }
-      />
-    </Cell>
-  );
+  rowData,
+  dataKey,
+  expandedRowKeys,
+  onChange,
+  ...props
+}) => (
+  <Cell {...props} style={{ padding: 5 }}>
+    <IconButton
+      appearance="subtle"
+      onClick={() => {
+        onChange(rowData);
+      }}
+      icon={
+        expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
+          <CollaspedOutlineIcon
+            style={{ color: "var(--color-conversion-1)" }}
+          />
+        ) : (
+          <ExpandOutlineIcon />
+        )
+      }
+    />
+  </Cell>
+);
 
-  const renderRowExpanded = (rowData) => {  
-    return (
-      <div id="expandable">
-        <div id="expandable-header">
-          <div className="expandable-header-text">
-            <h4>Detalhes do Pedido</h4>
-          </div>
-        </div>
-        <div id="expandable-body">
-          <div className="expandable-col"  style={{
-            maxHeight:400
-          }}>
-            <strong>Tipo de conteúdo</strong><br></br>{rowData.dscontenttype}<br></br>
-          </div>
-          <div className="expandable-col"  style={{
-            maxHeight:400
-          }}>
-            <strong>Total de palavras</strong><br></br>{rowData.nbtotalkeywords}<br></br>
-          </div>
-          <div className="expandable-col"  style={{
-            maxHeight:400
-          }}>
-            <strong>Total de Quick Wins</strong><br></br>{rowData.nbtotalqws}<br></br>
-          </div>
-          <div className="expandable-col"  style={{
-            maxHeight:400
-          }}>
-            <strong>Analista Conteúdo responsável<br></br></strong>{rowData.dsresponsible}<br></br>
-          </div>
+const renderRowExpanded = (rowData) => {
+  return (
+    <div id="expandable">
+      <div id="expandable-header">
+        <div className="expandable-header-text">
+          <h4>Detalhes do Pedido</h4>
         </div>
       </div>
-    );
-  };
+      <div id="expandable-body">
+        <div className="expandable-col" style={{
+          maxHeight: 400
+        }}>
+          <strong>Tipo de conteúdo</strong><br></br>{rowData.dscontenttype}<br></br>
+        </div>
+        <div className="expandable-col" style={{
+          maxHeight: 400
+        }}>
+          <strong>Total de palavras</strong><br></br>{rowData.nbtotalkeywords}<br></br>
+        </div>
+        <div className="expandable-col" style={{
+          maxHeight: 400
+        }}>
+          <strong>Total de Quick Wins</strong><br></br>{rowData.nbtotalqws}<br></br>
+        </div>
+        <div className="expandable-col" style={{
+          maxHeight: 400
+        }}>
+          <strong>Analista Conteúdo responsável<br></br></strong>{rowData.dsresponsible}<br></br>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-  const ActionCell = ({
-    setDrawerOpenEdit,
-    rowData,
-    dataKey,
-    setRowData,
-    ...props
-  }) => {
-    function handleAction() {
-      setRowData(rowData);
-      setDrawerOpenEdit(true);
-    }
-    return (
-      <Cell {...props} className="link-group">
-        <div style={{ marginTop: "-8px" }}>
-          <IconButton
-            disabled={rowData.dsstatus.toLowerCase().indexOf('recusado') == -1}
+const ActionCell = ({
+  setDrawerOpenEdit,
+  rowData,
+  dataKey,
+  setRowData,
+  ...props
+}) => {
+  const disabled = rowData.dsstatus.toLowerCase().indexOf('recusado') == -1
+  function handleAction() {
+    setRowData(rowData);
+    setDrawerOpenEdit(true);
+  }
+  return (
+    <Cell {...props} className="link-group">
+      <div style={{ marginTop: "-8px" }}>
+        <Whisper
+          trigger="hover"
+          placement={"left"}
+          controlId={`control-id-left`}
+          speaker={
+            <Tooltip visible>
+              {disabled ? "Apenas pedidos recusados podem ser editados" : "Editar pedido"}
+            </Tooltip>
+          }
+        ><IconButton
+            disabled={disabled}
             appearance="primary"
             style={{
               background: "var(--color-conversion-1)",
@@ -130,10 +141,12 @@ const ExpandCell = ({
             onClick={handleAction}
             icon={<EditIcon />}
           />
-        </div>
-      </Cell>
-    );
-  };
+        </Whisper>
+
+      </div>
+    </Cell>
+  );
+};
 
 const StatusCell = ({ rowData, dataKey, ...props }) => {
   const { dsstatus } = rowData;
@@ -218,7 +231,7 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
         color: "var(--rs-text-link-hover)",
         textDecoration: "underline",
       }}
-      href={'/applications/fluxo-quickwin/package/'+rowData?.dskey}
+      href={'/applications/fluxo-quickwin/package/' + rowData?.dskey}
       target={"_blank"}
       rel="noopener noreferrer"
     >
@@ -238,8 +251,8 @@ function capitalizeFirstLetter(string) {
 }
 
 const DateEntrance = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
-    <Cell {...props}>{rowData?.dtdeadline?.split("T")[0]}</Cell>
-  );
+  <Cell {...props}>{rowData?.dtdeadline?.split("T")[0]}</Cell>
+);
 
 const WordTable = ({
   setDrawerOpenEdit,
@@ -284,9 +297,9 @@ const WordTable = ({
 
   useEffect(() => {
     if (tableData?.length > 0) setLoading(false);
-    setTimeout(()=>{
+    setTimeout(() => {
       setLoading(false);
-    },5000)
+    }, 5000)
   }, [tableData]);
 
   const handleChangeLimit = (dataKey) => {
@@ -306,19 +319,19 @@ const WordTable = ({
   const setPageData = (arrayData) => {
     return typeof tableData == "object"
       ? arrayData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
   };
   const data =
     typeof tableData == "object"
       ? tableData.filter((v, i) => {
-          const start = limit * (page - 1);
-          const end = start + limit;
-          return i >= start && i < end;
-        })
+        const start = limit * (page - 1);
+        const end = start + limit;
+        return i >= start && i < end;
+      })
       : [];
   const handleCheckAll = (value, checked) => {
     const keys = checked ? data.map((item) => item.idworkedpage) : [];
@@ -382,21 +395,21 @@ const WordTable = ({
   //Configurações do filtro
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
     const manualKeys = [
-        { value: "idtextrequest", label: "Código"}, 
-        { value: "dsvalue", label: "Valor do pedido"}, 
-        { value: "dtdeadline", label: "Prazo de entrega"}, 
-        { value: "fkwriter", label: "Redator"}, 
-        { value: "dsstatus", label: "Status do pedido"}, 
-        { value: "nbtotalkeywords", label: "Total de palavras"}, 
-        { value: "nbtotalqws", label: "Total de Quick Wins"}, 
-        { value: "dsresponsible", label: "Analista Conteúdo responsável"}, 
-        { value: "fkidquickwin", label: "id qw"}, 
-        { value: "dscontenttype", label: "Tipo de conteúdo"}, 
-        { value: "idcustomer", label: "Cliente"},
-        { value: "dsmonth", label: "Mês de referência"}
+      { value: "idtextrequest", label: "Código" },
+      { value: "dsvalue", label: "Valor do pedido" },
+      { value: "dtdeadline", label: "Prazo de entrega" },
+      { value: "fkwriter", label: "Redator" },
+      { value: "dsstatus", label: "Status do pedido" },
+      { value: "nbtotalkeywords", label: "Total de palavras" },
+      { value: "nbtotalqws", label: "Total de Quick Wins" },
+      { value: "dsresponsible", label: "Analista Conteúdo responsável" },
+      { value: "fkidquickwin", label: "id qw" },
+      { value: "dscontenttype", label: "Tipo de conteúdo" },
+      { value: "idcustomer", label: "Cliente" },
+      { value: "dsmonth", label: "Mês de referência" }
     ];
     const keys = Object.keys(tableData[0] || {});
-    
+
     const handleSelect = (eventKey) => {
       onClose();
       const message = getMessage(manualKeys[eventKey].value);
@@ -530,10 +543,10 @@ const WordTable = ({
         virtualized
         autoHeight
         expandedRowKeys={expandedRowKeys}
-        onRowClick={(data) => {}}
+        onRowClick={(data) => { }}
         shouldUpdateScroll={false}
         renderRowExpanded={renderRowExpanded}
-        rowKey={rowKey}        
+        rowKey={rowKey}
         data={getData().length == 0 ? [] : getData()}
         loading={loading}
         sortColumn={sortColumn}
@@ -568,7 +581,7 @@ const WordTable = ({
             onChange={handleExpanded}
           />
         </Column>
-        
+
         <Column sortable width={150} flexGrow={1} fixed>
           <HeaderCell>Código</HeaderCell>
           <Cell dataKey="idtextrequest" />
@@ -603,7 +616,7 @@ const WordTable = ({
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="dsstatus" />
         </Column>
-        
+
         <Column width={50} verticalAlign={"top"} align="center">
           <HeaderCell>...</HeaderCell>
           <ActionCell
