@@ -21,7 +21,7 @@ import ExportForm from "../../../components/Form/Pages/Applications/quickwins/ex
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
 import TableWords from "../../../components/Tables/applications/pedidos-de-producao";
 import FullWidthLayout from "../../../Layouts/fullwidth";
-import CreateForm from "../../../components/Form/Pages/Applications/redatores/";
+import CreateForm from "../../../components/Form/Pages/Applications/quickwins/textRequest";
 
 
 function Demo(args) {
@@ -330,15 +330,15 @@ function Demo(args) {
         <Modal
           open={openCreateForm}
           onClose={handleClose}
-          size="md"
+          size="full"
           keyboard={false}
-          backdrop={"static"}
+          backdrop={"static"} 
         >
           <Modal.Header>
-            <Modal.Title>Adicionar Redator</Modal.Title>
+            <Modal.Title>Editar Pedido</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <CreateForm closeModal={handleClose} />
+            <CreateForm rowData={[rowData]} closeModal={handleClose} />
           </Modal.Body>
         </Modal>
 
@@ -352,6 +352,7 @@ function Demo(args) {
           filterActive={filterActive}
           filterData={filterData}
           setFilterData={setFilterData}
+          setDrawerOpenEdit={setOpenCreateForm}
         />
       </Container>
     </FullWidthLayout>

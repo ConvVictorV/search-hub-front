@@ -122,6 +122,7 @@ const ExpandCell = ({
       <Cell {...props} className="link-group">
         <div style={{ marginTop: "-8px" }}>
           <IconButton
+            disabled={rowData.dsstatus.toLowerCase().indexOf('recusado') == -1}
             appearance="primary"
             style={{
               background: "var(--color-conversion-1)",

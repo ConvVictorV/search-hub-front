@@ -27,10 +27,11 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
     const dataCustomer = rowData[0]?.nmcustomer
     const dataIdCustomer = rowData[0]?.idcustomer
     const dataMonth = rowData[0]?.dsmonth
-    const dataYear = rowData[0]?.dsyear
-    const dataContent = rowData[0]?.dscontent
-    const dataTotalQuickwins = rowData.length || 0
-    const dataTotalWords = rowData.reduce(getTotal, 0)
+    const dataYear = rowData[0]?.dsyear || new Date().getFullYear()
+    const dataContent = rowData[0]?.dscontent || rowData[0]?.dscontenttype
+    const dataTotalQuickwins = (rowData.length || rowData[0].nbtotalqws) || 0
+    const dataTotalWords = rowData.reduce(getTotal, 0) || rowData[0].nbtotalkeywords
+    const [idtextrequest, setIdtextrequest] = useState(rowData.idtextrequest || 0)
 
     function getTotal(total, item) {
         return total + item.dsdensity
@@ -39,15 +40,15 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
     const session = useSession();
     const toast = useToaster();
     const formRef = React.useRef();
-    const [idquickwin, setIdquickwin] = useState(rowData.id)
+    
     const [idtexttopic, setIdTextTopic] = useState(rowData.textTopic?.idtexttopic || 0)
     const [dstitle, setDstitle] = useState(rowData.textTopic?.dstitle || '')
     const [dsdescription, setDsdescription] = useState(rowData.textTopic?.dsdescription || '')
 
-    const [dsTotalValue, setDsTotalValue] = useState('')
-    const [dsObservations, setDsObservations] = useState('')
-    const [dsFinalDate, setDsFinalDate] = useState('')
-    const [dsresponsible, setDsresponsible] = useState('')
+    const [dsTotalValue, setDsTotalValue] = useState(rowData[0]?.dsvalue || '')
+    const [dsObservations, setDsObservations] = useState(rowData[0]?.dsorientation||'')
+    const [dsFinalDate, setDsFinalDate] = useState(rowData[0]?.dtdeadline ||'')
+    const [dsresponsible, setDsresponsible] = useState(rowData[0]?.dsresponsible ||'')
 
     const [dstextlink, setDstextlink] = useState(rowData.textTopic?.dstextlink || '')
     const [dstextstructure, setDstextstructure] = useState(rowData.textTopic?.dstextstructure || '')
@@ -74,7 +75,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
         // dspeopleask: StringType().isRequired('O campo não pode estar vazio.'),
         // dsrecommendations: StringType().isRequired('O campo não pode estar vazio.'),
         dsvalue: StringType().isRequired('Digite um valor válido'),
-        datePicker: DateType().isRequired('Selecione uma data').min(new Date(), 'Data a partir de:'+new Date().toLocaleDateString()),
+        datePicker: DateType().isRequired('Selecione uma data').min(new Date(), 'Data a partir de: '+new Date().toLocaleDateString()),
         dsobs: StringType().isRequired('O campo não pode estar vazio.'),
         dsresponsible: StringType().isRequired('O campo não pode estar vazio.'),
     });
@@ -172,6 +173,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
     };
 
     function validate() {
+        formValue.datePicker = dsFinalDate
+        console.log(formError)
         const requiredFields = [
             writer,
         ]
@@ -248,7 +251,9 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
                     marginLeft: 30
                 }}>
                     <Form.ControlLabel>Prazo de entrega final do pedido</Form.ControlLabel>
-                    <Form.Control name="datePicker" accepter={DatePicker} onChange={(value) => {
+                    <Form.Control name="datePicker" accepter={DatePicker} 
+                    value={new Date(dsFinalDate)}
+                    onChange={(value) => {
                         value ? setDsFinalDate(value.toISOString()) : setDsFinalDate(false)
                     }} />
                 </Form.Group>
