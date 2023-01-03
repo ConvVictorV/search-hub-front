@@ -49,7 +49,7 @@ function Sidenav() {
                   height={30}
                   alt="Logo Conversion Colorida"
                 />
-                <h4 className="logo-name">SearchHub</h4>
+                <h4 className="logo-name">SearchHub Homolog</h4>
               </div>
             </Link>
             <hr />
