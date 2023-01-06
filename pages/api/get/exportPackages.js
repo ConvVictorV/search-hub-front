@@ -8,8 +8,9 @@ export default async function handler(req, res) {
     await Promise.all(
       content.map(async row => {
         const { dskey } = row
+        const backend = process.env.ENV == 'DEV' ? 'https://search-hub-backend-homolog-nukcfjbsza-rj.a.run.app' : 'https://search-hub-backend-nukcfjbsza-rj.a.run.app'
         return await axios
-          .get(`https://search-hub-backend-nukcfjbsza-rj.a.run.app/quickwins${dskey ? "/key/" + dskey : "/"}`)
+          .get(`${backend}/quickwins${dskey ? "/key/" + dskey : "/"}`)
           .then(({ data }) => {
             fastcsv
               .write(data, { headers: true })

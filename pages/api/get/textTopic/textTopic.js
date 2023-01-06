@@ -1,8 +1,9 @@
 import axios from "axios";
 
 export default function handler(req, res) {
+  const backend = process.env.ENV == 'DEV' ? 'https://search-hub-backend-homolog-nukcfjbsza-rj.a.run.app' : 'https://search-hub-backend-nukcfjbsza-rj.a.run.app'
   axios
-    .get(`https://search-hub-backend-nukcfjbsza-rj.a.run.app/texttopics/${req.query.idquickwin || ''}`)
+    .get(`${backend}/texttopics/${req.query.idquickwin || ''}`)
     .then(({ data }) => res.status(200).send(data))
     .catch((err) => {
       res
