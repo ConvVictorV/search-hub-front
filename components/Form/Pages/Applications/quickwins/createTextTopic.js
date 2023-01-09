@@ -50,9 +50,9 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
         dstextlink: StringType().isRequired('O campo não pode estar vazio.').isURL('Digite uma url válida').addRule((value, data) => {
             return value.indexOf('docs') > - 1
         }, "A url precisa ser um docs."),
-        dstextstructure: StringType(),
+        dstextstructure: StringType().isRequired('O campo não pode estar vazio.'),
         dssecundarykeywords: StringType(),
-        dspeopleask: StringType().isRequired('O campo não pode estar vazio.'),
+        dspeopleask: StringType(),
         dsrecommendations: StringType().isRequired('O campo não pode estar vazio.'),
     });
     const [formValue, setFormValue] = useState({
@@ -276,7 +276,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             }}>
                 <p style={{
                     paddingBottom: 20
-                }}>Recomendamos que você crie o esboço do texto aqui</p>
+                }}>Recomendamos o máximo de 5 sugestões para textos de até 500 palavras. Você pode criar o esboço do texto aqui</p>
                 <Form.Group controlId="dstextstructure">
                     <Form.Control placeholder={"Estrutura do Conteúdo (H2, H3, H4)"} rows={3} name="dstextstructure" onChange={setDstextstructure} value={dstextstructure} accepter={Textarea} />
                 </Form.Group>
@@ -289,7 +289,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
             }}>
                 <p style={{
                     paddingBottom: 20
-                }}>Recomendamos que você crie o esboço do texto aqui</p>
+                }}>Recomendamos o máximo de 5 sugestões para textos de até 500 palavras. indicar termos separados por vírgula (palavra 1, palavra 2, palavra 3...)</p>
                 <Form.Group controlId="dssecundarykeywords">
                     <Form.Control rows={3} name="dssecundarykeywords" onChange={setDsecundarykeywords} value={dssecundarykeywords} accepter={Textarea} placeholder={"Palavras-chave secundárias"} />
                 </Form.Group>
