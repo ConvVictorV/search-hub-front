@@ -335,7 +335,7 @@ const WordTable = ({
           <Whisper
             trigger="hover"
             placement="top"
-            speaker={<Tooltip>Criar Pauta</Tooltip>}
+            speaker={<Tooltip>Editar Pauta</Tooltip>}
           >
             <IconButton
               appearance="primary"
@@ -481,6 +481,7 @@ const WordTable = ({
             <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura do texto</strong>:<br />{rowData.textTopic?.dstextstructure}</p>
             <p><strong>Termos secundários</strong>: {rowData.textTopic?.dssecundarykeywords}</p>
             <p style={{ whiteSpace: 'pre-wrap' }}><strong>Perguntas frequentes</strong>:<br />{rowData.textTopic?.dspeopleask}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Linkagem Interna</strong>:<br />{rowData.textTopic?.dsinternallink}</p>
             <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura da página</strong>:<br />{rowData.textTopic?.dspagestructure}</p>
             <p style={{ whiteSpace: 'pre-wrap' }}><strong>Recomendações</strong>:<br />{rowData.textTopic?.dsrecommendations}</p>
             <p><strong>Cta</strong>: {rowData.textTopic?.dscta}</p>
@@ -882,7 +883,7 @@ const WordTable = ({
         cellBordered
         bordered
       >
-        <Column width={50} align="center">
+        <Column width={50} align="center" fixed>
           <HeaderCell style={{ padding: 0 }}>
             <div style={{ lineHeight: "40px" }}>
               <Checkbox
@@ -899,7 +900,7 @@ const WordTable = ({
             onChange={handleCheck}
           />
         </Column>
-        <Column width={70} align="center">
+        <Column width={70} align="center" fixed>
           <HeaderCell>#</HeaderCell>
           <ExpandCell
             dataKey="id"

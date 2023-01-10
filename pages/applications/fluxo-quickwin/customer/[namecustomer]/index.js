@@ -412,7 +412,7 @@ function Demo(args) {
           backdrop={"static"}
         >
           <Modal.Header>
-            <Modal.Title>Criar Pauta</Modal.Title>
+            <Modal.Title>Editar Pauta</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <EditForm rowData={rowData} closeModal={handleClose} />
