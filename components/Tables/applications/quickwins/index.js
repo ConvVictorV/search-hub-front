@@ -31,6 +31,7 @@ import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
 import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
 import EditIcon from "@rsuite/icons/Edit";
 import DocPassIcon from '@rsuite/icons/DocPass';
+import CloseIcon from '@rsuite/icons/Close';
 import axios from "axios";
 import { Loader } from 'rsuite';
 import Select from "../../../../components/Form/Components/Select";
@@ -201,6 +202,7 @@ const WordTable = ({
   setFilterData,
   filterData,
   setOpenEditForm,
+  setOpenDeleteLineForm,
   setRowData,
   setOpenCreateTextTopicForm,
   packageData
@@ -297,6 +299,7 @@ const WordTable = ({
   const ActionCell = ({
     setOpenEditForm,
     setOpenCreateTextTopicForm,
+    setOpenDeleteLineForm,
     rowData,
     dataKey,
     setRowData,
@@ -306,6 +309,15 @@ const WordTable = ({
       setRowData(rowData);
       setOpenEditForm(true);
     }
+
+    function deleteQuickWin(){
+      setRowData(rowData);
+      setOpenDeleteLineForm(true);
+    }
+
+    
+
+
     async function openCreateTextTopic() {
       await axios.get('/api/get/textTopic/textTopic?idquickwin=' + rowData.id).then(({ data }) => {
         rowData.textTopic = data[0] || undefined
@@ -344,6 +356,20 @@ const WordTable = ({
               }}
               onClick={openCreateTextTopic}
               icon={<DocPassIcon />}
+            />
+          </Whisper>
+          <Whisper
+            trigger="hover"
+            placement="top"
+            speaker={<Tooltip>Deletar QW</Tooltip>}
+          >
+            <IconButton
+              appearance="primary"
+              style={{
+                background: "var(--color-conversion-1)",
+              }}
+              onClick={deleteQuickWin}
+              icon={<CloseIcon />}
             />
           </Whisper>
         </div>
@@ -899,7 +925,7 @@ const WordTable = ({
             onChange={handleCheck}
           />
         </Column>
-        <Column width={70} align="center">
+        <Column width={40} align="center">
           <HeaderCell>#</HeaderCell>
           <ExpandCell
             dataKey="id"
@@ -912,7 +938,7 @@ const WordTable = ({
           <HeaderCell>Palavra</HeaderCell>
           <Cell dataKey="dskeyword" />
         </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
+        <Column sortable resizable width={180}  flexGrow={1} align="center">
           <HeaderCell>Url</HeaderCell>
           <LinkCell dataKey="dsurl" />
         </Column>
@@ -924,7 +950,7 @@ const WordTable = ({
           <HeaderCell>Tipo de conteúdo</HeaderCell>
           <Cell dataKey="dscontent" />
         </Column>
-        <Column sortable resizable width={150} align="center">
+        <Column sortable resizable width={100} align="center">
           <HeaderCell>Densidade</HeaderCell>
           <Cell dataKey="dsdensity" />
         </Column>
@@ -932,11 +958,13 @@ const WordTable = ({
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="status" />
         </Column>
-        <Column width={100} verticalAlign={"top"} align="center">
+        <Column width={140} verticalAlign={"top"} align="center">
           <HeaderCell>...</HeaderCell>
           <ActionCell
             setOpenCreateTextTopicForm={setOpenCreateTextTopicForm}
             setOpenEditForm={setOpenEditForm}
+            setOpenDeleteLineForm={setOpenDeleteLineForm}
+            
             setRowData={setRowData}
             dataKey="idcustomer"
           />

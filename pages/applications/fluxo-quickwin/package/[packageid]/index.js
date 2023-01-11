@@ -20,9 +20,10 @@ import {
 } from "rsuite";
 import Select from "../../../../../components/Form/Components/Select";
 import DeleteForm from "../../../../../components/Form/Pages/Applications/quickwins/delete";
+import DeleteLineForm from "../../../../../components/Form/Pages/Applications/quickwins/deleteline";
 import ExportForm from "../../../../../components/Form/Pages/Applications/quickwins/export";
 import ImportForm from "../../../../../components/Form/Pages/Applications/quickwins/import";
-import CreateForm from "../../../../../components/Form/Pages/Applications/quickwins/create";
+import CreateForm from "../../../../../components/Form/Pages/Applications/quickwins/createOnEspecifcPackage";
 import CreateTextTopic from "../../../../../components/Form/Pages/Applications/quickwins/createTextTopic";
 import CreateTextRequest from "../../../../../components/Form/Pages/Applications/quickwins/textRequest";
 import EditForm from "../../../../../components/Form/Pages/Applications/quickwins/edit";
@@ -60,6 +61,7 @@ function Demo(args) {
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
+  const [openDeleteLineForm, setOpenDeleteLineForm] = useState(false);
   const [openCreateTextTopicForm, setOpenCreateTextTopicForm] = useState(false);
   const [openTextRequestForm, setOpenTextRequestForm] = useState(false)
   const [filterData, setFilterData] = useState([]);
@@ -74,6 +76,7 @@ function Demo(args) {
     setOpenExportForm(false);
     setOpenImportForm(false);
     setOpenEditForm(false);
+    setOpenDeleteLineForm(false);
     setOpenDeleteForm(false);
     setOpenCreateForm(false);
     setOpenCreateTextTopicForm(false);
@@ -97,6 +100,8 @@ function Demo(args) {
           } else {
             packageid && axios.get('/api/get/qwPackageByKey?key=' + packageid).then(({ data: _package }) => {
               setPackageData(_package[0])
+              console.log("Bem aqui")
+              console.log(setPackageData)
               if(_package[0]) axios.get('/api/get/select/customersId').then(({ data }) => {
                 console.log(_package[0]);
                 ((_package[0].nmcustomer = data.filter(customer => customer.value == _package[0].idcustomer)[0]?.label || '') && setPackageData(_package[0]));
@@ -244,7 +249,7 @@ function Demo(args) {
               }
               appearance={"default"}
               onClick={() => { setOpenCreateForm(true) }}
-            >Editar Pacote</Button>
+            >Adicionar QW</Button>
           <Whisper
             trigger="hover"
             placement="top"
@@ -406,12 +411,30 @@ function Demo(args) {
           backdrop={"static"}
         >
           <Modal.Header>
-            <Modal.Title>Planejamento de QuickWins</Modal.Title>
+            <Modal.Title>Adicionar QuickWins ao Pacote</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <CreateForm closeModal={handleClose} />
+            <CreateForm closeModal={handleClose} packagedata={packageData}/>
           </Modal.Body>
         </Modal>
+
+        <Modal
+          open={openDeleteLineForm}
+          onClose={handleClose}
+          size="xs"
+          keyboard={false}
+          backdrop={"static"}
+          >
+          <Modal.Header>
+            <Modal.Title>Deletar QuickWin</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <DeleteLineForm
+              closeModal={handleClose}
+              rowData={rowData}
+            />
+          </Modal.Body>
+          </Modal>
 
         <Modal
           open={openEditForm}
@@ -497,6 +520,7 @@ function Demo(args) {
           checkedKeys={checkedKeys}
           setOpenEditForm={setOpenEditForm}
           setOpenCreateTextTopicForm={setOpenCreateTextTopicForm}
+          setOpenDeleteLineForm={setOpenDeleteLineForm}
           tableData={filter(search, tableData)}
           setSearch={setSearch}
           headerMenu={getHeaderTable()}
