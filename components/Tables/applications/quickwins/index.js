@@ -182,8 +182,8 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
     </Cell>
   );
 };
-const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
-  <Cell {...props}>{rowData?.dtimplement?.split("T")[0]}</Cell>
+const DateCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+  <Cell {...props}>{`${rowData?.dsmonth}, ${rowData?.dsyear}`}</Cell>
 );
 function capitalizeFirstLetter(string) {
   return string ? string.charAt(0).toUpperCase() + string.slice(1) : ''
@@ -437,6 +437,16 @@ const WordTable = ({
     );
   };
 
+  const generateLinks = (text) => {
+    if(text == undefined) return false;
+    const splitedText = text.length > 0 ? text.split(' ') : []
+    return <span dangerouslySetInnerHTML={{ __html: splitedText.map(elem=>{
+      return elem.indexOf('http') > - 1 ?
+        `<a href="${elem}">${elem}</a> `
+        :
+        elem + " "
+    }) }}></span>
+  }
 
   const renderRowExpanded = (rowData) => {
 
@@ -454,13 +464,13 @@ const WordTable = ({
             <p><strong>Cliente</strong>: {rowData.customer}</p>
             <p><strong>Mês de referência</strong>: {rowData.dsmonth}, {rowData.dsyear}</p>
             <p><strong>Termo principal</strong>: {rowData.dskeyword}</p>
-            <p><strong>Url da página</strong>: {rowData.dsurl}</p>
+            <p><strong>Url da página</strong>: {generateLinks(rowData.dsurl)}</p>
             <p><strong>Volume de busca</strong>: {rowData.dsvolume}</p>
             <p><strong>Posição inicial</strong>: {rowData.dsposition}</p>
             <p><strong>Tipo de otimização</strong>: {rowData.dstype}</p>
             <p><strong>Tipo de conteúdo</strong>: {rowData.dscontent}</p>
             <p><strong>Densidade de palavras</strong>: {rowData.dsdensity}</p>
-            <p><strong>Objetivo da otimização</strong>: {rowData.dsobjective}</p>
+            <p><strong>Objetivo da otimização</strong>: {generateLinks(rowData.dsobjective)}</p>
           </div>
         </Panel>
 
@@ -474,16 +484,16 @@ const WordTable = ({
             overflowX: 'hidden',
             maxHeight: 400
           }}>
-            <p><strong>Title Otimizado</strong>: {rowData.textTopic?.dstitle}</p>
-            <p><strong>Description otimizado</strong>: {rowData.textTopic?.dsdescription}</p>
-            <p><strong>H1</strong>: {rowData.textTopic?.dsh1}</p>
-            <p><strong>Link do texto</strong>:{rowData.textTopic?.dstextlink}</p>
-            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura do texto</strong>:<br />{rowData.textTopic?.dstextstructure}</p>
-            <p><strong>Termos secundários</strong>: {rowData.textTopic?.dssecundarykeywords}</p>
-            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Perguntas frequentes</strong>:<br />{rowData.textTopic?.dspeopleask}</p>
-            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Linkagem Interna</strong>:<br />{rowData.textTopic?.dsinternallink}</p>
-            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura da página</strong>:<br />{rowData.textTopic?.dspagestructure}</p>
-            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Recomendações</strong>:<br />{rowData.textTopic?.dsrecommendations}</p>
+            <p><strong>Title Otimizado</strong>:<br /> {rowData.textTopic?.dstitle}</p>
+            <p><strong>Description otimizado</strong>:<br /> {rowData.textTopic?.dsdescription}</p>
+            <p><strong>H1</strong>:<br /> {rowData.textTopic?.dsh1}</p>
+            <p><strong>Link do texto</strong>:<br />{generateLinks(rowData.textTopic?.dstextlink)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura do texto</strong>:<br />{generateLinks(rowData.textTopic?.dstextstructure)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Termos secundários</strong>:<br />{generateLinks(rowData.textTopic?.dssecundarykeywords)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Perguntas frequentes</strong>:<br />{generateLinks(rowData.textTopic?.dspeopleask)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Linkagem Interna</strong>:<br />{generateLinks(rowData.textTopic?.dsinternallink)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura da página</strong>:<br />{generateLinks(rowData.textTopic?.dspagestructure)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Recomendações</strong>:<br />{generateLinks(rowData.textTopic?.dsrecommendations)}</p>
             <p><strong>Cta</strong>: {rowData.textTopic?.dscta}</p>
             <p><strong>Etapa do funil</strong>: {rowData.textTopic?.dsfunnel}</p>
           </div>
@@ -917,17 +927,17 @@ const WordTable = ({
           <HeaderCell>Url</HeaderCell>
           <LinkCell dataKey="dsurl" />
         </Column>
-        <Column sortable resizable width={150} align="center">
-          <HeaderCell>Tipo de otimização</HeaderCell>
+        <Column sortable resizable width={150} flexGrow={1} align="center">
+          <HeaderCell>Cliente</HeaderCell>
+          <Cell dataKey="nmcustomer" />
+        </Column>
+        <Column sortable resizable width={150} flexGrow={1} align="center">
+          <HeaderCell>Mês</HeaderCell>
+          <DateCell dataKey="dsmonth" />
+        </Column>
+        <Column sortable resizable width={200} align="center">
+          <HeaderCell>Tipo</HeaderCell>
           <Cell dataKey="dstype" />
-        </Column>
-        <Column sortable resizable width={150} align="center">
-          <HeaderCell>Tipo de conteúdo</HeaderCell>
-          <Cell dataKey="dscontent" />
-        </Column>
-        <Column sortable resizable width={150} align="center">
-          <HeaderCell>Densidade</HeaderCell>
-          <Cell dataKey="dsdensity" />
         </Column>
         <Column sortable resizable width={225} align="center">
           <HeaderCell>Status</HeaderCell>
