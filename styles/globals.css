@@ -155,3 +155,7 @@ color: white;
   width: auto;
   max-width:none!important;
 }
+
+div#expandable a {
+  color: var(--rs-text-link-hover);
+}
