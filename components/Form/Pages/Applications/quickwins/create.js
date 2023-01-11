@@ -470,6 +470,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             });
                         axios.post('/api/post/quickwins', tableData).then((e) => {
                             sucessHandle();
+                            window.open('/applications/fluxo-quickwin/package/'+e[0].fkIdqwpackage);
                             closeModal(true);
                         })
                             .catch((e) => {
