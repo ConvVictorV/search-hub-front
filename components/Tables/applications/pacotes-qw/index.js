@@ -497,7 +497,7 @@ const WordTable = ({
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Entrega Planejamento</HeaderCell>
-          <Cell dataKey="dsdelivery" />
+          <Cell dataKey="dtsendcontent" />
         </Column>
         <Column sortable width={250} flexGrow={1} align="center">
           <HeaderCell>Status</HeaderCell>
