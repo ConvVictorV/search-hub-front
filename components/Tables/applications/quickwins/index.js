@@ -465,13 +465,17 @@ const WordTable = ({
 
   const generateLinks = (text) => {
     if(text == undefined) return false;
+    text = text.replaceAll(/\</g,'').replaceAll(/\n/g, ' \n')
+
+    let full_text = ''
     const splitedText = text.length > 0 ? text.split(' ') : []
-    return <span dangerouslySetInnerHTML={{ __html: splitedText.map(elem=>{
+    splitedText.map(elem=>{
       return elem.indexOf('http') > - 1 ?
-        `<a href="${elem}">${elem}</a> `
+        full_text+=`<a href="${elem}">${elem}</a> `
         :
-        elem + " "
-    }) }}></span>
+        full_text+=elem + " "
+    })
+    return <span dangerouslySetInnerHTML={{ __html: full_text }}></span>
   }
 
   const renderRowExpanded = (rowData) => {
