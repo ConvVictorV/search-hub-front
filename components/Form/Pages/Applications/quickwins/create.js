@@ -62,17 +62,22 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         dskeyword: StringType().isRequired('O campo não pode estar vazio.'),
         dsvolume: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido."),
         dsurl: StringType()
-        .addRule(value => {
-            if(dstype == "Criação nova página") return true
-            else if(value.indexOf('http') == -1) return false
-          }, 'Digite uma url válida'),
+            .addRule(value => {
+                if (dstype == "Criação nova página") return true
+                else if (value.indexOf('http') == -1) return false
+            }, 'Digite uma url válida'),
         dsposition: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido.").max(150, "Digite um valor até 150."),
         dsdensity: NumberType('Digite um número válido.').isRequired('O campo não pode estar vazio.').min(1, "Digite um valor válido."),
         dsyear: NumberType('Digite um número válido.').min(2017, "Digite um valor acima de 2017."),
         dsresponsible: StringType().isRequired('O campo não pode estar vazio.'),
     });
 
-    
+
+    const openInNewTab = (url) => {
+        if (typeof window !== "undefined") {
+            window.open(url, '_blank', 'noreferrer');
+        }
+    };
 
     function clearInputs() {
         [...document.querySelectorAll('.rs-stack:not(:last-child):not(:first-child) span.rs-picker-toggle-clean.rs-btn-close, .rs-btn-toolbar span.rs-picker-toggle-clean.rs-btn-close')].map(clean => clean.click())
@@ -178,9 +183,9 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         }}
                     />
                 </Form.Group>
-                
-                
-                
+
+
+
                 {/* <Form.Control name="name" placeholder="Escopo" disabled /> */}
             </Stack>
 
@@ -189,33 +194,33 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                 alignItems="flex-start"
                 justifyContent="space-between"
             ><Form.Group controlId="dsyear" ref={forwardRef}
-            style={{
-                display: 'flex',
-                flexDirection: 'column'
-            }}>
-            <Form.ControlLabel style={{
-                lineHeight: "40px"
-            }}>Analista Responsável</Form.ControlLabel>
-            <Form.Control name="dsresponsible" onChange={setDsresponsible} value={dsresponsible} style={{
-                width: 230
-            }}  />
-        </Form.Group>
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                    <Form.ControlLabel style={{
+                        lineHeight: "40px"
+                    }}>Analista Responsável</Form.ControlLabel>
+                    <Form.Control name="dsresponsible" onChange={setDsresponsible} value={dsresponsible} style={{
+                        width: 230
+                    }} />
+                </Form.Group>
 
-        <Form.Group controlId="dsyear" ref={forwardRef}
-            style={{
-                display: 'flex',
-                flexDirection: 'column'
-            }}>
-            <Form.ControlLabel style={{
-                lineHeight: "40px"
-            }}>Ano de Referência</Form.ControlLabel>
-            <Form.Control name="dsyear" placeholder="" onChange={setDsyear} value={dsyear} style={{
-                width: 230
-            }} />
-        </Form.Group>
-                
+                <Form.Group controlId="dsyear" ref={forwardRef}
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}>
+                    <Form.ControlLabel style={{
+                        lineHeight: "40px"
+                    }}>Ano de Referência</Form.ControlLabel>
+                    <Form.Control name="dsyear" placeholder="" onChange={setDsyear} value={dsyear} style={{
+                        width: 230
+                    }} />
+                </Form.Group>
+
             </Stack>
-            
+
             <Form.ControlLabel style={{
                 lineHeight: "40px"
             }}>Resumo do planejamento</Form.ControlLabel>
@@ -232,7 +237,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     setTableData(data)
                     setRefresh(refresh + 1)
                 }}
-                editItem={(tableid)=>{
+                editItem={(tableid) => {
                     const data = tableData
                     const removeIndex = []
                     data.forEach((item, index) => {
@@ -242,13 +247,13 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             setDskeyword(item.dskeyword)
                             setDsresponsible(item.dsresponsible)
                             setDsurl(item.dsurl)
-                            setDsvolume(item.dsvolume+"")
+                            setDsvolume(item.dsvolume + "")
                             setDsposition(item.dsposition)
                             setDstype(item.dstype)
                             setDscontent(item.dscontent)
                             setDsobjective(item.dsobjective)
                             setDsstatus(item.dsstatus)
-                            setDsdensity(item.dsdensity+"")
+                            setDsdensity(item.dsdensity + "")
                             setDsmonth(item.dsmonth)
                             setDsyear(item.dsyear)
                             setFormValue({
@@ -289,19 +294,19 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     </Form.Group>
                     <Form.Group controlId="dsvolume" ref={forwardRef}>
                         <Form.ControlLabel>Volume de busca</Form.ControlLabel>
-                        <Form.Control name="dsvolume" onBlur={()=>setDsvolume(dsvolume.replaceAll('.',''))} onChange={setDsvolume} value={dsvolume} />
+                        <Form.Control name="dsvolume" onBlur={() => setDsvolume(dsvolume.replaceAll('.', ''))} onChange={setDsvolume} value={dsvolume} />
                     </Form.Group>
                     <Form.Group controlId="dsposition" ref={forwardRef}>
                         <Form.ControlLabel>Posição inicial</Form.ControlLabel>
-                        <Form.Control name="dsposition" onBlur={()=>setDsposition(dsposition.replaceAll('.',''))} onChange={setDsposition} disabled={dsposition == 100} value={dsposition} />
+                        <Form.Control name="dsposition" onBlur={() => setDsposition(dsposition.replaceAll('.', ''))} onChange={setDsposition} disabled={dsposition == 100} value={dsposition} />
                         <Checkbox style={{
                             marginLeft: '-10px',
                             fontStyle: 'italic'
-                        }} value="" onChange={(value,checked)=>checked ? setDsposition(100) : setDsposition('')}>Não posiciona</Checkbox>
+                        }} value="" onChange={(value, checked) => checked ? setDsposition(100) : setDsposition('')}>Não posiciona</Checkbox>
                     </Form.Group>
                     <Form.Group controlId="dsdensity" ref={forwardRef}>
                         <Form.ControlLabel>Densidade de palavras</Form.ControlLabel>
-                        <Form.Control name="dsdensity" onChange={setDsdensity} onBlur={()=>setDsdensity(dsdensity.replaceAll('.',''))} value={dsdensity} />
+                        <Form.Control name="dsdensity" onChange={setDsdensity} onBlur={() => setDsdensity(dsdensity.replaceAll('.', ''))} value={dsdensity} />
                     </Form.Group>
                     <Form.Group controlId="dsobjective" ref={forwardRef} style={{
                         width: 356
@@ -318,7 +323,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     }}
                     alignItems={"initial"}
                 >
-                     <Select
+                    <Select
                         fetch={"/api/get/quickwinsType"}
                         placeholder={dstype || "Tipo de otimização"}
                         onSelect={setDstype}
@@ -331,7 +336,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         <Form.ControlLabel>Url sugerida</Form.ControlLabel>
                         <Form.Control name="dsurl" onChange={setDsurl} value={dsurl} />
                     </Form.Group>
-                   
+
 
                     <Select
                         fetch={"/api/get/quickwinsTypeContent"}
@@ -382,75 +387,77 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                                 dsyear,
                                 dsresponsible
                             })
-                            formRef.current.check()
+                            setTimeout(() => {
+                                formRef.current.check()
 
-                            const requiredFields = [
-                                customer,
-                                dstype,
-                                dscontent,
-                                dsstatus,
-                                dsmonth,
-                            ]
+                                const requiredFields = [
+                                    customer,
+                                    dstype,
+                                    dscontent,
+                                    dsstatus,
+                                    dsmonth,
+                                ]
 
-                            const requiredMessages = [
-                                'Selecione um cliente',
-                                'Selecione um tipo de otimização',
-                                'Selecione um tipo de conteúdo',
-                                'Selecione um status',
-                                'Selecione um mês de referência'
-                            ]
+                                const requiredMessages = [
+                                    'Selecione um cliente',
+                                    'Selecione um tipo de otimização',
+                                    'Selecione um tipo de conteúdo',
+                                    'Selecione um status',
+                                    'Selecione um mês de referência'
+                                ]
 
-                            const erroredFields = requiredFields.map((field, index) => {
-                                if (field == undefined || field?.length == 0) {
-                                    return index
-                                } else {
-                                    return false
+                                const erroredFields = requiredFields.map((field, index) => {
+                                    if (field == undefined || field?.length == 0) {
+                                        return index
+                                    } else {
+                                        return false
+                                    }
+                                }).filter(row => row !== false)
+
+                                if (erroredFields?.length) {
+                                    toast.push(<Message showIcon type={"error"}>
+                                        {requiredMessages[erroredFields[0]]}
+                                    </Message>, { placement: "bottomCenter" });
+
+                                    return
                                 }
-                            }).filter(row => row !== false)
-
-                            if (erroredFields?.length) {
-                                toast.push(<Message showIcon type={"error"}>
-                                    {requiredMessages[erroredFields[0]]}
-                                </Message>, { placement: "bottomCenter" });
-
-                                return
-                            }
-                            if (!formRef.current.check()) {
-                                return;
-                            }
+                                if (!formRef.current.check()) {
+                                    return;
+                                }
 
 
 
-                            let data = tableData
-                            data.push({
-                                tableid: Math.floor(Math.random() * 9999999999),
-                                dskeyword,
-                                dsresponsible,
-                                dsurl,
-                                dsstatus,
-                                dsvolume: parseFloat(dsvolume.replace(',', '.')),
-                                dsposition: parseInt(dsposition),
-                                dsdensity: parseFloat(dsdensity.replace(',', '.')),
-                                dstype,
-                                dscontent,
-                                idcustomer: customer,
-                                dsobjective,
-                                dsmonth,
-                                dsyear,
-                                fkIdqwpackage: customer + dsmonth + dsyear
-                            })
-                            setTableData(data)
-                            clearInputs()
-                            setFormValue({
-                                dskeyword,
-                                dsresponsible,
-                                dsvolume,
-                                dsurl,
-                                dsposition,
-                                dsdensity,
-                                dsyear,
-                            })
-                            setRefresh(refresh + 1)
+                                let data = tableData
+                                data.push({
+                                    tableid: Math.floor(Math.random() * 9999999999),
+                                    dskeyword,
+                                    dsresponsible,
+                                    dsurl,
+                                    dsstatus,
+                                    dsvolume: parseFloat(dsvolume.replace(',', '.')),
+                                    dsposition: parseInt(dsposition),
+                                    dsdensity: parseFloat(dsdensity.replace(',', '.')),
+                                    dstype,
+                                    dscontent,
+                                    idcustomer: customer,
+                                    dsobjective,
+                                    dsmonth,
+                                    dsyear,
+                                    fkIdqwpackage: customer + dsmonth + dsyear
+                                })
+                                setTableData(data)
+                                clearInputs()
+                                setFormValue({
+                                    dskeyword,
+                                    dsresponsible,
+                                    dsvolume,
+                                    dsurl,
+                                    dsposition,
+                                    dsdensity,
+                                    dsyear,
+                                })
+                                setRefresh(refresh + 1)
+                            }, 100)
                         }}
                         style={{
                             backgroundColor: "var(--color-conversion-1)",
@@ -463,7 +470,6 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
             <ButtonToolbar style={{
                 float: "right"
             }}>
-
                 <Button
                     disabled
                     style={{
@@ -486,11 +492,12 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                         axios.post('/api/post/quickwins', tableData).then((e) => {
                             sucessHandle();
                             closeModal(true);
-                            window && window.open('/applications/fluxo-quickwin/package/'+e[0].fkIdqwpackage);
+                            openInNewTab('/applications/fluxo-quickwin/package/' + e.data[0].fkIdqwpackage)
                         })
                             .catch((e) => {
-                                typeof e.response.data != "object"
-                                    ? errorHandle(e.response.data)
+                                console.log(e)
+                                typeof e.response?.data != "object"
+                                    ? errorHandle('Ocorreu um erro')
                                     : errorHandle(e.response.data?.message);
                             });
                     }}
