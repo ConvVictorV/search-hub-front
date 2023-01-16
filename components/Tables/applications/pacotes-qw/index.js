@@ -141,6 +141,14 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 const Month = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   <Cell {...props}>{rowData?.dsmounthyear?.split("-")[0]}, {rowData?.dsmounthyear?.split("-")[1]}</Cell>
 );
+const SendCell = ({ rowData, dataKey, ...props }) => {
+  return (
+    <Cell {...props} className="link-group">
+      {rowData.dtsendcontent?.split('T')[0]}
+      {/*  && new Date(rowData.dtsendcontent?.split('T')[0]). to locale string */}
+    </Cell>
+  );
+}
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -497,7 +505,7 @@ const WordTable = ({
         </Column>
         <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Entrega Planejamento</HeaderCell>
-          <Cell dataKey="dtsendcontent" />
+          <SendCell dataKey="dtsendcontent" />
         </Column>
         <Column sortable width={250} flexGrow={1} align="center">
           <HeaderCell>Status</HeaderCell>
