@@ -26,8 +26,12 @@ function FullWidthLayout(args) {
           minHeight: "100vh",
         }}
       >
-        <Sidenav />
-        <Container>
+        <Sidenav style={{
+          zIndex: 2
+        }} />
+        <Container style={{
+          zIndex: 1
+        }}>
           <Header toggleTheme={args.toggleTheme} pageName={args.pageName} />
           {args.children}
         </Container>

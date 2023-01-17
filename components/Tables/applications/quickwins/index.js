@@ -31,6 +31,7 @@ import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
 import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
 import EditIcon from "@rsuite/icons/Edit";
 import DocPassIcon from '@rsuite/icons/DocPass';
+import CloseIcon from '@rsuite/icons/Close';
 import axios from "axios";
 import { Loader } from 'rsuite';
 import Select from "../../../../components/Form/Components/Select";
@@ -182,8 +183,8 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
     </Cell>
   );
 };
-const Inserted = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
-  <Cell {...props}>{rowData?.dtimplement?.split("T")[0]}</Cell>
+const DateCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+  <Cell {...props}>{`${rowData?.dsmonth}, ${rowData?.dsyear}`}</Cell>
 );
 function capitalizeFirstLetter(string) {
   return string ? string.charAt(0).toUpperCase() + string.slice(1) : ''
@@ -201,6 +202,7 @@ const WordTable = ({
   setFilterData,
   filterData,
   setOpenEditForm,
+  setOpenDeleteLineForm,
   setRowData,
   setOpenCreateTextTopicForm,
   packageData
@@ -297,6 +299,7 @@ const WordTable = ({
   const ActionCell = ({
     setOpenEditForm,
     setOpenCreateTextTopicForm,
+    setOpenDeleteLineForm,
     rowData,
     dataKey,
     setRowData,
@@ -306,6 +309,15 @@ const WordTable = ({
       setRowData(rowData);
       setOpenEditForm(true);
     }
+
+    function deleteQuickWin(){
+      setRowData(rowData);
+      setOpenDeleteLineForm(true);
+    }
+
+    
+
+
     async function openCreateTextTopic() {
       await axios.get('/api/get/textTopic/textTopic?idquickwin=' + rowData.id).then(({ data }) => {
         rowData.textTopic = data[0] || undefined
@@ -335,7 +347,7 @@ const WordTable = ({
           <Whisper
             trigger="hover"
             placement="top"
-            speaker={<Tooltip>Criar Pauta</Tooltip>}
+            speaker={<Tooltip>Editar Pauta</Tooltip>}
           >
             <IconButton
               appearance="primary"
@@ -344,6 +356,20 @@ const WordTable = ({
               }}
               onClick={openCreateTextTopic}
               icon={<DocPassIcon />}
+            />
+          </Whisper>
+          <Whisper
+            trigger="hover"
+            placement="top"
+            speaker={<Tooltip>Deletar QW</Tooltip>}
+          >
+            <IconButton
+              appearance="primary"
+              style={{
+                background: "var(--color-conversion-1)",
+              }}
+              onClick={deleteQuickWin}
+              icon={<CloseIcon />}
             />
           </Whisper>
         </div>
@@ -437,6 +463,20 @@ const WordTable = ({
     );
   };
 
+  const generateLinks = (text) => {
+    if(text == undefined) return false;
+    text = text.replaceAll(/\</g,'').replaceAll(/\n/g, ' \n')
+
+    let full_text = ''
+    const splitedText = text.length > 0 ? text.split(' ') : []
+    splitedText.map(elem=>{
+      return elem.indexOf('http') > - 1 ?
+        full_text+=`<a href="${elem}">${elem}</a> `
+        :
+        full_text+=elem + " "
+    })
+    return <span dangerouslySetInnerHTML={{ __html: full_text }}></span>
+  }
 
   const renderRowExpanded = (rowData) => {
 
@@ -454,13 +494,13 @@ const WordTable = ({
             <p><strong>Cliente</strong>: {rowData.customer}</p>
             <p><strong>Mês de referência</strong>: {rowData.dsmonth}, {rowData.dsyear}</p>
             <p><strong>Termo principal</strong>: {rowData.dskeyword}</p>
-            <p><strong>Url da página</strong>: {rowData.dsurl}</p>
+            <p><strong>Url da página</strong>: {generateLinks(rowData.dsurl)}</p>
             <p><strong>Volume de busca</strong>: {rowData.dsvolume}</p>
             <p><strong>Posição inicial</strong>: {rowData.dsposition}</p>
             <p><strong>Tipo de otimização</strong>: {rowData.dstype}</p>
             <p><strong>Tipo de conteúdo</strong>: {rowData.dscontent}</p>
             <p><strong>Densidade de palavras</strong>: {rowData.dsdensity}</p>
-            <p><strong>Objetivo da otimização</strong>: {rowData.dsobjective}</p>
+            <p><strong>Objetivo da otimização</strong>: {generateLinks(rowData.dsobjective)}</p>
           </div>
         </Panel>
 
@@ -474,15 +514,16 @@ const WordTable = ({
             overflowX: 'hidden',
             maxHeight: 400
           }}>
-            <p><strong>Title Otimizado</strong>: {rowData.textTopic?.dstitle}</p>
-            <p><strong>Description otimizado</strong>: {rowData.textTopic?.dsdescription}</p>
-            <p><strong>H1</strong>: {rowData.textTopic?.dsh1}</p>
-            <p><strong>Link do texto</strong>:{rowData.textTopic?.dstextlink}</p>
-            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura do texto</strong>:<br />{rowData.textTopic?.dstextstructure}</p>
-            <p><strong>Termos secundários</strong>: {rowData.textTopic?.dssecundarykeywords}</p>
-            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Perguntas frequentes</strong>:<br />{rowData.textTopic?.dspeopleask}</p>
-            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura da página</strong>:<br />{rowData.textTopic?.dspagestructure}</p>
-            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Recomendações</strong>:<br />{rowData.textTopic?.dsrecommendations}</p>
+            <p><strong>Title Otimizado</strong>:<br /> {rowData.textTopic?.dstitle}</p>
+            <p><strong>Description otimizado</strong>:<br /> {rowData.textTopic?.dsdescription}</p>
+            <p><strong>H1</strong>:<br /> {rowData.textTopic?.dsh1}</p>
+            <p><strong>Link do texto</strong>:<br />{generateLinks(rowData.textTopic?.dstextlink)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura do texto</strong>:<br />{generateLinks(rowData.textTopic?.dstextstructure)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Termos secundários</strong>:<br />{generateLinks(rowData.textTopic?.dssecundarykeywords)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Perguntas frequentes</strong>:<br />{generateLinks(rowData.textTopic?.dspeopleask)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Linkagem Interna</strong>:<br />{generateLinks(rowData.textTopic?.dsinternallink)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura da página</strong>:<br />{generateLinks(rowData.textTopic?.dspagestructure)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }}><strong>Recomendações</strong>:<br />{generateLinks(rowData.textTopic?.dsrecommendations)}</p>
             <p><strong>Cta</strong>: {rowData.textTopic?.dscta}</p>
             <p><strong>Etapa do funil</strong>: {rowData.textTopic?.dsfunnel}</p>
           </div>
@@ -882,7 +923,7 @@ const WordTable = ({
         cellBordered
         bordered
       >
-        <Column width={50} align="center">
+        <Column width={50} align="center" fixed>
           <HeaderCell style={{ padding: 0 }}>
             <div style={{ lineHeight: "40px" }}>
               <Checkbox
@@ -899,7 +940,8 @@ const WordTable = ({
             onChange={handleCheck}
           />
         </Column>
-        <Column width={70} align="center">
+
+        <Column width={70} align="center" fixed>
           <HeaderCell>#</HeaderCell>
           <ExpandCell
             dataKey="id"
@@ -912,31 +954,34 @@ const WordTable = ({
           <HeaderCell>Palavra</HeaderCell>
           <Cell dataKey="dskeyword" />
         </Column>
-        <Column sortable resizable width={200} flexGrow={1} align="center">
+        <Column sortable resizable width={180}  flexGrow={1} align="center">
           <HeaderCell>Url</HeaderCell>
           <LinkCell dataKey="dsurl" />
         </Column>
-        <Column sortable resizable width={150} align="center">
-          <HeaderCell>Tipo de otimização</HeaderCell>
+        <Column sortable resizable width={150} flexGrow={1} align="center">
+          <HeaderCell>Cliente</HeaderCell>
+          <Cell dataKey="nmcustomer" />
+        </Column>
+        <Column sortable resizable width={150} flexGrow={1} align="center">
+          <HeaderCell>Mês</HeaderCell>
+          <DateCell dataKey="dsmonth" />
+        </Column>
+
+        <Column sortable resizable width={200} align="center">
+          <HeaderCell>Tipo</HeaderCell>
           <Cell dataKey="dstype" />
-        </Column>
-        <Column sortable resizable width={150} align="center">
-          <HeaderCell>Tipo de conteúdo</HeaderCell>
-          <Cell dataKey="dscontent" />
-        </Column>
-        <Column sortable resizable width={150} align="center">
-          <HeaderCell>Densidade</HeaderCell>
-          <Cell dataKey="dsdensity" />
         </Column>
         <Column sortable resizable width={225} align="center">
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="status" />
         </Column>
-        <Column width={100} verticalAlign={"top"} align="center">
+        <Column width={140} verticalAlign={"top"} align="center">
           <HeaderCell>...</HeaderCell>
           <ActionCell
             setOpenCreateTextTopicForm={setOpenCreateTextTopicForm}
             setOpenEditForm={setOpenEditForm}
+            setOpenDeleteLineForm={setOpenDeleteLineForm}
+            
             setRowData={setRowData}
             dataKey="idcustomer"
           />

@@ -17,15 +17,12 @@ import {
   useToaster,
   Whisper,
 } from "rsuite";
-import Select from "../../../components/Form/Components/Select";
-import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/delete";
-import ExportForm from "../../../components/Form/Pages/Applications/quickwins/export";
+import ExportForm from "../../../components/Form/Pages/Applications/quickwins/exportOld";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
-import CreateForm from "../../../components/Form/Pages/Applications/quickwins/create";
-import CreateTextTopic from "../../../components/Form/Pages/Applications/quickwins/createTextTopic";
-import EditForm from "../../../components/Form/Pages/Applications/quickwins/edit";
-import TableWords from "../../../components/Tables/applications/quickwins";
+import TableWords from "../../../components/Tables/applications/log";
 import FullWidthLayout from "../../../Layouts/fullwidth";
+import CreateForm from "../../../components/Form/Pages/Applications/quickwins/textRequest";
+
 
 function Demo(args) {
   const [tableData, setTableData] = useState([]);
@@ -33,10 +30,7 @@ function Demo(args) {
   const [search, setSearch] = useState("");
   const [openExportForm, setOpenExportForm] = useState(false);
   const [openImportForm, setOpenImportForm] = useState(false);
-  const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [openCreateForm, setOpenCreateForm] = useState(false);
-  const [openEditForm, setOpenEditForm] = useState(false);
-  const [openCreateTextTopicForm, setOpenCreateTextTopicForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
   const route = useRouter()
@@ -46,10 +40,7 @@ function Demo(args) {
   const handleClose = () => {
     setOpenExportForm(false);
     setOpenImportForm(false);
-    setOpenEditForm(false);
-    setOpenDeleteForm(false);
     setOpenCreateForm(false);
-    setOpenCreateTextTopicForm(false);
     updateData();
   };
   const getData = () => {
@@ -57,18 +48,34 @@ function Demo(args) {
     setTableData([])
     let page = 0
     let tableD = []
-    let getQuickwins = () => {
-      axios.get("/api/get/quickwins?page=" + (++page))
+      let getWords = () => {
+      axios.get("/api/get/log?page=" + (++page))
         .then(({ data }) => {
           if (data.length > 0) {
             tableD = tableD.concat(data)
             setTableData(tableD);
-            getQuickwins()
+            getWords()
+          } else {
+            axios.get('/api/get/select/customersId').then(({ data }) => {
+              setTableData(tableD.map((row,index) => {
+                const { idcustomer } = row
+                row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
+                return row
+              }))
+            })
           }
         });
     }
-    getQuickwins()
+    getWords()
   };
+  useEffect(() => {
+    if (localStorage.getItem('customerName')) {
+      const routePath = (route.pathname.split('/')[1]) + "/" + (route.pathname.split('/')[2])
+      route.push("/" + routePath + "/customer/" + localStorage.getItem('customerName'))
+    } else {
+      getData();
+    }
+  }, []);
   const filterCustomerById = (id) => {
     const removeCustomerFilter = () => {
       const filters = filterData.filter(
@@ -112,16 +119,13 @@ function Demo(args) {
         case 2:
           setOpenExportForm(true);
           break;
-        case 3:
-          setOpenDeleteForm(true);
-          break;
       }
     };
     return (
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
-          <Dropdown.Item disabled eventKey={1}>Importar</Dropdown.Item>
-          <Dropdown.Item disabled eventKey={2}>{`Exportar ${
+          <Dropdown.Item eventKey={1}>Importar</Dropdown.Item>
+          <Dropdown.Item eventKey={2}>{`Exportar ${
             checkedKeys.length != 0 ? `(${checkedKeys.length})` : ""
           }`}</Dropdown.Item>
           {checkedKeys.length != 0 ? (
@@ -148,30 +152,6 @@ function Demo(args) {
       >
         <div></div>
         <ButtonToolbar>
-        <Whisper
-            trigger="hover"
-            placement="top"
-            speaker={<Tooltip>Novo Planejamento</Tooltip>}
-          >
-            <IconButton
-              style={
-                {
-                  backgroundColor: "transparent",
-                  color: "var(--color-conversion-1)",
-                  borderColor: "var(--color-conversion-1)"
-                }
-              }
-              icon={<FunnelIcon style={
-                {
-                  backgroundColor: "transparent",
-                  color: "var(--color-conversion-1)",
-                  borderColor: "var(--color-conversion-1)"
-                }
-              }/>}
-              appearance={"ghost"}
-              onClick={() => {setOpenCreateForm(true)}}
-            >Novo Planejamento</IconButton>
-          </Whisper>
           <Whisper
             trigger="hover"
             placement="top"
@@ -194,7 +174,6 @@ function Demo(args) {
               onClick={() => setFilterActive(!filterActive)}
             ></IconButton>
           </Whisper>
-          
           <Whisper
             trigger="hover"
             placement="top"
@@ -278,10 +257,10 @@ function Demo(args) {
   return (
     <FullWidthLayout
       toggleTheme={args.toggleTheme}
-      title="QuickWins | SearchHub"
+      title="Logs | SearchHub"
       description="SearchHub Conversion"
       background={2}
-      pageName="QuickWins"
+      pageName="Homolog"
     >
       <Container
         style={{
@@ -327,85 +306,21 @@ function Demo(args) {
         <Modal
           open={openCreateForm}
           onClose={handleClose}
-          size="md"
+          size="full"
           keyboard={false}
-          backdrop={"static"}
+          backdrop={"static"} 
         >
           <Modal.Header>
-            <Modal.Title>Planejamento de QuickWins</Modal.Title>
+            <Modal.Title>Editar Pedido</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <CreateForm closeModal={handleClose} />
+            <CreateForm rowData={[rowData]} closeModal={handleClose} />
           </Modal.Body>
         </Modal>
 
-        <Modal
-          open={openEditForm}
-          onClose={handleClose}
-          size="md"
-          keyboard={false}
-          backdrop={"static"}
-        >
-          <Modal.Header>
-            <Modal.Title>Editar Quickwin</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <EditForm rowData={rowData} closeModal={handleClose} />
-          </Modal.Body>
-        </Modal>
-        <Modal
-          open={openCreateTextTopicForm}
-          onClose={handleClose}
-          size="md"
-          keyboard={false}
-          backdrop={"static"}
-        >
-          <Modal.Header>
-            <Modal.Title>Planejamento de Pauta</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <CreateTextTopic rowData={rowData} closeModal={handleClose} />
-          </Modal.Body>
-        </Modal>
-{/*         
-        <Modal
-          open={openCreateTextTopicForm}
-          onClose={handleClose}
-          size="md"
-          keyboard={false}
-          backdrop={"static"}
-        >
-          <Modal.Header>
-            <Modal.Title>Editar Pauta</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <EditForm rowData={rowData} closeModal={handleClose} />
-          </Modal.Body>
-        </Modal> */}
-        <Modal
-          open={openDeleteForm}
-          onClose={handleClose}
-          size="xs"
-          keyboard={false}
-          backdrop={"static"}
-        >
-          <Modal.Header>
-            <Modal.Title>Deletar palavras</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <DeleteForm
-              closeModal={handleClose}
-              data={tableData.filter(
-                (word) => checkedKeys.indexOf(word.idworkedpage) > -1
-              )}
-            />
-          </Modal.Body>
-        </Modal>
         <TableWords
-          setCheckedKeys={setCheckedKeys}
           checkedKeys={checkedKeys}
-          setOpenEditForm={setOpenEditForm}
-          setOpenCreateTextTopicForm={setOpenCreateTextTopicForm}
+          setCheckedKeys={setCheckedKeys}
           tableData={filter(search, tableData)}
           setSearch={setSearch}
           headerMenu={getHeaderTable()}
@@ -413,6 +328,7 @@ function Demo(args) {
           filterActive={filterActive}
           filterData={filterData}
           setFilterData={setFilterData}
+          setDrawerOpenEdit={setOpenCreateForm}
         />
       </Container>
     </FullWidthLayout>

@@ -20,6 +20,7 @@ import {
 } from "rsuite";
 import Select from "../../../components/Form/Components/Select";
 import DeleteForm from "../../../components/Form/Pages/Applications/quickwins/delete";
+import DeleteLineForm from "../../../components/Form/Pages/Applications/quickwins/deleteline";
 import ExportForm from "../../../components/Form/Pages/Applications/quickwins/export";
 import ImportForm from "../../../components/Form/Pages/Applications/quickwins/import";
 import CreateForm from "../../../components/Form/Pages/Applications/quickwins/create";
@@ -37,6 +38,7 @@ function Demo(args) {
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
+  const [openDeleteLineForm, setOpenDeleteLineForm] = useState(false);
   const [openCreateTextTopicForm, setOpenCreateTextTopicForm] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [filterActive, setFilterActive] = useState(false);
@@ -48,6 +50,7 @@ function Demo(args) {
     setOpenExportForm(false);
     setOpenImportForm(false);
     setOpenEditForm(false);
+    setOpenDeleteLineForm(false);
     setOpenDeleteForm(false);
     setOpenCreateForm(false);
     setOpenCreateTextTopicForm(false);
@@ -344,6 +347,24 @@ function Demo(args) {
         </Modal>
 
         <Modal
+          open={openDeleteLineForm}
+          onClose={handleClose}
+          size="xs"
+          keyboard={false}
+          backdrop={"static"}
+          >
+          <Modal.Header>
+            <Modal.Title>Deletar QuickWin</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <DeleteLineForm
+              closeModal={handleClose}
+              rowData={rowData}
+            />
+          </Modal.Body>
+        </Modal>
+
+        <Modal
           open={openEditForm}
           onClose={handleClose}
           size="md"
@@ -380,7 +401,7 @@ function Demo(args) {
           backdrop={"static"}
         >
           <Modal.Header>
-            <Modal.Title>Criar Pauta</Modal.Title>
+            <Modal.Title>Editar Pauta</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <EditForm rowData={rowData} closeModal={handleClose} />
@@ -410,6 +431,7 @@ function Demo(args) {
           checkedKeys={checkedKeys}
           setOpenEditForm={setOpenEditForm}
           setOpenCreateTextTopicForm={setOpenCreateTextTopicForm}
+          setOpenDeleteLineForm={setOpenDeleteLineForm}
           tableData={filter(search, tableData)}
           setSearch={setSearch}
           headerMenu={getHeaderTable()}

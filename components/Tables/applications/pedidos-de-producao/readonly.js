@@ -242,7 +242,7 @@ const WordTable = ({
           <Whisper
             trigger="hover"
             placement="top"
-            speaker={<Tooltip>Criar Pauta</Tooltip>}
+            speaker={<Tooltip>Editar Pauta</Tooltip>}
           >
             <IconButton
               appearance="primary"

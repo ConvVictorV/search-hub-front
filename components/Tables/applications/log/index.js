@@ -19,15 +19,20 @@ import {
   TagGroup,
   useToaster,
   Whisper,
-  Badge
+  Badge,
+  Tooltip
 } from "rsuite";
 
+import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
+import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
 import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
 import LinkIcon from "@rsuite/icons/legacy/ExternalLink";
-import Select from "../../../../components/Form/Components/Select";
+import EditIcon from "@rsuite/icons/Edit";
+
 
 const { HeaderCell, Cell, Column } = Table;
+const rowKey = "idlog";
 
 // custom cells
 const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
@@ -43,54 +48,98 @@ const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   </Cell>
 );
 
+const ExpandCell = ({
+  rowData,
+  dataKey,
+  expandedRowKeys,
+  onChange,
+  ...props
+}) => (
+  <Cell {...props} style={{ padding: 5 }}>
+    <IconButton
+      appearance="subtle"
+      onClick={() => {
+        onChange(rowData);
+      }}
+      icon={
+        expandedRowKeys.some((key) => key === rowData[rowKey]) ? (
+          <CollaspedOutlineIcon
+            style={{ color: "var(--color-conversion-1)" }}
+          />
+        ) : (
+          <ExpandOutlineIcon />
+        )
+      }
+    />
+  </Cell>
+);
+
+
+
+const ActionCell = ({
+  setDrawerOpenEdit,
+  rowData,
+  dataKey,
+  setRowData,
+  ...props
+}) => {
+  const disabled = rowData.dsaction.toLowerCase().indexOf('recusado') == -1
+  function handleAction() {
+    setRowData(rowData);
+    setDrawerOpenEdit(true);
+  }
+  return (
+    <Cell {...props} className="link-group">
+      <div style={{ marginTop: "-8px" }}>
+        <Whisper
+          trigger="hover"
+          placement={"left"}
+          controlId={`control-id-left`}
+          speaker={
+            <Tooltip visible>
+              {disabled ? "Apenas pedidos recusados podem ser editados" : "Editar pedido"}
+            </Tooltip>
+          }
+        ><IconButton
+            disabled={disabled}
+            appearance="primary"
+            style={{
+              background: "var(--color-conversion-1)",
+            }}
+            onClick={handleAction}
+            icon={<EditIcon />}
+          />
+        </Whisper>
+
+      </div>
+    </Cell>
+  );
+};
+
 const StatusCell = ({ rowData, dataKey, ...props }) => {
-  const { dsstatus } = rowData;
+  const { dsaction } = rowData;
   let color = "var(--color-conversion-1)"
-  switch (dsstatus) {
-    case 'Planejamento de Termo':
+  switch (dsaction) {
+    case 'Create':
+      color = "var(--color-conversion-7)"
+      break;
+    case 'Update':
       color = "var(--color-conversion-8)"
       break;
-    case 'Planejamento de Pauta':
-      color = "var(--color-conversion-8)"
-      break;
-    case 'Enviado para Conteúdo':
-      color = "var(--color-conversion-10)"
-      break;
-    case 'Conteúdo em produção':
-      color = "var(--color-conversion-9)"
-      break;
-    case 'Conteúdo em revisão':
-      color = "var(--color-conversion-2)"
-      break;
-    case 'Validação SEO':
-      color = "var(--color-conversion-2)"
-      break;
-    case 'Envio ao cliente':
-      color = "var(--color-conversion-5)"
-      break;
-    case 'Pedido de Ajustes':
-      color = "var(--color-conversion-3)"
-      break;
-    case 'Aprovado pelo cliente':
-      color = "var(--color-conversion-7)"
-      break;
-    case 'Implementado':
-      color = "var(--color-conversion-7)"
-      break;
-    case 'Finalizado':
-      color = "var(--color-conversion-7)"
-      break;
-    case 'Pausado':
-      color = "var(--color-conversion-5)"
-      break;
-    case 'Cancelado':
+    case 'Delete':
       color = "var(--color-conversion-4)"
+      break;
+    case 'Login':
+      color = "var(--color-conversion-1)"
+      break;
+    case 'Logout':
+      color = "var(--color-conversion-2)"
       break;
   }
   return (
     <Cell {...props} className="link-group">
       <div style={{ marginTop: "-8px" }}>
-        {(dsstatus !== undefined && (
+        {(dsaction !== undefined && (
           <Button
             appearance="ghost"
             style={{
@@ -100,7 +149,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
             }}
           >
             <Badge style={{ background: color }} />{" "}
-            {dsstatus}
+            {dsaction}
           </Button>
         )) || (
             <Button
@@ -141,25 +190,23 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 const Month = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   <Cell {...props}>{rowData?.dsmounthyear?.split("-")[0]}, {rowData?.dsmounthyear?.split("-")[1]}</Cell>
 );
-const SendCell = ({ rowData, dataKey, ...props }) => {
-  return (
-    <Cell {...props} className="link-group">
-      {rowData.dtsendcontent?.split('T')[0]}
-      {/*  && new Date(rowData.dtsendcontent?.split('T')[0]). to locale string */}
-    </Cell>
-  );
-}
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+const DateEntrance = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
+  <Cell {...props}>{new Date(rowData?.dtaction).toLocaleString()}</Cell>
+);
+
 const WordTable = ({
+  setDrawerOpenEdit,
   tableData,
   setSearch,
   headerMenu,
   checkedKeys,
   setCheckedKeys,
   filterActive,
+  setRowData,
   setFilterData,
   filterData,
 }) => {
@@ -168,28 +215,30 @@ const WordTable = ({
   const [page, setPage] = React.useState(1);
   const [sortColumn, setSortColumn] = React.useState();
   const [sortType, setSortType] = React.useState();
+  const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
+
+  const handleExpanded = (rowData, dataKey) => {
+    let open = false;
+    const nextExpandedRowKeys = [];
+
+    expandedRowKeys.forEach((key) => {
+      if (key === rowData[rowKey]) {
+        open = true;
+      } else {
+        nextExpandedRowKeys.push(key);
+      }
+    });
+
+    if (!open) {
+      nextExpandedRowKeys.push(rowData[rowKey]);
+    }
+    setExpandedRowKeys(nextExpandedRowKeys);
+  };
 
   const toaster = useToaster();
   let checked = false;
   let indeterminate = false;
-  const filterStatus = (status) => {
-    if (status) {
-      let data = filterData.filter(filter => filter.indexOf('dsstatus') == -1)
-      setFilterData(data.concat(["dsstatus|is|" + status])) && setPage(1)
-    } else {
-      let data = filterData.filter(filter => filter.indexOf('dsstatus') == -1)
-      setFilterData(data) && setPage(1)
-    }
-  };
-  const filterSquad = (squad) => {
-    if (squad && squad !== "") {
-      let data = filterData.filter(filter => filter.indexOf('dssquadid') == -1)
-      setFilterData(data.concat(["dssquadid|is|" + squad])) && setPage(1)
-    } else {
-      let data = filterData.filter(filter => filter.indexOf('dssquadid') == -1)
-      setFilterData(data) && setPage(1)
-    }
-  };
+
   useEffect(() => {
     if (tableData?.length > 0) setLoading(false);
     setTimeout(() => {
@@ -228,7 +277,10 @@ const WordTable = ({
         return i >= start && i < end;
       })
       : [];
-
+  const handleCheckAll = (value, checked) => {
+    const keys = checked ? data.map((item) => item.idworkedpage) : [];
+    setCheckedKeys(keys);
+  };
   if (checkedKeys.length === data.length) {
     checked = true;
   } else if (checkedKeys.length === 0) {
@@ -236,12 +288,6 @@ const WordTable = ({
   } else if (checkedKeys.length > 0 && checkedKeys.length < data.length) {
     indeterminate = true;
   }
-
-  const handleCheckAll = (value, checked) => {
-    const keys = checked ? data.map((item) => item.idqwpackage) : [];
-    setCheckedKeys(keys);
-  };
-
   const handleCheck = (value, checked) => {
     const keys = checked
       ? [...checkedKeys, value]
@@ -293,13 +339,15 @@ const WordTable = ({
   //Configurações do filtro
   const renderSpeaker = ({ onClose, left, top, className, ...rest }, ref) => {
     const manualKeys = [
-      { value: "nmcustomer", label: "Cliente" },
-      { value: "dsmounthyear", label: "Mês de referência" },
-      { value: "dsmounthyear", label: "Ano" },
-      { value: "dsstatus", label: "Status" },
-      { value: "dsresponsible", label: "Responsável" },
+      { value: "idlog", label: "Código" },
+      { value: "dsservice", label: "Serviço" },
+      { value: "dtaction", label: "Data e hora da ação" },
+      { value: "dsaction", label: "Ação realizada" },
+      { value: "idrowafected", label: "Linha afetada" },
+      { value: "dsuser", label: "Usuario" },
     ];
     const keys = Object.keys(tableData[0] || {});
+
     const handleSelect = (eventKey) => {
       onClose();
       const message = getMessage(manualKeys[eventKey].value);
@@ -385,9 +433,9 @@ const WordTable = ({
               className="rs-input"
               type="text"
               onChange={(event) => setSearch(event.target.value)}
-              placeholder={`Buscar (${tableData.length + " Pacotes"})`}
+              placeholder={`Buscar (${tableData.length + " Pedido de Produção"})`}
               style={{
-                width: "300px",
+                width: "500px",
                 border: "none!important",
                 outlineStyle: "none",
                 boxShadow: "none",
@@ -397,24 +445,7 @@ const WordTable = ({
               }}
             />
           </InputGroup>
-          <Select
-            fetch={"/api/get/quickWinStatus"}
-            placeholder={'Status'}
-            onSelect={filterStatus}
-            style={{
-              width: 100
-            }}
-          />
-          <Select
-            fetch={"/api/get/select/squadsId"}
-            placeholder={'Squad'}
-            onSelect={filterSquad}
-            style={{
-              width: 100
-            }}
-          />
         </Stack>
-
         {headerMenu}
       </Stack>
       {filterActive ? (
@@ -449,12 +480,17 @@ const WordTable = ({
       <Table
         virtualized
         autoHeight
+        expandedRowKeys={expandedRowKeys}
+        onRowClick={(data) => { }}
+        shouldUpdateScroll={false}
+        rowKey={rowKey}
         data={getData().length == 0 ? [] : getData()}
         loading={loading}
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
         cellBordered
+        rowExpandedHeight={400}
         bordered
       >
         <Column width={50} align="center">
@@ -469,48 +505,47 @@ const WordTable = ({
             </div>
           </HeaderCell>
           <CheckCell
-            dataKey="idqwpackage"
+            dataKey="idlog"
             checkedKeys={checkedKeys}
             onChange={handleCheck}
           />
         </Column>
-        <Column width={75} align="center">
-          <HeaderCell>Visualizar</HeaderCell>
-          <LinkCell dataKey="idqwpackage" />
+
+        <Column sortable width={90} fixed>
+          <HeaderCell>Código</HeaderCell>
+          <Cell dataKey="idlog" />
         </Column>
-        <Column sortable width={150} flexGrow={1} fixed>
-          <HeaderCell>Cliente</HeaderCell>
-          <Cell dataKey="nmcustomer" />
-        </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Mês de referência</HeaderCell>
-          <Month dataKey="dsmounthyear" />
-        </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Squad</HeaderCell>
-          <Cell dataKey="dssquad" />
-        </Column>
-        <Column sortable width={150} flexGrow={1} fixed>
-          <HeaderCell>Analista SEO</HeaderCell>
-          <Cell dataKey="dsresponsible" />
+
+
+
+        <Column sortable width={150} align="center">
+          <HeaderCell>Serviço</HeaderCell>
+          <Cell dataKey="dsservice" />
         </Column>
 
         <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>QuickWins</HeaderCell>
-          <Cell dataKey="nbtotalqws" />
+          <HeaderCell>Data e hora da ação</HeaderCell>
+          <DateEntrance dataKey="dtaction" />
         </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Palavras</HeaderCell>
-          <Cell dataKey="nbtotalkeywords" />
-        </Column>
-        <Column sortable width={150} flexGrow={1} align="center">
-          <HeaderCell>Entrega Planejamento</HeaderCell>
-          <SendCell dataKey="dtsendcontent" />
-        </Column>
+
+    
+
         <Column sortable width={250} flexGrow={1} align="center">
-          <HeaderCell>Status</HeaderCell>
-          <StatusCell dataKey="status" />
+          <HeaderCell>Ação realizada</HeaderCell>
+          <StatusCell dataKey="dsaction" />
         </Column>
+
+        <Column sortable width={120}  align="center">
+          <HeaderCell>Linha afetada</HeaderCell>
+          <Cell dataKey="idrowafected" />
+        </Column>
+
+        <Column sortable width={100}  align="center">
+          <HeaderCell>Usuario</HeaderCell>
+          <Cell dataKey="dsuser" />
+        </Column>
+
+
       </Table>
       <div style={{ padding: 20 }}>
         <Pagination

@@ -42,6 +42,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
     const [dsrecommendations, setDsrecommendations] = useState(rowData.textTopic?.dsrecommendations || '')
     const [dscta, setDscta] = useState(rowData.textTopic?.dscta || '')
     const [dsfunnel, setDsfunnel] = useState(rowData.textTopic?.dsfunnel || '')
+    const [dsinternallink, setDsinternallink] = useState(rowData.textTopic?.dsinternallink || '')
+    
     const [formError, setFormError] = useState({});
     const model = Schema.Model({
         dstitle: StringType().isRequired('O campo não pode estar vazio.'),
@@ -54,6 +56,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
         dssecundarykeywords: StringType(),
         dspeopleask: StringType(),
         dsrecommendations: StringType().isRequired('O campo não pode estar vazio.'),
+        dsinternallink: StringType().isRequired('O campo não pode estar vazio.'),
     });
     const [formValue, setFormValue] = useState({
         dstitle,
@@ -67,6 +70,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
         dsrecommendations,
         dscta,
         dsfunnel,
+        dsinternallink
     });
 
     const [tableData, setTableData] = useState([]);
@@ -308,7 +312,15 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                     <Form.Control rows={3} name="dspeopleask" onChange={setDspeopleask} value={dspeopleask} accepter={Textarea} placeholder={"As pessoas perguntam"} />
                 </Form.Group>
             </Panel>
-
+            <Panel bordered shaded header={"Linkagem Interna"} style={{
+                width: "97%",
+                padding: "20px 0px",
+                marginTop: "20px"
+            }}>
+                <Form.Group controlId="dsinternallink">
+                    <Form.Control rows={3} name="dsinternallink" onChange={setDsinternallink} value={dsinternallink} accepter={Textarea} placeholder={"Linkagem interna"} />
+                </Form.Group>
+            </Panel>
 
             <Panel bordered shaded header={"Qual é o formato do conteúdo para essa página?"} style={{
                 width: "97%",
@@ -391,6 +403,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         dsrecommendations,
                                         dscta,
                                         dsfunnel,
+                                        dsinternallink
                                         
                                     }).then((e) => {
                                         createSuccessHandle();
@@ -415,6 +428,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         dsrecommendations,
                                         dscta,
                                         dsfunnel,
+                                        dsinternallink
                                         
                                     }).then((e) => {
                                         updateSuccessHandle();
@@ -460,7 +474,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         dspagestructure,
                                         dsrecommendations,
                                         dscta,
-                                        dsfunnel
+                                        dsfunnel,
+                                        dsinternallink
                                     }).then((e) => {
                                         createSuccessHandle();
                                     })
@@ -482,7 +497,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         dspagestructure,
                                         dsrecommendations,
                                         dscta,
-                                        dsfunnel
+                                        dsfunnel,
+                                        dsinternallink
                                     }).then((e) => {
                                         updateSuccessHandle();
                                     })
