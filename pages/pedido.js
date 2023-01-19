@@ -11,6 +11,27 @@ import Quickwins from "../components/Tables/applications/pedidos-de-producao/rea
 const { HeaderCell, Cell, Column } = Table;
 
 
+const crypto = require("crypto");
+const DADOS_CRIPTOGRAFAR = {
+  algoritmo : "aes-128-cbc",
+  codificacao : "utf8",
+  segredo : "conversionurl",
+  tipo : "hex"
+};
+
+function criptografar(senha) {
+const key = crypto.createCipher(DADOS_CRIPTOGRAFAR.algoritmo, DADOS_CRIPTOGRAFAR.segredo);
+const str = key.update(senha, DADOS_CRIPTOGRAFAR.codificacao, DADOS_CRIPTOGRAFAR.tipo);
+return  str + key.final(DADOS_CRIPTOGRAFAR.tipo);
+};
+
+function descriptografar(senha) {
+	const key = crypto.createDecipher(DADOS_CRIPTOGRAFAR.algoritmo, DADOS_CRIPTOGRAFAR.segredo);
+	const str = key.update(senha, DADOS_CRIPTOGRAFAR.tipo, DADOS_CRIPTOGRAFAR.codificacao);
+	return str + key.final(DADOS_CRIPTOGRAFAR.codificacao);
+};
+
+
 function Teste(props) {
   const router = useRouter()
   const [requestData, setRequestData] = useState([])
@@ -53,8 +74,11 @@ function Teste(props) {
   };
 
   useEffect(() => {
-    const { redator, id } = router.query
-
+    const { codigo } = router.query
+    if(codigo){
+      const infourl = descriptografar(codigo)
+      const redator = infourl.split('-')[0]
+      const id = infourl.split('-')[1]
     if (id) {
       axios.get('/api/get/textsrequests?page=1&idcustomer=' + id)
       .then(({ data: textrequest }) => {
@@ -74,6 +98,7 @@ function Teste(props) {
         }
       })
     }
+  }
   }, [router])
   return (
     <div
