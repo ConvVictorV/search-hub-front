@@ -4,6 +4,7 @@ import axios from "axios";
 export default function handler(req, res) {
   const backend = process.env.ENV == 'DEV' ? 'https://search-hub-backend-homolog-nukcfjbsza-rj.a.run.app' : 'https://search-hub-backend-nukcfjbsza-rj.a.run.app'
   console.log(`${backend}/qwpackages/${req.body[0].idcustomer}`)
+  axios.defaults.headers.common['useremail'] = req.headers.useremail || 'não definido'
   axios
     .post(`${backend}/qwpackages/${req.body[0].idcustomer}`,
     {
