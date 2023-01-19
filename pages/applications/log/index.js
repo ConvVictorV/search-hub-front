@@ -48,22 +48,14 @@ function Demo(args) {
     setTableData([])
     let page = 0
     let tableD = []
-      let getWords = () => {
+    let getWords = () => {
       axios.get("/api/get/log?page=" + (++page))
         .then(({ data }) => {
           if (data.length > 0) {
             tableD = tableD.concat(data)
             setTableData(tableD);
             getWords()
-          } else {
-            axios.get('/api/get/select/customersId').then(({ data }) => {
-              setTableData(tableD.map((row,index) => {
-                const { idcustomer } = row
-                row.nmcustomer = data.filter(customer => customer.value == idcustomer)[0]?.label || ''
-                return row
-              }))
-            })
-          }
+          } 
         });
     }
     getWords()
