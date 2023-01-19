@@ -2,6 +2,7 @@ import ExitIcon from "@rsuite/icons/Exit";
 import { getSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import axios from 'axios';
 import {
   Breadcrumb,
   Dropdown,
@@ -56,6 +57,7 @@ export default function Header(args) {
   }, []);
   const { AvatarGroup, Badge, Avatar } = require("rsuite/esm/");
   const route = useRouter()
+  axios.defaults.headers.common['useremail'] = session && session.user && session.user.email
   const renderIconButton = (props, ref) => {
     return (
       <Whisper
