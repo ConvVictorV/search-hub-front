@@ -1,5 +1,6 @@
 import PeoplesIcon from "@rsuite/icons/Peoples";
 import SingleSourceIcon from "@rsuite/icons/SingleSource";
+import OperatePeopleIcon from '@rsuite/icons/OperatePeople';
 
 module.exports.settingsItems = [
   {
@@ -12,6 +13,13 @@ module.exports.settingsItems = [
     url: "/customers/projects",
     name: "Projetos",
     icon: SingleSourceIcon,
+    active: true,
+  },
+
+  {
+    url: "/customers/squads",
+    name: "Squads",
+    icon: OperatePeopleIcon,
     active: true,
   },
 ];
