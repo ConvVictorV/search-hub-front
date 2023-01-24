@@ -12,7 +12,8 @@ import {
     Input,
     ButtonGroup,
     Divider,
-    Schema
+    Schema,
+    Checkbox
 } from "rsuite";
 import Select from "../../../Components/Select";
 import Overview from "../../../../Tables/applications/quickwins/overview"
@@ -165,15 +166,20 @@ function FormComponent({ data, closeModal, rowData, footer, sendText, ...rest })
                     </Form.Group>
                     <Form.Group controlId="dsvolume" ref={forwardRef}>
                         <Form.ControlLabel>Volume de busca</Form.ControlLabel>
-                        <Form.Control name="dsvolume" onChange={setDsvolume} value={dsvolume} />
+                        <Form.Control name="dsvolume" onBlur={() => setDsvolume(dsvolume.replaceAll('.', ''))} onChange={setDsvolume} value={dsvolume} />
                     </Form.Group>
                     <Form.Group controlId="dsposition" ref={forwardRef}>
                         <Form.ControlLabel>Posição inicial</Form.ControlLabel>
-                        <Form.Control name="dsposition" onChange={setDsposition} value={dsposition} />
+                        <Form.Control name="dsposition" onBlur={() => setDsposition(dsposition.replaceAll('.', ''))} onChange={setDsposition} disabled={dsposition == 100} value={dsposition} />
+                        
                     </Form.Group>
+                    <Checkbox style={{
+                            marginLeft: '-10px',
+                            fontStyle: 'italic'
+                        }} value="" onChange={(value, checked) => checked ? setDsposition(100) : setDsposition('')}>Não posiciona</Checkbox>
                     <Form.Group controlId="dsdensity" ref={forwardRef}>
                         <Form.ControlLabel>Densidade de palavras</Form.ControlLabel>
-                        <Form.Control name="dsdensity" onChange={setDsdensity} value={dsdensity} />
+                        <Form.Control name="dsdensity" onChange={setDsdensity} onBlur={() => setDsdensity(dsdensity.replaceAll('.', ''))} value={dsdensity} />
                     </Form.Group>
                     <Form.Group controlId="dsobjective" ref={forwardRef} style={{
                         width: 356
