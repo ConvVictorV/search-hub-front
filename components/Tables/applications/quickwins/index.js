@@ -471,7 +471,7 @@ const WordTable = ({
     const splitedText = text.length > 0 ? text.split(' ') : []
     splitedText.map(elem=>{
       return elem.indexOf('http') > - 1 ?
-        full_text+=`<a href="${elem}">${elem}</a> `
+        full_text+=`<a href="${elem}" target="_blank" rel="noopener">${elem}</a> `
         :
         full_text+=elem + " "
     })

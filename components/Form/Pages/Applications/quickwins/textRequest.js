@@ -29,8 +29,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
     const dataMonth = rowData[0]?.dsmonth
     const dataYear = rowData[0]?.dsyear || new Date().getFullYear()
     const dataContent = rowData[0]?.dscontent || rowData[0]?.dscontenttype
-    const dataTotalQuickwins = (rowData.length || rowData[0].nbtotalqws) || 0
-    const dataTotalWords = rowData.reduce(getTotal, 0) || rowData[0].nbtotalkeywords
+    const dataTotalQuickwins = (rowData.length || rowData[0]?.nbtotalqws) || 0
+    const dataTotalWords = rowData.reduce(getTotal, 0) || rowData[0]?.nbtotalkeywords
     const [idtextrequest, setIdtextrequest] = useState(rowData.idtextrequest || 0)
 
     function getTotal(total, item) {
@@ -46,10 +46,10 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
     const [dsdescription, setDsdescription] = useState(rowData.textTopic?.dsdescription || '')
 
     const [dsTotalValue, setDsTotalValue] = useState(rowData[0]?.dsvalue || '')
-    const [dsObservations, setDsObservations] = useState(rowData[0]?.dsorientation||'')
+    const [dsObservations, setDsObservations] = useState(rowData[0]?.dsorientation|| '')
     const [dsFinalDate, setDsFinalDate] = useState(rowData[0]?.dtdeadline || new Date())
-    const [dsresponsible, setDsresponsible] = useState(rowData[0]?.dsresponsible ||'')
-
+    const [dsresponsible, setDsresponsible] = useState(rowData[0]?.dsresponsible || '')
+    const [jiraKey, setJiraKey] = useState(rowData[0]?.jiraKey || '')
     const [dstextlink, setDstextlink] = useState(rowData.textTopic?.dstextlink || '')
     const [dstextstructure, setDstextstructure] = useState(rowData.textTopic?.dstextstructure || '')
     const [dssecundarykeywords, setDsecundarykeywords] = useState(rowData.textTopic?.dssecundarykeywords || '')
@@ -265,6 +265,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
                     <Form.ControlLabel>Analista Responsável</Form.ControlLabel>
                     <Form.Control name="dsresponsible" onChange={setDsresponsible} value={dsresponsible} />
                 </Form.Group>
+                
+                
 
                 <Form.Group controlId="dsobs" style={{
                     display: 'flex',
@@ -275,7 +277,15 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
                         width: 875
                     }} onChange={setDsObservations} value={dsObservations} accepter={Textarea} placeholder={"Observações"} />
                 </Form.Group>
+                <Form.Group controlId="jirakey" style={{
+                    display: dsTotalValue ? 'inline-flex':'none',
+                    flexDirection: 'column',
+                }}>
+                    <Form.ControlLabel>Chave do Jira</Form.ControlLabel>
+                    <Form.Control name="jirakey" onChange={setJiraKey} value={jiraKey} />
+                </Form.Group>
             </Panel>
+            
             <Panel bordered shaded style={{
                 width: "97%",
                 padding: "20px 0px",
@@ -315,7 +325,8 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
                                         dscontenttype: dataContent,
                                         dsmonth: dataMonth,
                                         idcustomer: dataIdCustomer,
-                                        fkidquickwin: rowData.map(row=>row.id)
+                                        fkidquickwin: rowData.map(row=>row.id),
+                                        jiraKey
                                     }).then((e) => {
                                         createSuccessHandle();
                                         closeModal(true);
@@ -338,7 +349,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, tableData,
                                         dsrecommendations,
                                         dscta,
                                         dsfunnel,
-                                        
+                                        jiraKey
                                     }).then((e) => {
                                         updateSuccessHandle();
                                         closeModal(true);

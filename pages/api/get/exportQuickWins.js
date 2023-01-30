@@ -6,13 +6,11 @@ export default function handler(req, res) {
   const { content } = req.body || {};
   let csv = "";
   if (content) {
-    fastcsv
-      .write(content, { headers: true })
-      .on("data", (row) => {
-        csv += row;
-      })
-      .on("end", () => res.status(200).send(csv));
+    axios.post('https://script.google.com/macros/s/AKfycbwS75r9vSNlU4U8vjp7PDquAkaoOsgIyHW-_F33ZiLbQRrX4GdIOnauCoLBcFQ2f001vQ/exec', content).then(({data})=>{
+      return res.status(200).send({data})
+    })
   }
+  else {
   return axios
     .get(`${process.env.BACKENDHOST}/quickwins/${idcustomer || ""}`)
     .then(({ data }) => {
@@ -24,4 +22,5 @@ export default function handler(req, res) {
         .on("end", () => res.status(200).send(csv));
     })
     .catch((err) => res.status(500).send(err));
+  }
 }
