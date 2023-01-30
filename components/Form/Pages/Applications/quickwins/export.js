@@ -32,6 +32,19 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     </Message>
   );
 
+  const linkModal = (link) => (
+    <Message showIcon type={"error"} duration={10000}>
+      <a href={link} target={"_blank"} rel="noopener noreferrer">
+        Acesse a planilha
+      </a>
+    </Message>
+  );
+  const openInNewTab = (url) => {
+    if (typeof window !== "undefined") {
+      window.open(url, '_blank', 'noreferrer');
+    }
+  };
+
   const downloadData = async (data) => {
     closeModal(true);
     clearToast().then(() => {
@@ -47,9 +60,8 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
           <hr />
           <a
             href={url}
-            download={`${
-              projectCustomer || 0
-            }_export_quickwins_${new Date().getTime()}.csv`}
+            download={`${projectCustomer || 0
+              }_export_quickwins_${new Date().getTime()}.csv`}
           >
             <Button>Download</Button>
           </a>
@@ -77,7 +89,12 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         .post(`/api/get/exportQuickWins`, {
           content: exportData,
         })
-        .then(({ data }) => downloadData(data))
+        .then(result => {
+          openInNewTab(result.data?.data)
+          sucessHandle()
+          toast.push(linkModal, { placement: "topCenter" });
+          closeModal(true)
+        })
         .catch((e) => {
           errorHandle();
         });

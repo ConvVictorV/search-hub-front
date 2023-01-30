@@ -226,56 +226,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                     >Salvar e sair</Button>
 
                 </ButtonToolbar>
-                <ButtonToolbar style={{
-                    float: "right",
-                    marginRight: 10
-                }}>
-
-
-                    <Button
-                        style={{
-                            backgroundColor: "var(--color-conversion-12)",
-                            color: "var(--color-darkness-background)",
-                        }}
-                        onClick={() => {
-                            if (validate() == false) {
-                                return
-                            }
-                            else {
-                                idsquad == 0 ?
-                                    axios.post('/api/post/squad', {
-                                        dsname,
-                                        dsemail,
-                                        dspoemail,
-                                        blstatus,
-                                    }).then((e) => {
-                                        createSuccessHandle();
-                                    })
-                                        .catch((e) => {
-                                            typeof e.response.data != "object"
-                                                ? errorHandle(e.response.data)
-                                                : errorHandle(e.response.data?.message);
-                                        })
-                                    :
-                                    axios.patch('/api/put/squad', {
-                                        idsquad,
-                                        dsname,
-                                        dsemail,
-                                        dspoemail,
-                                        blstatus
-                                    }).then((e) => {
-                                        updateSuccessHandle();
-                                    })
-                                        .catch((e) => {
-                                            typeof e.response.data != "object"
-                                                ? errorHandle(e.response.data)
-                                                : errorHandle(e.response.data?.message);
-                                        })
-                            }
-                        }}
-                    >Salvar</Button>
-
-                </ButtonToolbar>
+                
             </Panel>
         </Form>
     );
