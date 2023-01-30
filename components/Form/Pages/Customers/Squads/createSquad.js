@@ -206,6 +206,7 @@ function FormComponent({ data, rowData, closeModal, footer, sendText, ...rest })
                                         })
                                     :
                                     axios.patch('/api/put/squad', {
+                                        idsquad,
                                         dsname,
                                         dsemail,
                                         dspoemail,
