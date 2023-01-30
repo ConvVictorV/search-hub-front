@@ -32,13 +32,6 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     </Message>
   );
 
-  const linkModal = (link) => (
-    <Message showIcon type={"error"} duration={10000}>
-      <a href={link} target={"_blank"} rel="noopener noreferrer">
-        Acesse a planilha
-      </a>
-    </Message>
-  );
   const openInNewTab = (url) => {
     if (typeof window !== "undefined") {
       window.open(url, '_blank', 'noreferrer');
@@ -92,7 +85,21 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         .then(result => {
           openInNewTab(result.data?.data)
           sucessHandle()
-          toast.push(linkModal, { placement: "topCenter" });
+          setTimeout(() => toast.push(
+            <Notification
+              type="info"
+              header="Exportação Concluída"
+              closable
+              duration={0}
+              style={{ width: 320 }}
+            >
+              <hr />
+              <a href={result.data?.data} target={"_blank"} rel="noopener noreferrer">
+                <Button>Acesse a planilha</Button>
+              </a>
+            </Notification>,
+            { placement: "topCenter" }
+          ), 2000)
           closeModal(true)
         })
         .catch((e) => {
