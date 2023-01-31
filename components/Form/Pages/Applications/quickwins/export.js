@@ -78,33 +78,40 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
           errorHandle();
         });
     } else {
-      await axios
-        .post(`/api/get/exportQuickWins`, {
-          content: exportData,
-        })
-        .then(result => {
-          openInNewTab(result.data?.data)
-          sucessHandle()
-          setTimeout(() => toast.push(
-            <Notification
-              type="info"
-              header="Exportação Concluída"
-              closable
-              duration={0}
-              style={{ width: 320 }}
-            >
-              <hr />
-              <a href={result.data?.data} target={"_blank"} rel="noopener noreferrer">
-                <Button>Acesse a planilha</Button>
-              </a>
-            </Notification>,
-            { placement: "topCenter" }
-          ), 2000)
-          closeModal(true)
-        })
-        .catch((e) => {
-          errorHandle();
-        });
+      await Promise.all(exportData.map(async (quickwin, index) => {
+        return await axios.get('/api/get/textTopic/textTopic?idquickwin=' + quickwin.id)
+          .then(({ data: texttopic }) => {
+            exportData[index].textTopic = texttopic
+          }).catch(e => console.log(e))
+      })).finally(async () => {
+        await axios
+          .post(`/api/get/exportQuickWins`, {
+            content: exportData,
+          })
+          .then(result => {
+            openInNewTab(result.data?.data)
+            sucessHandle()
+            setTimeout(() => toast.push(
+              <Notification
+                type="info"
+                header="Exportação Concluída"
+                closable
+                duration={0}
+                style={{ width: 320 }}
+              >
+                <hr />
+                <a href={result.data?.data} target={"_blank"} rel="noopener noreferrer">
+                  <Button>Acesse a planilha</Button>
+                </a>
+              </Notification>,
+              { placement: "topCenter" }
+            ), 2000)
+            closeModal(true)
+          })
+          .catch((e) => {
+            errorHandle();
+          });
+      })
     }
   };
 
