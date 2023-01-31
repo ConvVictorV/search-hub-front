@@ -94,7 +94,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
             setTimeout(() => toast.push(
               <Notification
                 type="info"
-                header="Exportação Concluída"
+                header="Exportação concluída"
                 closable
                 duration={0}
                 style={{ width: 320 }}
