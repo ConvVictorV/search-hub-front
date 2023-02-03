@@ -94,6 +94,7 @@ function Teste(props) {
     if(codigo){
       const key = descriptografar(codigo)
       const id =  key.match(/\d+/g)[0];
+      console.log(criptografar('211DEZEMBRO2022'))
       console.log(`key: ${key} | idcustomer: ${id}`)
     if (key) {
       axios.get('/api/get/qwPackageByKey?key=' + key).then(({data:qwpackage}) => {

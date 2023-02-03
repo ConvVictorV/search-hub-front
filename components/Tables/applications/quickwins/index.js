@@ -26,6 +26,7 @@ import {
 } from "rsuite";
 
 import PlusIcon from "@rsuite/icons/Plus";
+import CopyIcon from '@rsuite/icons/Copy';
 import SearchIcon from "@rsuite/icons/Search";
 import CollaspedOutlineIcon from "@rsuite/icons/CollaspedOutline";
 import ExpandOutlineIcon from "@rsuite/icons/ExpandOutline";
@@ -35,8 +36,28 @@ import CloseIcon from '@rsuite/icons/Close';
 import axios from "axios";
 import { Loader } from 'rsuite';
 import Select from "../../../../components/Form/Components/Select";
+import Link from "next/link";
 
 const { HeaderCell, Cell, Column } = Table;
+
+const crypto = require("crypto");
+const DADOS_CRIPTOGRAFAR = {
+  algoritmo : "aes-128-cbc",
+  codificacao : "utf8",
+  segredo : "conversionurl",
+  tipo : "hex"
+};
+
+function criptografar(senha) {
+  try{
+    const key = crypto.createCipher(DADOS_CRIPTOGRAFAR.algoritmo, DADOS_CRIPTOGRAFAR.segredo);
+    const str = key.update(senha, DADOS_CRIPTOGRAFAR.codificacao, DADOS_CRIPTOGRAFAR.tipo);
+    return  str + key.final(DADOS_CRIPTOGRAFAR.tipo);
+  }catch(e){
+    return ''
+  }
+};
+
 
 // custom cells
 const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
@@ -215,6 +236,7 @@ const WordTable = ({
   const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
   const [previousExpandedKeys, setPreviousExpandedKeys] = React.useState([]);
   const [refresh, setRefresh] = React.useState(0)
+  
 
 
   const handleExpanded = (rowData, dataKey) => {
@@ -665,6 +687,22 @@ const WordTable = ({
                 margin: '0px 10px'
               }}>{packageData.nbtotalkeywords}</Tag>}
             </Stack>
+          </Stack>
+          <Stack alignItems={"center"} justifyContent={"space-between"}>
+            <span style={{paddingRight:5}}>Link do Cliente:</span>
+                <Link style={{color:"var(--rs-text-link)!important",marginRight:"10px"}}
+                href={`/package?codigo=${criptografar(packageData.dskey)}`}>
+                {`https://searchhub.conversion.com.br/package?codigo=${criptografar(packageData.dskey)}`}
+                  </Link>
+                <IconButton onClick={() => {navigator.clipboard.writeText(`https://searchhub.conversion.com.br/package?codigo=${criptografar(packageData.dskey)}`);}}
+              size="xs"
+              icon={<CopyIcon  />}
+              style={{
+                marginLeft: "15px",
+                background: "var(--color-conversion-1)",
+                color: "white",
+              }}
+            />
           </Stack>
           <Divider style={{
             width: 565
