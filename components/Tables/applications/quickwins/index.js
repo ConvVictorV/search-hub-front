@@ -680,12 +680,12 @@ const WordTable = ({
             <Stack alignItems={"center"} justifyContent={"space-between"}>
               Total de quickwins: {<Tag style={{
                 margin: '0px 10px'
-              }}>{packageData.nbtotalqws}</Tag>}
+              }}>{getData().length}</Tag>}
             </Stack>
             <Stack alignItems={"center"} justifyContent={"space-between"}>
               Total de palavras: {<Tag style={{
                 margin: '0px 10px'
-              }}>{packageData.nbtotalkeywords}</Tag>}
+              }}>{getData().map(row=>row.dsdensity).reduce((p,n)=>p+n,0)}</Tag>}
             </Stack>
           </Stack>
           <Stack alignItems={"center"} justifyContent={"space-between"}>
