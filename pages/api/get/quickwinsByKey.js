@@ -1,0 +1,16 @@
+import axios from "axios";
+
+export default function handler(req, res) {
+  const { fkIdqwpackage, page } = req.query || {};
+  const backend = process.env.ENV == 'DEV' ? 'https://search-hub-backend-homolog-nukcfjbsza-rj.a.run.app' : 'https://search-hub-backend-nukcfjbsza-rj.a.run.app'
+  return axios
+    .get(`${backend}/quickwins/key/${fkIdqwpackage || ""}?items=2000&page=${page}`)
+    .then(({ data }) => res.status(200).send(data))
+    .catch((err) => res.status(500).send(err.data));
+}
+
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+};
