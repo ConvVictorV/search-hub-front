@@ -19,8 +19,8 @@ export default function handler(req, res) {
             value: "Ajuste planejamento"
         },
         {
-            label: "Alocação redatores",
-            value: "Alocação redatores"
+            label: "Alocação redator",
+            value: "Alocação redator"
         },
         {
             label: "Aguardando aceite redator",

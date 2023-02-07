@@ -114,7 +114,7 @@ const StatusCell = ({ rowData, dataKey, ...props }) => {
       break;
 
 
-    case 'Alocação redatores':
+    case 'Alocação redator':
       color = "var(--color-conversion-5)"
       break;
     case 'Aguardando aceite redator':
@@ -746,7 +746,7 @@ const WordTable = ({
                 }}>
                   {
                     sumValues([
-                      'Alocação redatores',
+                      'Alocação redator',
                       'Aguardando aceite redator',
                       'Conteúdo em produção',
                       'Validação requisitos básicos',

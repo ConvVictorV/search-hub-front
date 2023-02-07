@@ -216,7 +216,7 @@ function Demo(args) {
             disabled={checkedKeys.length == 0 || tableData.filter(
               (row) => checkedKeys.indexOf(row.id) > -1
             ).map(row => {
-              return row.dsstatus?.toLowerCase().indexOf(('Alocação Redatores').toLocaleLowerCase()) > -1
+              return row.dsstatus?.toLowerCase().indexOf(('Alocação Redator').toLocaleLowerCase()) > -1
             }).includes(false) != false}
             onClick={() => { setOpenTextRequestForm(true) }}
             appearance={"ghost"} style={
