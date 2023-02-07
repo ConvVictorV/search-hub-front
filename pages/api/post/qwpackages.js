@@ -12,7 +12,7 @@ export default function handler(req, res) {
       "dstype": req.body[0].dstype,
       "nbtotalqws": req.body.length,
       "nbtotalkeywords": req.body.reduce((total,item)=>total+=item.dsdensity,0),
-      "dsstatus": req.body[0].dsstatus,
+      "dsstatus": 'Em Planejamento',
       "dsresponsible": req.body[0].dsresponsible,
       "dskey": req.body[0].fkIdqwpackage,
   }    
