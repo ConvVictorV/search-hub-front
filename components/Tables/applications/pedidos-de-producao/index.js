@@ -29,6 +29,7 @@ import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
 import LinkIcon from "@rsuite/icons/legacy/ExternalLink";
 import EditIcon from "@rsuite/icons/Edit";
+import axios from "axios";
 
 
 const { HeaderCell, Cell, Column } = Table;
@@ -86,22 +87,19 @@ const renderRowExpanded = (rowData) => {
         <div className="expandable-col" style={{
           maxHeight: 400
         }}>
-          <strong>Tipo de conteúdo</strong><br></br>{rowData.dscontenttype}<br></br>
+          <strong>Cliente: </strong>{rowData.nmcustomer}<br></br>
+          <strong>Mês de referência: </strong>{rowData?.dsmonth.toUpperCase()}, {rowData?.dtcreate.slice(0, 4)}<br></br>
+          <strong>Tipo de conteúdo: </strong>{rowData.dscontenttype}<br></br>
+          <strong>Total de Quick Wins: </strong>{rowData.nbtotalqws}<br></br>
+          <strong>Total de palavras: </strong>{rowData.nbtotalkeywords}<br></br>
+          
         </div>
         <div className="expandable-col" style={{
           maxHeight: 400
         }}>
-          <strong>Total de palavras</strong><br></br>{rowData.nbtotalkeywords}<br></br>
-        </div>
-        <div className="expandable-col" style={{
-          maxHeight: 400
-        }}>
-          <strong>Total de Quick Wins</strong><br></br>{rowData.nbtotalqws}<br></br>
-        </div>
-        <div className="expandable-col" style={{
-          maxHeight: 400
-        }}>
-          <strong>Analista Conteúdo responsável<br></br></strong>{rowData.dsresponsible}<br></br>
+          <strong>Analista de Conteúdo: </strong>{rowData.dsresponsible}<br></br>
+          <strong>Link do pedido: </strong>{rowData.nbtotalkeywords}<br></br>
+          <strong>Chave do Jira: </strong>{rowData.jiraKey || ''}<br></br>
         </div>
       </div>
     </div>
@@ -244,8 +242,15 @@ const LinkCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
   </Cell>
 );
 const Month = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
-  <Cell {...props}>{rowData?.dsmounthyear?.split("-")[0]}, {rowData?.dsmounthyear?.split("-")[1]}</Cell>
+  <Cell {...props}>{rowData?.dsmonth.toUpperCase()}, {rowData?.dtcreate.slice(0, 4)}</Cell>
 );
+const Writer = ({ rowData, onChange, checkedKeys, dataKey, writers, ...props }) => {
+  const writerId = rowData?.fkwriter
+  const writer = writers.filter(row=>row.idwriter == writerId)
+  return (
+    <Cell {...props}>{writer[0]?.dsname}</Cell>
+  )
+}
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -272,6 +277,7 @@ const WordTable = ({
   const [sortColumn, setSortColumn] = React.useState();
   const [sortType, setSortType] = React.useState();
   const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
+  const [writers, setWriters] = React.useState([]);
 
   const handleExpanded = (rowData, dataKey) => {
     let open = false;
@@ -297,6 +303,24 @@ const WordTable = ({
 
   useEffect(() => {
     if (tableData?.length > 0) setLoading(false);
+    setTimeout(() => {
+
+      let pageWriter = 0
+      let writersD = []
+
+      writers.length == 0 && getWriters();
+
+      function getWriters() {
+        pageWriter = pageWriter + 1
+        axios.get('/api/get/writers?page=' + pageWriter)
+          .then(({ data }) => {
+            writersD = writersD.concat(data)
+            setWriters(writersD)
+            data.length != 0 && getWriters()
+          })
+
+      }
+    }, 1000)
     setTimeout(() => {
       setLoading(false);
     }, 5000)
@@ -582,7 +606,7 @@ const WordTable = ({
           />
         </Column>
 
-        <Column sortable width={150} flexGrow={1} fixed>
+        <Column sortable width={70} align="center">
           <HeaderCell>Código</HeaderCell>
           <Cell dataKey="idtextrequest" />
         </Column>
@@ -592,27 +616,27 @@ const WordTable = ({
           <Cell dataKey="nmcustomer" />
         </Column>
 
-        <Column sortable width={150} flexGrow={1} align="center">
+        <Column sortable width={150} align="center">
           <HeaderCell>Mês de referência</HeaderCell>
-          <Cell dataKey="dsmonth" />
+          <Month dataKey="dsmonth" />
         </Column>
 
-        <Column sortable width={150} flexGrow={1} align="center">
+        <Column sortable width={150} align="center">
           <HeaderCell>Valor do pedido</HeaderCell>
           <Cell dataKey="dsvalue" />
         </Column>
 
-        <Column sortable width={150} flexGrow={1} align="center">
+        <Column sortable width={150} align="center">
           <HeaderCell>Prazo de entrega</HeaderCell>
           <DateEntrance dataKey="dtdeadline" />
         </Column>
 
         <Column sortable width={150} flexGrow={1} align="center">
           <HeaderCell>Redator</HeaderCell>
-          <Cell dataKey="fkwriter" />
+          <Writer writers={writers} dataKey="fkwriter" />
         </Column>
 
-        <Column sortable width={250} flexGrow={1} align="center">
+        <Column sortable width={250} align="center">
           <HeaderCell>Status</HeaderCell>
           <StatusCell dataKey="dsstatus" />
         </Column>
