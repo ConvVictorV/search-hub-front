@@ -13,7 +13,8 @@ import {
     ButtonGroup,
     Divider,
     Schema,
-    Checkbox
+    Checkbox,
+    DatePicker
 } from "rsuite";
 import Select from "../../../Components/Select";
 import Overview from "../../../../Tables/applications/quickwins/overview"
@@ -53,8 +54,10 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
     const [dsobjective, setDsobjective] = useState('');
     const [dsstatus, setDsstatus] = useState('Planejamento de termos');
     const [dsdensity, setDsdensity] = useState('');
-    const [dsmonth, setDsmonth] = useState('')
-    const [dsyear, setDsyear] = useState(2022)
+    const monthNames = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
+    const [dsmonth, setDsmonth] = useState(monthNames[new Date().getMonth()])
+    const [dsyear, setDsyear] = useState(new Date().getFullYear())
+    const [dsyearmonth, setDsYearMouthn] = useState(new Date())
 
 
 
@@ -72,12 +75,28 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
         dsresponsible: StringType().isRequired('O campo não pode estar vazio.'),
     });
 
-
     const openInNewTab = (url) => {
         if (typeof window !== "undefined") {
             window.open(url, '_blank', 'noreferrer');
         }
     };
+
+ 
+    const updateDsyearmonth = (date) =>{       
+        let d = date || dsyearmonth
+        console.log(d) 
+        setDsYearMouthn(d)
+        setDsmonth(monthNames[d.getMonth()])
+        setDsyear(d.getFullYear())
+    }
+
+    const updateDatePicker = (month, year) => {
+        console.log("aqui my friend")
+        let nbmonth = monthNames.indexOf(month)
+        let dataformatada = new Date(year + '-' + nbmonth)
+        console.log(dataformatada)
+        return dataformatada
+    }
 
     function clearInputs() {
         [...document.querySelectorAll('.rs-stack:not(:last-child):not(:first-child) span.rs-picker-toggle-clean.rs-btn-close, .rs-btn-toolbar span.rs-picker-toggle-clean.rs-btn-close')].map(clean => clean.click())
@@ -170,30 +189,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     />
                 </Form.Group>
 
-                <Form.Group>
-                    <Form.ControlLabel style={{
-                        lineHeight: "40px"
-                    }}>Mês de referência</Form.ControlLabel>
-                    <Select
-                        fetch={"/api/get/quickWinDate"}
-                        placeholder={"Selecione o mês de referência"}
-                        onSelect={setDsmonth}
-                        style={{
-                            width: "100%",
-                        }}
-                    />
-                </Form.Group>
-
-
-
-                {/* <Form.Control name="name" placeholder="Escopo" disabled /> */}
-            </Stack>
-
-            <Stack
-                direction="row"
-                alignItems="flex-start"
-                justifyContent="space-between"
-            ><Form.Group controlId="dsyear" ref={forwardRef}
+                <Form.Group controlId="dsyear" ref={forwardRef}
                 style={{
                     display: 'flex',
                     flexDirection: 'column'
@@ -206,19 +202,29 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                     }} />
                 </Form.Group>
 
-                <Form.Group controlId="dsyear" ref={forwardRef}
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}>
-                    <Form.ControlLabel style={{
-                        lineHeight: "40px"
-                    }}>Ano de Referência</Form.ControlLabel>
-                    <Form.Control name="dsyear" placeholder="" onChange={setDsyear} value={dsyear} style={{
-                        width: 230
-                    }} />
-                </Form.Group>
+                
 
+
+
+                {/* <Form.Control name="name" placeholder="Escopo" disabled /> */}
+            </Stack>
+
+            <Stack
+                direction="row"
+                alignItems="flex-start"
+                justifyContent="space-between"
+            >
+
+            </Stack>
+
+            <Stack
+            direction="column"
+            alignItems="flex-start"
+            justifyContent="space-between">
+            <Form.ControlLabel style={{
+                        lineHeight: "40px"
+                    }}>Ano e Mês de Referência</Form.ControlLabel>
+                    <DatePicker onChange={updateDsyearmonth}  value={dsyearmonth} format="yyyy-MM" ranges={[]} />
             </Stack>
 
             <Form.ControlLabel style={{
@@ -256,6 +262,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                             setDsdensity(item.dsdensity + "")
                             setDsmonth(item.dsmonth)
                             setDsyear(item.dsyear)
+                            setDsYearMouthn(updateDatePicker(item.dsmonth,item.dsyear))
                             setFormValue({
                                 dskeyword: item.dskeyword,
                                 dsvolume: item.dsvolume + "",
@@ -385,6 +392,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                                 dsposition,
                                 dsdensity,
                                 dsyear,
+                                dsyearmonth,
                                 dsresponsible
                             })
                             setTimeout(() => {
@@ -396,6 +404,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                                     dscontent,
                                     dsstatus,
                                     dsmonth,
+                                    dsyearmonth
                                 ]
 
                                 const requiredMessages = [
@@ -443,6 +452,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                                     dsobjective,
                                     dsmonth,
                                     dsyear,
+                                    dsyearmonth,
                                     fkIdqwpackage: customer + dsmonth + dsyear
                                 })
                                 setTableData(data)
@@ -455,6 +465,7 @@ function FormComponent({ data, closeModal, footer, sendText, ...rest }) {
                                     dsposition,
                                     dsdensity,
                                     dsyear,
+                                    dsyearmonth
                                 })
                                 setRefresh(refresh + 1)
                             }, 100)
