@@ -260,7 +260,7 @@ function Demo(args) {
       title="Pedidos de Produção de QuickWins | SearchHub"
       description="SearchHub Conversion"
       background={2}
-      pageName="QuickWins"
+      pageName="Pedidos de Produção de QuickWins"
     >
       <Container
         style={{

@@ -94,8 +94,6 @@ function Teste(props) {
     if(codigo){
       const key = descriptografar(codigo)
       const id =  key.match(/\d+/g)[0];
-      console.log(criptografar('211DEZEMBRO2022'))
-      console.log(`key: ${key} | idcustomer: ${id}`)
     if (key) {
       axios.get('/api/get/qwPackageByKey?key=' + key).then(({data:qwpackage}) => {
         setRequestData(qwpackage[0]);
@@ -145,7 +143,7 @@ function Teste(props) {
           />
           </div>
         <Panel >
-          {requestData.nbtotalqws ?
+          {requestData?.nbtotalqws ?
             <Panel>
               <Stack  direction="column" alignItems={"baseline"} justifyContent={"space-between"} style={{
           width: "100%"
@@ -166,7 +164,7 @@ function Teste(props) {
             <Stack alignItems={"center"} justifyContent={"space-between"}>
               Total de quickwins: {<Tag style={{
                 margin: '0px 10px'
-              }}>{requestData.nbtotalqws}</Tag>}
+              }}>{requestData?.nbtotalqws}</Tag>}
             </Stack>
             <Stack alignItems={"center"} justifyContent={"space-between"}>
               Total de palavras: {<Tag style={{

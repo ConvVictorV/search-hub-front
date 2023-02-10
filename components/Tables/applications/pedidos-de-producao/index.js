@@ -30,6 +30,26 @@ import SearchIcon from "@rsuite/icons/Search";
 import LinkIcon from "@rsuite/icons/legacy/ExternalLink";
 import EditIcon from "@rsuite/icons/Edit";
 import axios from "axios";
+import { useRouter } from "next/router";
+
+var url = ''
+const crypto = require("crypto");
+const DADOS_CRIPTOGRAFAR = {
+  algoritmo: "aes-128-cbc",
+  codificacao: "utf8",
+  segredo: "conversionurl",
+  tipo: "hex"
+};
+
+function criptografar(senha) {
+  try {
+    const key = crypto.createCipher(DADOS_CRIPTOGRAFAR.algoritmo, DADOS_CRIPTOGRAFAR.segredo);
+    const str = key.update(senha, DADOS_CRIPTOGRAFAR.codificacao, DADOS_CRIPTOGRAFAR.tipo);
+    return str + key.final(DADOS_CRIPTOGRAFAR.tipo);
+  } catch (e) {
+    return ''
+  }
+};
 
 
 const { HeaderCell, Cell, Column } = Table;
@@ -76,6 +96,7 @@ const ExpandCell = ({
 );
 
 const renderRowExpanded = (rowData) => {
+
   return (
     <div id="expandable">
       <div id="expandable-header">
@@ -92,13 +113,25 @@ const renderRowExpanded = (rowData) => {
           <strong>Tipo de conteúdo: </strong>{rowData.dscontenttype}<br></br>
           <strong>Total de Quick Wins: </strong>{rowData.nbtotalqws}<br></br>
           <strong>Total de palavras: </strong>{rowData.nbtotalkeywords}<br></br>
-          
+
         </div>
         <div className="expandable-col" style={{
           maxHeight: 400
         }}>
           <strong>Analista de Conteúdo: </strong>{rowData.dsresponsible}<br></br>
-          <strong>Link do pedido: </strong>{rowData.nbtotalkeywords}<br></br>
+          <a
+            style={{
+              color: "var(--rs-text-link-hover)",
+              textDecoration: "underline",
+            }}
+            href={`/package?codigo=${criptografar(rowData.idcustomer + (rowData.dsmonth).toUpperCase() + rowData.dtcreate.slice(0, 4))}`}
+            target={"_blank"}
+            rel="noopener noreferrer"
+          >Visualizar pacote<LinkIcon
+              style={{
+                marginLeft: "5px",
+              }}
+            /></a><br></br>
           <strong>Chave do Jira: </strong>{rowData.jiraKey || ''}<br></br>
         </div>
       </div>
@@ -246,7 +279,7 @@ const Month = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
 );
 const Writer = ({ rowData, onChange, checkedKeys, dataKey, writers, ...props }) => {
   const writerId = rowData?.fkwriter
-  const writer = writers.filter(row=>row.idwriter == writerId)
+  const writer = writers.filter(row => row.idwriter == writerId)
   return (
     <Cell {...props}>{writer[0]?.dsname}</Cell>
   )
@@ -278,7 +311,7 @@ const WordTable = ({
   const [sortType, setSortType] = React.useState();
   const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
   const [writers, setWriters] = React.useState([]);
-
+  const router = useRouter()
   const handleExpanded = (rowData, dataKey) => {
     let open = false;
     const nextExpandedRowKeys = [];
@@ -302,6 +335,7 @@ const WordTable = ({
   let indeterminate = false;
 
   useEffect(() => {
+    url = router.basePath
     if (tableData?.length > 0) setLoading(false);
     setTimeout(() => {
 

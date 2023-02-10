@@ -117,9 +117,9 @@ function Teste(props) {
         <Panel style={{
         overflowY: 'scroll!important'
       }}>
-          {requestData.nbtotalqws ?
+          {requestData?.nbtotalqws ?
             <Panel>
-              <h5>Quantidade total de textos: <br></br><i>{requestData.nbtotalqws}</i></h5><br></br>
+              <h5>Quantidade total de textos: <br></br><i>{requestData?.nbtotalqws}</i></h5><br></br>
               <h5>Quantidade total de palavras: <br></br><i>{requestData.nbtotalkeywords}</i></h5><br></br>
               <h5>Prazo final de entrega do pedido: <br></br><i>{new Date((requestData.dtdeadline)).toLocaleDateString()}</i></h5><br></br>
               <h5>Orientações: <br></br><i>{requestData.dsorientation}</i></h5><br></br>
