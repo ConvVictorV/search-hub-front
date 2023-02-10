@@ -692,7 +692,9 @@ const WordTable = ({
             <span style={{paddingRight:5}}>Link do Cliente:</span>
                 <Link style={{color:"var(--rs-text-link)!important",marginRight:"10px"}}
                 href={`/package?codigo=${criptografar(packageData.dskey)}`}>
+                  <a target="_blank">
                 {`https://searchhub.conversion.com.br/package?codigo=${criptografar(packageData.dskey)}`}
+                </a>
                   </Link>
                 <IconButton onClick={() => {navigator.clipboard.writeText(`https://searchhub.conversion.com.br/package?codigo=${criptografar(packageData.dskey)}`);}}
               size="xs"
