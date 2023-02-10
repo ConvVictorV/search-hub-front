@@ -63,7 +63,7 @@ function Demo(args) {
               axios.get('/api/get/select/squadsId').then(({ data: squads }) => {
                 setTableData(tableD.map((row, index) => {
                   const { idcustomer } = row
-                  const { nmcustomer, idsquad } = customers.filter(customer => customer.idcustomer == idcustomer)[0]
+                  const { nmcustomer, idsquad } = customers.filter(customer => customer.idcustomer == idcustomer)[0] || {}
                   row.nmcustomer = nmcustomer || ''
                   row.dssquadid = idsquad || 0
                   row.dssquad = squads.filter(squad => squad.value == idsquad)[0]?.label || ''
