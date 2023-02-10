@@ -50,6 +50,8 @@ export async function getStaticPaths() {
   }
 }
 
+const urlsearchhub = process.env.ENV == 'DEV' ?  'https://searchhub.conversion.com.br' : 'https://search-hub-front.vercel.app'
+
 function Demo(args) {
   const router = useRouter()
   const packageid = router.query.packageid || null
@@ -529,6 +531,7 @@ function Demo(args) {
           filterData={filterData}
           setFilterData={setFilterData}
           packageData={packageData}
+          urlsearchhub = {urlsearchhub}
         />
       </Container>
     </FullWidthLayout>

@@ -32,6 +32,7 @@ import DocPassIcon from '@rsuite/icons/DocPass';
 import axios from "axios";
 import { Loader } from 'rsuite';
 import Select from "../../../Form/Components/Select";
+import Link from "next/link";
 
 const { HeaderCell, Cell, Column } = Table;
 
@@ -345,7 +346,7 @@ const WordTable = ({
             <p><strong>Cliente</strong>: {rowData.customer}</p>
             <p><strong>Mês de referência</strong>: {rowData.dsmonth}, {rowData.dsyear}</p>
             <p><strong>Termo principal</strong>: {rowData.dskeyword}</p>
-            <p><strong>Url da página</strong>: {rowData.dsurl}</p>
+            <p><strong>Url da página</strong>: <Link href={rowData.dsurl}><a target="_blank">{rowData.dsurl}</a></Link></p>
             <p><strong>Volume de busca</strong>: {rowData.dsvolume}</p>
             <p><strong>Posição inicial</strong>: {rowData.dsposition}</p>
             <p><strong>Tipo de otimização</strong>: {rowData.dstype}</p>
@@ -368,7 +369,7 @@ const WordTable = ({
             <p><strong>Title Otimizado</strong>: {rowData.textTopic?.dstitle}</p>
             <p><strong>Description otimizado</strong>: {rowData.textTopic?.dsdescription}</p>
             <p><strong>H1</strong>: {rowData.textTopic?.dsh1}</p>
-            <p><strong>Link do texto</strong>:{rowData.textTopic?.dstextlink}</p>
+            <p><strong>Link do texto</strong>:<Link href={rowData.textTopic?.dstextlink}><a target="_blank">{rowData.textTopic?.dstextlink}</a></Link></p>
             <p style={{ whiteSpace: 'pre-wrap' }}><strong>Estrutura do texto</strong>:<br />{rowData.textTopic?.dstextstructure}</p>
             <p><strong>Termos secundários</strong>: {rowData.textTopic?.dssecundarykeywords}</p>
             <p style={{ whiteSpace: 'pre-wrap' }}><strong>Perguntas frequentes</strong>:<br />{rowData.textTopic?.dspeopleask}</p>

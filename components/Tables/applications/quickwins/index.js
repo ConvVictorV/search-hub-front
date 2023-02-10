@@ -226,7 +226,8 @@ const WordTable = ({
   setOpenDeleteLineForm,
   setRowData,
   setOpenCreateTextTopicForm,
-  packageData
+  packageData,
+  urlsearchhub = 'https://searchhub.conversion.com.br'
 }) => {
   const [loading, setLoading] = React.useState(true);
   const [limit, setLimit] = React.useState(12);
@@ -692,9 +693,11 @@ const WordTable = ({
             <span style={{paddingRight:5}}>Link do Cliente:</span>
                 <Link style={{color:"var(--rs-text-link)!important",marginRight:"10px"}}
                 href={`/package?codigo=${criptografar(packageData.dskey)}`}>
-                {`https://searchhub.conversion.com.br/package?codigo=${criptografar(packageData.dskey)}`}
+                  <a target="_blank">
+                {`${urlsearchhub}/package?codigo=${criptografar(packageData.dskey)}`}
+                </a>
                   </Link>
-                <IconButton onClick={() => {navigator.clipboard.writeText(`https://searchhub.conversion.com.br/package?codigo=${criptografar(packageData.dskey)}`);}}
+                <IconButton onClick={() => {navigator.clipboard.writeText(`${urlsearchhub}/package?codigo=${criptografar(packageData.dskey)}`);}}
               size="xs"
               icon={<CopyIcon  />}
               style={{
